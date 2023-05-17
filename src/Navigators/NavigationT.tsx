@@ -11,6 +11,7 @@ import Lottie from 'lottie-react-native'
 import HomeScreen from '../Screens/HomeScreen';
 import prueba from '../Screens/prueba'
 import HomeVentas from './ventasprueba/HomeVentas';
+import Apiprueba from '../Screens/Api/ApiPrueba'
 
 const Tab = createBottomTabNavigator()
 const AnimatedSvg = Animated.createAnimatedComponent(Svg)
@@ -31,7 +32,7 @@ return (
               // @ts-ignore
               tabBarIcon: ({ ref }) => <Lottie ref={ref} loop={false} source={require('./assets/lottie/home.icon.json')} style={styles.icon} />,
             }}
-            component={HomeVentas}
+            component={Apiprueba}
            
           />
             <Tab.Screen

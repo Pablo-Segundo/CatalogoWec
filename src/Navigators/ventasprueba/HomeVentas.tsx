@@ -1,5 +1,7 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
+import { Icon } from 'react-native-vector-icons/Icon';
+
 
 const products = [
   { image: 'https://cloud.wapizima.com/test/products/62ffbf3aab1c395fd79b1fb1/WhatsApp Image 2022-08-19 at 11.44.36 AM.jpeg/original.webp', price: 10 },
@@ -15,6 +17,8 @@ const ProductItem = ({ image, price }) => {
   const handleBuy = () => {
   };
   return (
+
+    
     <View style={styles.productItem}>
       <Image source={{ uri: image }} style={styles.productImage} />
       <Text style={styles.productPrice}>${price}</Text>
@@ -24,20 +28,27 @@ const ProductItem = ({ image, price }) => {
     </View>
   );
 };
+
+
+
+export const Stack = () =>{
+   return (
+    <View style={{height: '100%'}}>
+    <View
+      style={{
+        height: '10%',
+        borderBottomRightRadius: 25,
+        borderBottomLeftRadius: 25,
+        backgroundColor: '#d3afd4',
+      }}
+      />
+     </View>
+   );
+};
+
 const App = () => {
    const renderItem = ({ item }) => <ProductItem image={item.image} price={item.price} />;
   return (
-    // <View style={{height: '100%'}}>
-    // <View
-    //   style={{
-    //     height: '10%',
-    //     borderBottomRightRadius: 25,
-    //     borderBottomLeftRadius: 25,
-    //     backgroundColor: '#d3afd4',
-    //   }}
-    //   />
-    //  </View>
-
       <View style={styles.container}> 
       <FlatList
          data={products}
@@ -45,7 +56,6 @@ const App = () => {
         keyExtractor={(item, index) => index.toString()}
         numColumns={2}
       />
-       
      </View>   
   );
 };
@@ -71,6 +81,7 @@ const styles = StyleSheet.create({
   productPrice: {
     fontSize: 20,
     fontWeight: 'bold',
+    color:'black',
     marginVertical: 10,
   },
   buyButton: {
@@ -82,21 +93,17 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
   },
+  IconBarra: {
+    flex: 1,
+    paddingTop: 20, 
+    paddingHorizontal: 10,
+  },
+  IconContainer: {
+   position: 'absolute',
+   top: 10, 
+   right: 10,
+   zIndex: 1,
+  }
 
-
-
-  screenTitle: {
-    fontSize: 20,
-    color:'black',
-    margin: 8,
-    fontWeight: 'bold',
- },
- box: {
-  width: 170,
-  height: 200,
-  backgroundColor: '#d3afd4',
-  marginBottom: 30
-}
-  
 });
-export default App;
+export default App; 
