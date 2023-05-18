@@ -30,6 +30,7 @@ const App = () => {
     <Text>{item.name}</Text>
     <Text>{item.description} </Text>
     <Image source={{ uri: item.products['400x400'] }} style={{ width: '100%', height: '100%' }} /> 
+    <Image source={{ uri: item.products['400x400'] }} style={{ width: '100%', height: '100%' }} /> 
    </View>
     
     
