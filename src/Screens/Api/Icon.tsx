@@ -9,7 +9,7 @@ const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.iconContainer} onPress={navigateToOtherScreen}>
-        <Icon name="shopping-basket" size={30} color="#000" />
+        <Icon name="shopping-cart" size={30} color="#000" />
       </TouchableOpacity>
     </View>
   );

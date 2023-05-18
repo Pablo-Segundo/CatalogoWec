@@ -12,6 +12,8 @@ import HomeScreen from '../Screens/HomeScreen';
 import prueba from '../Screens/prueba'
 import HomeVentas from './ventasprueba/HomeVentas';
 import Apiprueba from '../Screens/Api/ApiPrueba'
+import Categories from '../Screens/Categories';
+import Products from '../Products/Products';
 
 const Tab = createBottomTabNavigator()
 const AnimatedSvg = Animated.createAnimatedComponent(Svg)
@@ -28,11 +30,11 @@ return (
       <Tab.Screen
             name="Home"
             options={{
-              headerShown: true,
+              headerShown: false,
               // @ts-ignore
               tabBarIcon: ({ ref }) => <Lottie ref={ref} loop={false} source={require('./assets/lottie/home.icon.json')} style={styles.icon} />,
             }}
-            component={Apiprueba}
+            component={Products}
            
           />
             <Tab.Screen

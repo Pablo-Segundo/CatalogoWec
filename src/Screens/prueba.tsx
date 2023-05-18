@@ -9,7 +9,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
     <View style={{height: '60%'}}>
        
        <TouchableOpacity style={styles.IconContainer} >
-        <Icon name= "basket-check" size={30} color="#000" />
+        <Icon name= "shopping-cart" size={30} color="#000" />
       </TouchableOpacity>
     <View
       style={{
@@ -46,7 +46,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
           screenTitle: {
             fontSize: 25,
             color:'#ff69b4',
-            margin: 20,
+            margin: 25,
             fontWeight: 'bold',
           },
           container: {
