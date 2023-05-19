@@ -11,7 +11,7 @@ import ShoppingScreen from '../Screens/ShoppingScreen';
 const App = ({  }) => {
   
   const [categories, setCategories] = useState();
-  const _id =  "637fd33234834475d1f055b5" ;
+  
   const getCategories = async () => {
     try{
     const {data } = await API.get('/categories');
@@ -32,8 +32,10 @@ const App = ({  }) => {
     
 
   <View >
+       <Text style={styles.TextContainer}> WAPIZIMA</Text>
      <TouchableOpacity style={styles.IconContainer} onPress={ShoppingScreen} >
         <Icon name= "shopping-cart" size={30} color="#000" />
+     
       </TouchableOpacity>
   <View
       style={{
@@ -97,6 +99,14 @@ const styles = StyleSheet.create({
     top: 15,
     right: 25,
     zIndex: 1,
-
+  },
+  TextContainer: {
+    color:'black',
+    position: 'absolute',
+    top: 20,
+    left: 25,
+    zIndex: 1,
   }
+
+
 });

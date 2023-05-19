@@ -1,18 +1,17 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
 import { Icon } from 'react-native-vector-icons/Icon';
+import API from '../../API/API';
+
 
 
 const products = [
   { image: 'https://cloud.wapizima.com/test/products/62ffbf3aab1c395fd79b1fb1/WhatsApp Image 2022-08-19 at 11.44.36 AM.jpeg/original.webp', price: 10 },
   { image: 'ruta/a/imagen2.jpg', price: 20 },
-  { image: 'ruta/a/imagen3.jpg', price: 15 },
-  { image: 'ruta/a/imagen4.jpg', price: 25 },
-  { image: 'ruta/a/imagen2.jpg', price: 20 },
-  { image: 'ruta/a/imagen3.jpg', price: 15 },
-  { image: 'ruta/a/imagen4.jpg', price: 25 }
-
+ 
+  
 ];
+
 const ProductItem = ({ image, price }) => {
   const handleBuy = () => {
   };
@@ -29,25 +28,9 @@ const ProductItem = ({ image, price }) => {
   );
 };
 
-
-
-export const Stack = () =>{
-   return (
-    <View style={{height: '100%'}}>
-    <View
-      style={{
-        height: '10%',
-        borderBottomRightRadius: 25,
-        borderBottomLeftRadius: 25,
-        backgroundColor: '#d3afd4',
-      }}
-      />
-     </View>
-   );
-};
-
 const App = () => {
-   const renderItem = ({ item }) => <ProductItem image={item.image} price={item.price} />;
+   
+  const renderItem = ({ item }) => <ProductItem image={item.image} price={item.price} />;
   return (
       <View style={styles.container}> 
       <FlatList

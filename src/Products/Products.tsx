@@ -3,12 +3,13 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, Touchable } from 'react-native';
 import API from '../API/API';
 import { FlatList } from 'react-native';
+
 const App = () => {
   const [products, setproducts] = useState();
   // const _id =  "637fd33234834475d1f055b5" ; 
   const getproducts = async () => {
     try{
-    const {data } = await API.get('/products/multimedia');
+    const {data } = await API.get('/products');
     setproducts(data.products)
     }catch (error){
     console.log(error);
@@ -29,8 +30,8 @@ const App = () => {
    <View>
     <Text>{item.name}</Text>
     <Text>{item.description} </Text>
-    <Image source={{ uri: item.products['400x400'] }} style={{ width: '100%', height: '100%' }} /> 
-    <Image source={{ uri: item.products['400x400'] }} style={{ width: '100%', height: '100%' }} /> 
+    {/* <Image source={{ uri: item.products['400x400'] }} style={{ width: '100%', height: '100%' }} />  */}
+     
    </View>
     
     

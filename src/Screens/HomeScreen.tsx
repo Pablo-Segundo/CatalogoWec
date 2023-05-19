@@ -7,7 +7,7 @@ import prueba from './prueba';
 
 const HomeScreen = ()  => {
    //img       
-   const imageUrl = 'https://cloud.wapizima.com/test/categories/mobile/64443c435347d830ef8e31da/original.webp';
+   const imageUrl = '';
    const image = ''; 
   return (
     <View  >
