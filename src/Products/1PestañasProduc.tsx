@@ -12,7 +12,7 @@ const App = () => {
 
   const getproducts = async () => {
         try{
-        const {data } = await API.get('/products');
+        const {data } = await API.get('/products/category/637fd33234834475d1f055b5');
         setproducts(data.products)
         }catch (error){
         console.log(error);
@@ -37,12 +37,12 @@ const App = () => {
        <Image style={styles.productImage} source={{ uri: item.multimedia[0].images['400x400'] }} />
 
 
-      <Text  style={styles.productPrice}>{item.name}</Text>
-     <Text> {item.description} </Text>
+      <Text  style={styles.productname}>{item.name}</Text>
+     {/* <Text> {item.description} </Text> */}
      {/* <Text> {item.category.name} </Text> */}
       <Text style={styles.productPrice}>${item.price}</Text>
       <TouchableOpacity style={styles.buyButton} onPress={pruebas}>
-      <Text style={styles.buyButtonText}>Comprar</Text>
+      <Text style={styles.buyButtonText}>Agregar a la cesta</Text>
       </TouchableOpacity>
 
 
@@ -75,10 +75,16 @@ const App = () => {
           height: 150,
           borderRadius: 10,
         },
-        productPrice: {
+        productname:{
           fontSize: 20,
           fontWeight: 'bold',
           color:'black',
+          marginVertical: 10,
+        },
+        productPrice: {
+          fontSize: 20,
+          fontWeight: 'bold',
+          color:'#1e90ff',
           marginVertical: 10,
         },
         buyButton: {

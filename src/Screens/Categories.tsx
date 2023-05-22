@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet,TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet,TouchableOpacity,Button,navigation } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native'
 import API from '../API/API';
 import { FlatList } from 'react-native';
@@ -8,66 +8,93 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import ShoppingScreen from '../Screens/ShoppingScreen';
 
 
-const App = ({  }) => {
+
+
+ 
+
+     const App = ({navigation}) => {
   
-  const [categories, setCategories] = useState();
+      const [categories, setCategories] = useState();
+      
+      const getCategories = async () => {
+        try{
+        const {data } = await API.get('/categories');
+          setCategories(data.categories)
+        }catch (error){
+        console.log(error);
+        }
+      }
+      useEffect(() => {
+       getCategories();
+      }, []);
+      if (!categories) {
+        return null;
+      }else
+      return (
+       
+    
+        
+    
+      <View >
+           <Text style={styles.TextContainer}> WAPIZIMA</Text>
+         <TouchableOpacity style={styles.IconContainer} onPress={ShoppingScreen} >
+            <Icon name= "shopping-cart" size={30} color="#000" />
+         
+          </TouchableOpacity>
+      <View
+          style={{
+            height: '8%',
+          //  borderBottomRightRadius: 25,
+          //  borderBottomLeftRadius: 25,
+            backgroundColor: '#d3afd4',
+          }}
+          
+        />
+          
+        
+         
+          <FlatList
+              data={categories}
+              renderItem={ ({item } ) => (
+    
+              <View style={styles.container}>
+             
+             <TouchableOpacity onPress={()=>navigation.navigate('ShoppingScreen')}>
+              <Image style={styles.image} source={{ uri: item.imagesMobile['400x400'] }} />
+              </TouchableOpacity>
+              {/* onProgress={()=>navigation.navigate('ShoppingScreen')} */}
+    
+              <TouchableOpacity>
+              {/* <Button title='asd' onPress={ShoppingScreen}></Button>  */}
+              </TouchableOpacity>
+              
+               {/* <Button title='asd' onClick={carritoAnuncio}></Button>   */}
+                
+               
+
+
+              <View style={styles.overlay}>
+              <Text style={styles.text}>{item.name} </Text>
+          </View>
+              </View>
+          )}/>
+        
+        </View>
+        );
+      };
+
+      export default App;
+
   
-  const getCategories = async () => {
-    try{
-    const {data } = await API.get('/categories');
-      setCategories(data.categories)
-    }catch (error){
-    console.log(error);
-    }
-  }
-  useEffect(() => {
-   getCategories();
-  }, []);
-  if (!categories) {
-    return null;
-  }else
-  return (
+
+
+   
    
 
-    
-
-  <View >
-       <Text style={styles.TextContainer}> WAPIZIMA</Text>
-     <TouchableOpacity style={styles.IconContainer} onPress={ShoppingScreen} >
-        <Icon name= "shopping-cart" size={30} color="#000" />
-     
-      </TouchableOpacity>
-  <View
-      style={{
-        height: '8%',
-        // borderBottomRightRadius: 25,
-        // borderBottomLeftRadius: 25,
-        backgroundColor: '#d3afd4',
-      }}
-      
-    />
-      
-      <FlatList
-          data={categories}
-          renderItem={ ({item } ) => (
-
-          <View style={styles.container}>
-         
-          <Image style={styles.image} source={{ uri: item.imagesMobile['400x400'] }}  />
-         
-
-          <View style={styles.overlay}>
-          <Text style={styles.text}>{item.name} </Text>
-      </View>
-          </View>
-      )}/>
-    
-    </View>
-    );
-  };
 
 
-export default App;
+
+
 const styles = StyleSheet.create({
  container: {
     flex: 1,
@@ -76,8 +103,8 @@ const styles = StyleSheet.create({
   },
   image: {
     width: 400, 
-    
-    height: 200, 
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    height: 170, 
     resizeMode: 'cover',
     margin: 10,
     
@@ -85,7 +112,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)', 
+         backgroundColor: 'rgba(0, 0, 0, 0.5)', 
     justifyContent: 'center',
     alignItems: 'center',
   },

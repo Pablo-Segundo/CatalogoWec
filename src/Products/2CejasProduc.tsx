@@ -1,63 +1,57 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import API from '../API/API';
-import { FlatList } from 'react-native';
-import pruebas from '../Screens/prueba'
-
-
+import { FlatList } from 'react-native'
 
 const App = () => {
-  const [products, setproducts] = useState();
-
-
-  const getproducts = async () => {
-        try{
-        const {data } = await API.get('/products');
+     const [products,setproducts] = useState();
+   
+const getproducts = async () => {
+    try{
+        const { data } = await API.get('/products/category/637fd2f5e4d40766f8ea8a62');
         setproducts(data.products)
-        }catch (error){
+    }catch (error){
         console.log(error);
-        }
-      }
-       useEffect(() => {
-         getproducts();
-      }, []);
-       if (!products) {
+    }
+   }
+    useEffect(() => {
+        getproducts();
+    }, []);
+
+     if (!products) {
         return null;
-    }else 
-    return (
+     }else
+     return (
+      <FlatList
+      data={products}
+      numColumns={2}
+      renderItem={ ({item}) =>(
 
-        <FlatList 
-        data={products}
-         numColumns={2}
-        renderItem={ ({item } ) => (
-            
-       
-      <View style={styles.container}>
-    
-       <Image style={styles.productImage} source={{ uri: item.multimedia[0].images['400x400'] }} />
-
-
-      <Text  style={styles.productPrice}>{item.name}</Text>
-     <Text> {item.description} </Text>
+    <View  style={styles.container}>
+      <Image style={styles.productImage} source={{ uri: item.multimedia[0].images['400x400'] }} />
+      <Text  style={styles.productname}>{item.name}</Text>
+     {/* <Text> {item.description} </Text> */}
      {/* <Text> {item.category.name} </Text> */}
       <Text style={styles.productPrice}>${item.price}</Text>
-      <TouchableOpacity style={styles.buyButton} onPress={pruebas}>
-      <Text style={styles.buyButtonText}>Comprar</Text>
+      <TouchableOpacity style={styles.buyButton}>
+      <Text style={styles.buyButtonText}>Agregar a la cesta</Text>
+
       </TouchableOpacity>
+     
 
 
-     {/* <Image style={{width: 400, height:400}} source={{ uri: item.multimedia[0].images['400x400'] }}  />    */}
-    
+     
+
+    </View>
+     
 
 
-       </View>
+
       )}/>
-
- 
-
-  );
- };
- export default App;
+      
+     );
+    };
+    export default App;
 
  const styles = StyleSheet.create({
 
@@ -75,10 +69,16 @@ const App = () => {
           height: 150,
           borderRadius: 10,
         },
-        productPrice: {
+        productname:{
           fontSize: 20,
           fontWeight: 'bold',
           color:'black',
+          marginVertical: 10,
+        },
+        productPrice: {
+          fontSize: 20,
+          fontWeight: 'bold',
+          color:'#1e90ff',
           marginVertical: 10,
         },
         buyButton: {
