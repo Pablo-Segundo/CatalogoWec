@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import API from '../API/API';
 import { FlatList } from 'react-native';
-import pruebas from '../Screens/prueba'
+
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 
-const App = () => {
+
+export const PetañaScreen = () => {
   const [products, setproducts] = useState();
 
 
@@ -25,6 +27,17 @@ const App = () => {
         return null;
     }else 
     return (
+       <View>
+      <Text style={styles.TextContainer}> WAPIZIMA</Text>
+      <TouchableOpacity style={styles.IconContainer} >
+        <Icon name="shopping-cart" size={30} color="#000" />
+      </TouchableOpacity>
+      <View
+        style={{
+          height: '8%',
+              backgroundColor: '#D3AFD4',
+         }}
+        />
 
         <FlatList 
         data={products}
@@ -41,7 +54,9 @@ const App = () => {
      {/* <Text> {item.description} </Text> */}
      {/* <Text> {item.category.name} </Text> */}
       <Text style={styles.productPrice}>${item.price}</Text>
-      <TouchableOpacity style={styles.buyButton} onPress={pruebas}>
+      <TouchableOpacity style={styles.buyButton} >
+     
+
       <Text style={styles.buyButtonText}>Agregar a la cesta</Text>
       </TouchableOpacity>
 
@@ -52,12 +67,12 @@ const App = () => {
 
        </View>
       )}/>
-
+      </View>
  
 
   );
  };
- export default App;
+
 
  const styles = StyleSheet.create({
 
@@ -106,6 +121,13 @@ const App = () => {
          top: 10, 
          right: 10,
          zIndex: 1,
+        },
+        TextContainer: {
+          color: 'black',
+          position: 'absolute',
+          top: 20,
+          left: 25,
+          zIndex: 1,
         }
     
 });

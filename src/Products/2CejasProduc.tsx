@@ -3,7 +3,7 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import API from '../API/API';
 import { FlatList } from 'react-native'
 
-const App = () => {
+export const CejasScreen = () => {
      const [products,setproducts] = useState();
    
 const getproducts = async () => {
@@ -51,7 +51,7 @@ const getproducts = async () => {
       
      );
     };
-    export default App;
+  
 
  const styles = StyleSheet.create({
 

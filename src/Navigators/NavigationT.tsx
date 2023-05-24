@@ -8,26 +8,20 @@ import Svg, { Path } from 'react-native-svg'
 import Animated, { useAnimatedStyle, withTiming, useDerivedValue } from 'react-native-reanimated'
 import Lottie from 'lottie-react-native'
 
-import HomeScreen from '../Screens/HomeScreen';
-import prueba from '../Screens/prueba'
-import HomeVentas from './ventasprueba/HomeVentas';
-import Apiprueba from '../Screens/Api/ApiPrueba'
-import Categories from '../Screens/Categories';
+import { CategoriesScreen } from '../Screens/CategoriesScreen';
 
-import Prueba2 from '../Screens/Prueba2';
-import ProductsTest from '../Products/ProductsTest';
-import Pestalla from '../Products/1PestañasProduc';
-import poly from '../Products/3PolygelProduc';
+
+
+import { KistScreen } from '../Products/4Kits';
 
 const Tab = createBottomTabNavigator()
 const AnimatedSvg = Animated.createAnimatedComponent(Svg)
 
 
-const App = () => {
+export const NavigationTab =  () => {
 return (
     <>
     <StatusBar barStyle="light-content" />
-     <NavigationContainer>
      <Tab.Navigator
           tabBar={(props) => <AnimatedTabBar {...props} />}
         >
@@ -38,7 +32,7 @@ return (
               // @ts-ignore
               tabBarIcon: ({ ref }) => <Lottie ref={ref} loop={false} source={require('./assets/lottie/home.icon.json')} style={styles.icon} />,
             }}
-            component={Categories}
+            component={CategoriesScreen}
            
           />
             <Tab.Screen
@@ -49,10 +43,9 @@ return (
               // @ts-ignore
               tabBarIcon: ({ ref }) => <Lottie ref={ref} loop={false} source={require('./assets/lottie/upload.icon.json')} style={styles.icon} />,
             }}
-            component={Pestalla}
+            component={KistScreen}
           />
        </Tab.Navigator>
-     </NavigationContainer>
 
     </>
 )
@@ -207,7 +200,6 @@ type TabBarComponentProps = {
     }
   })
   
-  export default App;
   
   
 
