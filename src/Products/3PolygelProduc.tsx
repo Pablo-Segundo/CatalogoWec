@@ -1,22 +1,106 @@
-// import React from 'react';
-// import { View, Image, TouchableOpacity } from 'react-native';
-// import pesta from './1PestañasProduc'
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import API from '../API/API';
+import { FlatList } from 'react-native'
 
-// const HomeScreen = ({ navigation  }) => {
-//   const handleImagePress = () => {
-//     navigation.navigate(pesta);
-//   };
+export const PolygelScreen = () => {
+     const [products,setproducts] = useState();
+   
+const getproducts = async () => {
+    try{
+        const { data } = await API.get('/products/category/63697d2e02ef2cc9b9bd2f73');
+        setproducts(data.products)
+    }catch (error){
+        console.log(error);
+    }
+   }
+    useEffect(() => {
+        getproducts();
+    }, []);
 
-//   return (
-//     <View>
-//       <TouchableOpacity onPress={handleImagePress}>
-//         <Image
-//           source={require('../Navigators/assets/lottie/react.jpg')}
-//           style={{ width: 200, height: 200 }}
-//         />
-//       </TouchableOpacity>
-//     </View>
-//   );
-// };
+     if (!products) {
+        return null;
+     }else
+     return (
+      <FlatList
+      data={products}
+      numColumns={2}
+      renderItem={ ({item}) =>(
 
-// export default HomeScreen;
+    <View  style={styles.container}>
+      <Image style={styles.productImage} source={{ uri: item.multimedia[0].images['400x400'] }} />
+      <Text  style={styles.productname}>{item.name}</Text>
+     {/* <Text> {item.description} </Text> */}
+     {/* <Text> {item.category.name} </Text> */}
+      <Text style={styles.productPrice}>${item.price}</Text>
+ 
+
+      <TouchableOpacity style={styles.buyButton}>
+      <Text style={styles.buyButtonText}>Agregar a la cesta</Text>
+
+      </TouchableOpacity>
+     
+
+
+     
+
+    </View>
+     
+
+
+
+      )}/>
+      
+     );
+    };
+
+ const styles = StyleSheet.create({
+
+        container: {
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        productItem: {
+          margin: 10,
+          alignItems: 'center',
+        },
+        productImage: {
+          width: 150,
+          height: 150,
+          borderRadius: 10,
+        },
+        productname:{
+          fontSize: 20,
+          fontWeight: 'bold',
+          color:'black',
+          marginVertical: 10,
+        },
+        productPrice: {
+          fontSize: 20,
+          fontWeight: 'bold',
+          color:'#1e90ff',
+          marginVertical: 10,
+        },
+        buyButton: {
+          backgroundColor: '#ff69b4',
+          padding: 10,
+          borderRadius: 10,
+        },
+        buyButtonText: {
+          color: 'white',
+          fontWeight: 'bold',
+        },
+        IconBarra: {
+          flex: 1,
+          paddingTop: 20, 
+          paddingHorizontal: 10,
+        },
+        IconContainer: {
+         position: 'absolute',
+         top: 10, 
+         right: 10,
+         zIndex: 1,
+        }
+    
+});

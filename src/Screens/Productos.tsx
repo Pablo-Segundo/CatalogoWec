@@ -1,32 +1,37 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import API from "../API/API";
-import Icon from 'react-native-vector-icons/FontAwesome';
- import { useNavigation } from "@react-navigation/native";
+import {useNavigation } from '@react-navigation/native';
+
+
+export const Product = () => {
+    const navigation = useNavigation();
+    
+  const [categories, setCategories] = useState();
+  const getCategories = async () => {
+    try {
+      const { data } = await API.get('/categories');
+      setCategories(data.categories)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  useEffect(() => {
+    getCategories();
+  }, []);
+  if (!categories) {
+    return null;
+  } else {
+     return{
+                                      
 
 
 
-export const ShoppingScreen = () => {
 
-  const navigation = useNavigation();
-  return(
-    <View>
-        <Text style={styles.TextContainer}> WAPIZIMA</Text>
-        <TouchableOpacity style={styles.IconContainer}
-            onPress={() => navigation.navigate('shopping', { })}>
-          <Icon name="shopping-cart" size={30} color="#000" />
-        </TouchableOpacity>
-        <View
-          style={{
-            height: '28%',
-            backgroundColor: '#D3AFD4',
-          }}
-        />
-    </View>
-  )
-
+     }
+    }
 }
-  const styles = StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
       flex: 1,
       justifyContent: 'center',

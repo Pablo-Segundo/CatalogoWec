@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Text, View,Button, StyleSheet } from 'react-native';
 
 import { NavigationTab } from './NavigationT';
-import { KistScreen } from '../Products/4Kits';
+
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { PetañaScreen } from '../Products/1PestañasProduc';
 import { CejasScreen } from '../Products/2CejasProduc';
@@ -44,15 +44,9 @@ export const Navigation = ()=> {
           
         }}
         />
-        <Stack.Screen 
-        name="Kits" 
-        component={KistScreen}
-        options={{
-          headerShown: false,
-        }}
-        />
+       
         {/* <Stack.Screen 
-        name="Kits" 
+        name="Polygel" 
         component={KistScreen}
         options={{
           headerShown: false,

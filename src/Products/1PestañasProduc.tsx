@@ -28,6 +28,7 @@ export const PetañaScreen = () => {
     }else 
     return (
        <View>
+        
       <Text style={styles.TextContainer}> WAPIZIMA</Text>
       <TouchableOpacity style={styles.IconContainer} >
         <Icon name="shopping-cart" size={30} color="#000" />
@@ -51,13 +52,13 @@ export const PetañaScreen = () => {
 
 
       <Text  style={styles.productname}>{item.name}</Text>
-     {/* <Text> {item.description} </Text> */}
-     {/* <Text> {item.category.name} </Text> */}
+      <Text>Disponible:{item.quantity}</Text>
+ 
       <Text style={styles.productPrice}>${item.price}</Text>
       <TouchableOpacity style={styles.buyButton} >
-     
+      
 
-      <Text style={styles.buyButtonText}>Agregar a la cesta</Text>
+      <Text style={styles.buyButtonText}>Agregar a la cesta+</Text>
       </TouchableOpacity>
 
 
