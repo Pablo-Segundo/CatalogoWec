@@ -2,19 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import API from '../API/API';
 import { FlatList } from 'react-native';
-
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 
+interface Props extends NativeStackScreenProps<any, any> { }
 
-
-export const PetañaScreen = () => {
+export const PetañaScreen = ({route, navigation}: Props) => {
   const [products, setproducts] = useState();
 
-
+console.log();
+ 
   const getproducts = async () => {
         try{
-        const {data } = await API.get('/products/category/637fd33234834475d1f055b5');
+          const { data } = await API.get(`/products/category/${route.params}`);
         setproducts(data.products)
         }catch (error){
         console.log(error);
@@ -55,10 +56,11 @@ export const PetañaScreen = () => {
       <Text>Disponible:{item.quantity}</Text>
  
       <Text style={styles.productPrice}>${item.price}</Text>
-      <TouchableOpacity style={styles.buyButton} >
-      
 
-      <Text style={styles.buyButtonText}>Agregar a la cesta+</Text>
+
+
+      <TouchableOpacity style={styles.buyButton}  onPress={() => navigation.navigate('products',item._id )} >
+      <Text style={styles.buyButtonText}>Ver Detalles</Text>
       </TouchableOpacity>
 
 
@@ -105,8 +107,8 @@ export const PetañaScreen = () => {
         },
         buyButton: {
           backgroundColor: '#ff69b4',
-          padding: 10,
-          borderRadius: 10,
+          padding: 5,
+          borderRadius: 5,
         },
         buyButtonText: {
           color: 'white',

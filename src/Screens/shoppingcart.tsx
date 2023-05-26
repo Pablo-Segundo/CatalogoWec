@@ -23,6 +23,10 @@ export const ShoppingScreen = () => {
           }}
         />
     </View>
+   
+    
+
+
   )
 
 }

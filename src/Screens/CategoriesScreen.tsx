@@ -1,27 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Button } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native'
-import API from '../API/API';
-import { FlatList } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { useNavigation } from '@react-navigation/native';
+import API from '../API/API';
 
-import {useNavigation } from '@react-navigation/native';
 
 
 
-export const CategoriesScreen = ( ) => {
-   
-    const navigation = useNavigation();
-    
+export const CategoriesScreen = () => {
+  const navigation = useNavigation();
   const [categories, setCategories] = useState();
   const getCategories = async () => {
     try {
       const { data } = await API.get('/categories');
-      setCategories(data.categories)
+      setCategories(data.categories);
     } catch (error) {
       console.log(error);
     }
-  }
+  };
   useEffect(() => {
     getCategories();
   }, []);
@@ -30,31 +26,27 @@ export const CategoriesScreen = ( ) => {
   } else {
     return (
       <View>
-        <Text style={styles.TextContainer}> WAPIZIMA</Text>
-        <TouchableOpacity style={styles.IconContainer}
-            onPress={() => navigation.navigate('shopping', { })}>
+        <Text style={styles.TextContainer}>WAPIZIMA</Text>
+        <TouchableOpacity
+          style={styles.IconContainer}
+          onPress={() => navigation.navigate('shopping', {})}
+        >
           <Icon name="shopping-cart" size={30} color="#000" />
         </TouchableOpacity>
-        <View
-          style={{
-            height: '8%',
-            backgroundColor: '#D3AFD4',
-          }}
-        />
+        <View style={styles.divider} />
         <FlatList
           data={categories}
           renderItem={({ item }) => (
-            <TouchableOpacity 
-            onPress={() => navigation.navigate('pestañas', { category: item })}>
-
+            <TouchableOpacity onPress={() => navigation.navigate('pestanas', item._id )}>
               <View style={styles.container}>
                 <Image style={styles.image} source={{ uri: item.imagesMobile['400x400'] }} />
                 <View style={styles.overlay}>
-                  <Text style={styles.text}>{item.name} </Text>
+                  <Text style={styles.text}>{item.name}</Text>
                 </View>
               </View>
             </TouchableOpacity>
           )}
+          keyExtractor={(item) => item._id.toString()}
         />
       </View>
     );
@@ -96,5 +88,9 @@ const styles = StyleSheet.create({
     top: 20,
     left: 25,
     zIndex: 1,
-  }
+  },
+  divider: {
+    height: '8%',
+    backgroundColor: '#D3AFD4',
+  },
 });

@@ -5,8 +5,10 @@ import { NavigationTab } from './NavigationT';
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { PetañaScreen } from '../Products/1PestañasProduc';
-import { CejasScreen } from '../Products/2CejasProduc';
 import { ShoppingScreen } from '../Screens/shoppingcart';
+// import { productsScreen } from '../Screens/products';
+
+
 
 const Stack = createNativeStackNavigator()
 
@@ -36,7 +38,7 @@ export const Navigation = ()=> {
 
 
         <Stack.Screen
-        name="pestañas" 
+        name="pestanas" 
         component={PetañaScreen}
         options={{
           
@@ -44,21 +46,18 @@ export const Navigation = ()=> {
           
         }}
         />
-       
-        {/* <Stack.Screen 
-        name="Polygel" 
-        component={KistScreen}
-        options={{
+        
+        <Stack.Screen
+         name="Products"
+         component={ShoppingScreen}
+         options={{
+          
           headerShown: false,
-        }}
-        /> */}
-           <Stack.Screen 
-        name="Cejas" 
-        component={CejasScreen}
-        options={{
-          headerShown: false,
-        }}
+         }}
+
         />
+       
+           
 
 
 
