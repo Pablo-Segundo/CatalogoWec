@@ -1,5 +1,5 @@
-import React from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import API from "../API/API";
 import Icon from 'react-native-vector-icons/FontAwesome';
  import { useNavigation } from "@react-navigation/native";
@@ -7,9 +7,27 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 export const ShoppingScreen = () => {
-
   const navigation = useNavigation();
+  const [categories, setCategories] = useState();
+  const getCategories = async () => {
+    try {
+      const { data } = await API.get('/categories');
+      setCategories(data.categories);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getCategories();
+  }, []);
+  if (!categories) {
+    return null;
+  } else {
+
   return(
+ 
+
+
     <View>
         <Text style={styles.TextContainer}> WAPIZIMA</Text>
         <TouchableOpacity style={styles.IconContainer}
@@ -22,14 +40,30 @@ export const ShoppingScreen = () => {
             backgroundColor: '#D3AFD4',
           }}
         />
+        <View>  
+        <Text style={(styles.TextContainer)}> Productos añadidos</Text>
+        </View>
+
+         <View>
+       
+         </View>
+      
+        
+
+
+      
+
     </View>
+    
+    )}
+  
    
     
 
 
-  )
-
-}
+  
+    }
+ 
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -37,9 +71,9 @@ export const ShoppingScreen = () => {
       alignItems: 'center',
     },
     image: {
-      width: 400,
+      width: 50,
       backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      height: 170,
+      height: 130,
       resizeMode: 'cover',
       margin: 10,
     },
@@ -50,7 +84,7 @@ export const ShoppingScreen = () => {
       alignItems: 'center',
     },
     text: {
-      color: '#fff',
+      color: 'NLACK',
       fontSize: 20,
       fontWeight: 'bold',
     },

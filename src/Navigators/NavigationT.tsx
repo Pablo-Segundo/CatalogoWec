@@ -12,7 +12,7 @@ import { CategoriesScreen } from '../Screens/CategoriesScreen';
 
 import { ShoppingScreen } from '../Screens/shoppingcart'
 import { PetañaScreen } from '../Products/1PestañasProduc' 
-// import { ProductsScreen } from '../Screens/Productos';
+import { productsLoading } from '../Screens/products'
 
 
 const Tab = createBottomTabNavigator()
@@ -44,7 +44,7 @@ return (
               // @ts-ignore
               tabBarIcon: ({ ref }) => <Lottie ref={ref} loop={false} source={require('./assets/lottie/upload.icon.json')} style={styles.icon} />,
             }}
-            component={ShoppingScreen}
+            component={productsLoading}
           />
        </Tab.Navigator>
 

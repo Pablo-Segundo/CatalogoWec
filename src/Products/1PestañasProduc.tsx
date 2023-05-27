@@ -5,12 +5,15 @@ import { FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
+import { LoadingScreen } from '../Screens/loadintgScreen';
+
 
 interface Props extends NativeStackScreenProps<any, any> { }
 
 export const PetañaScreen = ({route, navigation}: Props) => {
   const [products, setproducts] = useState();
-
+   const [isLoading, setIsLoading] = useState(true);
+ 
 console.log();
  
   const getproducts = async () => {
@@ -22,7 +25,25 @@ console.log();
         }
       }
        useEffect(() => {
-         getproducts();
+        
+      //    setTimeout(() => {
+      //     setIsLoading(false);
+      //   }, 1000);
+      // }, []);
+      // if (isLoading) {
+      //   return <LoadingScreen />;
+      // }
+    
+
+
+        // const incrementQuantity  = () =>{
+        // }
+        // const decrementQuantity  = () =>{
+        // }
+        
+      
+
+        getproducts();
       }, []);
        if (!products) {
         return null;
@@ -57,7 +78,18 @@ console.log();
  
       <Text style={styles.productPrice}>${item.price}</Text>
 
+     <View style={styles.quantityContainer}>
+            <TouchableOpacity onPress={() => decrementQuantity(index)}>
+            <Text style={styles.quantityButton}>-</Text>
+             </TouchableOpacity>
+             <Text style={styles.quantity}>{item.quantity}</Text>
+            <TouchableOpacity onPress={() => incrementQuantity(index)}>
+             <Text style={styles.quantityButton}>+</Text>
+            </TouchableOpacity>
+       </View>
 
+    
+      
 
       <TouchableOpacity style={styles.buyButton}  onPress={() => navigation.navigate('products',item._id )} >
       <Text style={styles.buyButtonText}>Ver Detalles</Text>
@@ -131,6 +163,21 @@ console.log();
           top: 20,
           left: 25,
           zIndex: 1,
-        }
+        },  
+        quantityContainer: {
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginTop: 10,
+        },
+        quantityButton: {
+          fontSize: 20,
+          fontWeight: 'bold',
+          paddingHorizontal: 10,
+        },
+        quantity: {
+          fontSize: 16,
+          fontWeight: 'bold',
+          marginHorizontal: 10,
+        },
     
 });
