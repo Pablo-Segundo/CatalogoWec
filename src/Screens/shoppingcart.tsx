@@ -45,6 +45,7 @@ export const ShoppingScreen = () => {
         </View>
 
          <View>
+         
        
          </View>
       

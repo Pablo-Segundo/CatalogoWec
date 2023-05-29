@@ -1,24 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text } from 'react-native';
-import { LoadingScreen } from './loadintgScreen';
+import API from '../API/API';
 
 
-export const productsLoading: React.FC = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  useEffect(() => {
+
+
+export const ProductScreen = () =>  {
+  const [products, setproducts] = useState();
+     try{
+
+      const { data } = await API.get(`/products/category/${route.params}`)
+     }
+    
    
+   
+  
+  return(
+   <View>
+    
 
 
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
-  }, []);
-  if (isLoading) {
-    return <LoadingScreen />;
-  }
-  return (
-    <View>
-      <Text>í</Text>
-    </View>
-  );
-};
+
+   </View>
+
+
+
+  )
+ 
+
+}

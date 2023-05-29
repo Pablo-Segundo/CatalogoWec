@@ -11,8 +11,9 @@ import Lottie from 'lottie-react-native'
 import { CategoriesScreen } from '../Screens/CategoriesScreen';
 
 import { ShoppingScreen } from '../Screens/shoppingcart'
-import { PetañaScreen } from '../Products/1PestañasProduc' 
-import { productsLoading } from '../Screens/products'
+import { PetañaScreen } from '../Products/Products' 
+import LoadingScreen from '../Screens/loadintgScreen'
+
 
 
 const Tab = createBottomTabNavigator()
@@ -44,7 +45,7 @@ return (
               // @ts-ignore
               tabBarIcon: ({ ref }) => <Lottie ref={ref} loop={false} source={require('./assets/lottie/upload.icon.json')} style={styles.icon} />,
             }}
-            component={productsLoading}
+            component={LoadingScreen}
           />
        </Tab.Navigator>
 

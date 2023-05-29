@@ -24,6 +24,8 @@ export const CategoriesScreen = () => {
   if (!categories) {
     return null;
   } else {
+
+
     return (
       <View>
         <Text style={styles.TextContainer}>WAPIZIMA</Text>

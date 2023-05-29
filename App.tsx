@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import HomeVentas from './src/Navigators/ventasprueba/HomeVentas';
+
 import { NavigationContainer } from '@react-navigation/native';
 
 import { Navigation } from './src/Navigators/Navigation';

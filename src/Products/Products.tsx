@@ -5,7 +5,7 @@ import { FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import { LoadingScreen } from '../Screens/loadintgScreen';
+
 
 
 interface Props extends NativeStackScreenProps<any, any> { }
@@ -16,39 +16,44 @@ export const PetañaScreen = ({route, navigation}: Props) => {
  
 console.log();
  
-  const getproducts = async () => {
-        try{
-          const { data } = await API.get(`/products/category/${route.params}`);
-        setproducts(data.products)
-        }catch (error){
-        console.log(error);
-        }
-      }
-       useEffect(() => {
-        
-      //    setTimeout(() => {
-      //     setIsLoading(false);
-      //   }, 1000);
-      // }, []);
-      // if (isLoading) {
-      //   return <LoadingScreen />;
-      // }
-    
+const getproducts = async () => {
+
+ 
+
+  try{
+    const { data } = await API.get(`/products/category/${route.params}`);
+  setproducts(data.products)
+  }catch (error){
+  console.log(error);
+  }
+}
+
+useEffect(() => {
 
 
-        // const incrementQuantity  = () =>{
-        // }
-        // const decrementQuantity  = () =>{
-        // }
-        
-      
+//    setTimeout(() => {
+//     setIsLoading(false);
+//   }, 1000);
+// }, []);
+// if (isLoading) {
+//   return <LoadingScreen />;
+// }
 
-        getproducts();
-      }, []);
-       if (!products) {
-        return null;
-    }else 
-    return (
+
+
+  // const incrementQuantity  = () =>{
+  // }
+  // const decrementQuantity  = () =>{
+  // }
+  
+
+
+  getproducts();
+}, []);
+ if (!products) {
+  return null;
+}else 
+return (
        <View>
         
       <Text style={styles.TextContainer}> WAPIZIMA</Text>
@@ -78,7 +83,7 @@ console.log();
  
       <Text style={styles.productPrice}>${item.price}</Text>
 
-     <View style={styles.quantityContainer}>
+     {/* <View style={styles.quantityContainer}>
             <TouchableOpacity onPress={() => decrementQuantity(index)}>
             <Text style={styles.quantityButton}>-</Text>
              </TouchableOpacity>
@@ -86,7 +91,7 @@ console.log();
             <TouchableOpacity onPress={() => incrementQuantity(index)}>
              <Text style={styles.quantityButton}>+</Text>
             </TouchableOpacity>
-       </View>
+       </View> */}
 
     
       
