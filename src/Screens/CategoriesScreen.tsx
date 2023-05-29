@@ -48,7 +48,7 @@ export const CategoriesScreen = () => {
               </View>
             </TouchableOpacity>
           )}
-          keyExtractor={(item) => item._id.toString()}
+         keyExtractor={(item) => item._id.toString()}
         />
       </View>
     );

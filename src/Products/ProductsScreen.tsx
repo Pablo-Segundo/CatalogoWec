@@ -12,7 +12,7 @@ interface Props extends NativeStackScreenProps<any, any> { }
 
 export const PetañaScreen = ({route, navigation}: Props) => {
   const [products, setproducts] = useState();
-   const [isLoading, setIsLoading] = useState(true);
+  //  const [isLoading, setIsLoading] = useState(true);
  
 console.log();
  

@@ -4,9 +4,9 @@ import { Text, View,Button, StyleSheet } from 'react-native';
 import { NavigationTab } from './NavigationT';
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { PetañaScreen } from '../Products/Products';
+import { PetañaScreen } from '../Products/ProductsScreen';
 import { ShoppingScreen } from '../Screens/shoppingcart';
-// import { productsScreen } from '../Screens/products';
+import { ProductScreen } from '../Screens/products';
 
 
 
@@ -48,13 +48,11 @@ export const Navigation = ()=> {
         />
         
         <Stack.Screen
-         name="Products"
-         component={ShoppingScreen}
-         options={{
-          
+        name="products"
+        component={ProductScreen}
+        options={{
           headerShown: false,
-         }}
-
+        }}
         />
        
            
