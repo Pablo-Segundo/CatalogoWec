@@ -36,8 +36,11 @@ export const ShoppingScreen = () => {
         </TouchableOpacity>
         <View
           style={{
-            height: '28%',
+            height: '30%',
             backgroundColor: '#D3AFD4',
+            borderBottomLeftRadius: 20,
+            borderBottomRightRadius:20,
+
           }}
         />
         <View>  

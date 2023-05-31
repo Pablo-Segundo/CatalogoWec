@@ -30,6 +30,7 @@ export const apiprueba = () => {
     <View style={{width: '100%', height:'20%' }}>
     <Text>{item.name}
       </Text>
+      <Text>{item._id}</Text>
     </View>
     <View style={{width: '100%', height:'80%' }}>
     {/* <Image source={{ uri: item.imagesMobile['400x400'] }} style={{ width: '100%', height: '100%' }} /> */}

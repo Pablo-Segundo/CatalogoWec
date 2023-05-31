@@ -3,15 +3,23 @@ import { View, Text, Image, StyleSheet, TouchableOpacity, FlatList } from 'react
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import API from '../API/API';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 
 
+interface Props extends NativeStackScreenProps<any, any> {}
 
 export const CategoriesScreen = () => {
+
+  // console.log('hola dime que hace ');
+  
   const navigation = useNavigation();
   const [categories, setCategories] = useState();
   const getCategories = async () => {
     try {
+  
+
+
       const { data } = await API.get('/categories');
       setCategories(data.categories);
     } catch (error) {
@@ -48,7 +56,7 @@ export const CategoriesScreen = () => {
               </View>
             </TouchableOpacity>
           )}
-         keyExtractor={(item) => item._id.toString()}
+          //  keyExtractor={(item) => item._id.toString()}
         />
       </View>
     );
@@ -77,6 +85,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 20,
     fontWeight: 'bold',
+    
   },
   IconContainer: {
     position: 'absolute',

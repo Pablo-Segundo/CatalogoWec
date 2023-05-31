@@ -4,112 +4,57 @@ import API from '../API/API';
 import { FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import LoadingScreen from '../Screens/loadintgScreen';
+import { Actionsheet, Button, useDisclose } from "native-base";
+import { ProductCard } from '../components/ProductCard';
+// import BottomSheet from "react-native-gesture-bottom-sheet";
 
 
 
+interface Props extends NativeStackScreenProps<any, any> {}
 
-interface Props extends NativeStackScreenProps<any, any> { }
+export const PetañaScreen = ({ route, navigation }: Props) => {
+  const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-export const PetañaScreen = ({route, navigation}: Props) => {
-  const [products, setproducts] = useState();
-  //  const [isLoading, setIsLoading] = useState(true);
- 
-console.log();
- 
-const getproducts = async () => {
-
- 
-
-  try{
-    const { data } = await API.get(`/products/category/${route.params}`);
-  setproducts(data.products)
-  }catch (error){
-  console.log(error);
-  }
-}
-
-useEffect(() => {
-
-
-//    setTimeout(() => {
-//     setIsLoading(false);
-//   }, 1000);
-// }, []);
-// if (isLoading) {
-//   return <LoadingScreen />;
-// }
-
-
-
-  // const incrementQuantity  = () =>{
-  // }
-  // const decrementQuantity  = () =>{
-  // }
+  //  const bottomSheet = useRef();
   
+ 
 
-
-  getproducts();
-}, []);
- if (!products) {
-  return null;
-}else 
-return (
-       <View>
-        
+  const getProducts = async () => {
+    try {
+      const { data } = await API.get(`/products/category/${route.params}`);
+      setProducts(data.products);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      const apiCall = getProducts();
+      const timeout = new Promise((resolve) => setTimeout(resolve, 1000));
+      await Promise.all([apiCall, timeout]);
+      setIsLoading(false);
+    };
+    fetchData();
+  }, []);
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+  return (
+    <View>
       <Text style={styles.TextContainer}> WAPIZIMA</Text>
-      <TouchableOpacity style={styles.IconContainer} >
+      <TouchableOpacity style={styles.IconContainer}>
         <Icon name="shopping-cart" size={30} color="#000" />
       </TouchableOpacity>
-      <View
-        style={{
-          height: '8%',
-              backgroundColor: '#D3AFD4',
-         }}
-        />
-
-        <FlatList 
+      <View style={{ height: '8%', backgroundColor: '#D3AFD4' }} />
+      <FlatList
         data={products}
-         numColumns={2}
-        renderItem={ ({item } ) => (
-            
-       
-      <View style={styles.container}>
-    
-       <Image style={styles.productImage} source={{ uri: item.multimedia[0].images['400x400'] }} />
-
-
-      <Text  style={styles.productname}>{item.name}</Text>
-      <Text>Disponible:{item.quantity}</Text>
- 
-      <Text style={styles.productPrice}>${item.price}</Text>
-
-     {/* <View style={styles.quantityContainer}>
-            <TouchableOpacity onPress={() => decrementQuantity(index)}>
-            <Text style={styles.quantityButton}>-</Text>
-             </TouchableOpacity>
-             <Text style={styles.quantity}>{item.quantity}</Text>
-            <TouchableOpacity onPress={() => incrementQuantity(index)}>
-             <Text style={styles.quantityButton}>+</Text>
-            </TouchableOpacity>
-       </View> */}
-
-    
-      
-
-      <TouchableOpacity style={styles.buyButton}  onPress={() => navigation.navigate('products',item._id )} >
-      <Text style={styles.buyButtonText}>Ver Detalles</Text>
-      </TouchableOpacity>
-
-
-     {/* <Image style={{width: 400, height:400}} source={{ uri: item.multimedia[0].images['400x400'] }}  />    */}
-    
-
-
-       </View>
+        numColumns={2}
+        renderItem={({ item }) => (
+          <ProductCard product={item} />
       )}/>
       </View>
- 
-
   );
  };
 

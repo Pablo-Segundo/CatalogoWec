@@ -13,6 +13,7 @@ import { CategoriesScreen } from '../Screens/CategoriesScreen';
 import { ShoppingScreen } from '../Screens/shoppingcart'
 import { apiprueba } from '../Products/ProductsTest'
 import LoadingScreen from '../Screens/loadintgScreen'
+import { MyActionSheet } from '../Screens/Actionproduct'
 
 
 
@@ -45,7 +46,7 @@ return (
               // @ts-ignore
               tabBarIcon: ({ ref }) => <Lottie ref={ref} loop={false} source={require('./assets/lottie/upload.icon.json')} style={styles.icon} />,
             }}
-            component={apiprueba}
+            component={ShoppingScreen}
           />
        </Tab.Navigator>
 
