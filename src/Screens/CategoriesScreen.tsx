@@ -37,13 +37,15 @@ export const CategoriesScreen = () => {
     return (
       <View>
         <Text style={styles.TextContainer}>WAPIZIMA</Text>
+
         <TouchableOpacity
           style={styles.IconContainer}
-          onPress={() => navigation.navigate('shopping', {})}
-        >
+          onPress={() => navigation.navigate('shopping', {})}>
           <Icon name="shopping-cart" size={30} color="#000" />
         </TouchableOpacity>
+
         <View style={styles.divider} />
+
         <FlatList
           data={categories}
           renderItem={({ item }) => (

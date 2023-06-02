@@ -7,6 +7,7 @@ export const MyActionSheet = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      
       <BottomSheet hasDraggableIcon ref={bottomSheet} height={600}>
         <View>
           <Text style={styles.text1} >hola uwu </Text>

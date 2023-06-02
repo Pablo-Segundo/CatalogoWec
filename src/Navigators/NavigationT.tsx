@@ -14,6 +14,8 @@ import { ShoppingScreen } from '../Screens/shoppingcart'
 import { apiprueba } from '../Products/ProductsTest'
 import LoadingScreen from '../Screens/loadintgScreen'
 import { MyActionSheet } from '../Screens/Actionproduct'
+import products from '../Screens/products'
+
 
 
 
@@ -170,6 +172,7 @@ type TabBarComponentProps = {
   const styles = StyleSheet.create({
     tabBar: {
       backgroundColor: '#d3afd4',
+     
     },
     activeBackground: {
       position: 'absolute',
@@ -177,6 +180,7 @@ type TabBarComponentProps = {
     tabBarContainer: {
       flexDirection: 'row',
       justifyContent: 'space-evenly',
+       
     },
     component: {
       height: 60,

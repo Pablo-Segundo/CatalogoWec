@@ -1,10 +1,14 @@
-
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
 import { Product } from '../interfaces/ProductsCategoryInterface';
 import { useNavigation } from '@react-navigation/native';
 import BottomSheet from "react-native-gesture-bottom-sheet";
-import { useRef } from 'react';
-import { ScrollView } from 'native-base';
+import Carousel from 'react-native-snap-carousel';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Card } from 'react-native-paper';
+
+
+
 
 
 interface Props {
@@ -15,95 +19,110 @@ interface Props {
 export const ProductCard = ({product}: Props) => {
     const navigation = useNavigation();
     const bottomSheet = useRef();
-  return (
-    <>
-    <View style={styles.container}>
-            <Image style={styles.productImage} source={{ uri: product.multimedia[0].images['400x400'] }} />
-            <Text  style={styles.productname}>{product.name}</Text>
-             <Text>Disponible:{product.quantity}</Text>
- 
-              <Text style={styles.productPrice}>${product.price}</Text>
-             
-            {/* <View style={styles.quantityContainer}>
-                <TouchableOpacity onPress={() => decrementQuantity(index)}>
-                  <Text style={styles.quantityButton}>-</Text>
-                </TouchableOpacity>
-                <Text style={styles.quantity}>{item.quantity}</Text>
-                <TouchableOpacity onPress={() => incrementQuantity(index)}>
-                  <Text style={styles.quantityButton}>+</Text>
-                </TouchableOpacity>
-              </View> */}
-
-
-               
-             
-
-
-                <TouchableOpacity style={styles.buyButton}  onPress={() => bottomSheet.current.show()} >
-                <Text style={styles.buyButtonText}>Ver Detalles</Text>
-                
-
-                    </TouchableOpacity>
-
-
-            <Image style={{width: 400, height:400}} source={{ uri: product.multimedia[0].images['400x400'] }}  />   
+    const [quantity, setQuantity] = useState(product.quantity);
     
 
+    const incrementQuantity = () => {
+      if ( quantity < product.quantity) {
+        setQuantity(quantity + 1);
+      }
+    };
 
-                </View>
-                <BottomSheet hasDraggableIcon ref={bottomSheet} height={600}>
-                   
-                    <View style={styles.productItem}>
-                    <Text style={styles.text1} >products uwu </Text>
-                    <Image style={styles.cardImage} source={{ uri: product.multimedia[0].images['400x400'] }} />
-                    <Text  style={styles.productname}>{product.name}</Text>
-                    
-                    {/* <Image style={styles.productImage} source={{ uri: product.multimedia[1].images['400x400'] }} /> */}
-                    {/* <Image style={styles.productImage} source={{ uri: product.multimedia[2].images['400x400'] }} />
-                    <Image style={styles.productImage} source={{ uri: product.multimedia[3].images['400x400'] }} /> */}
-                    <Text style={styles.text1}>{product.description}</Text>
-                    <Text style={styles.productPrice}>${product.price}.Mx</Text>
-               
-                    <View style={styles.quantityContainer}>
-                            <TouchableOpacity onPress={() => decrementQuantity(index)}>
-                            <Text style={styles.quantityButton}>-</Text>
-                            </TouchableOpacity>
-                            <Text style={styles.quantity}>{product.quantity}</Text>
-                            <TouchableOpacity onPress={() => incrementQuantity(index)}>
-                            <Text style={styles.quantityButton}>+</Text>
-                            </TouchableOpacity>
-                        </View>
+    const decrementQuantity = () => {
+      if (quantity > 1) {
+        setQuantity(quantity - 1);
+      }
+    };
 
-
-
-
-
-
-
-
-
-
-
-                    <TouchableOpacity style={styles.buyButton}>
-                    <Text style={styles.buyButtonText}>Comprar</Text>
-                    
-
+  return (
+    <> 
+       <Card  style={styles.container}>
+                <Image style={styles.productImage} source={{ uri: product.multimedia[0].images['400x400'] }} />
+                <Text  style={styles.productname}>{product.name}</Text>
+                <Text>Disponible:{product.quantity}</Text>
+                <Text style={styles.productPrice}>${product.price}</Text>
+             
+                <TouchableOpacity style={styles.buyButton} onPress={() => bottomSheet.current.show()}>
+                <Text style={styles.buyButtonText}>Ver Detalles</Text>
                     </TouchableOpacity>
+                </Card>
+
+              
+
+
+      <BottomSheet hasDraggableIcon ref={bottomSheet} height={600}>
+        <View style={styles.productItem}>
+        <Text style={styles.text1}>products uwu </Text>
+        <Carousel
+          data={product.multimedia}
+          renderItem={({ item }) => (
+            <Image style={styles.cardImage} source={{ uri: item.images['400x400'] }} />
+          )}
+          sliderWidth={600} 
+          itemWidth={300}
+          loop={true}
+          autoplay={true} 
+          autoplayInterval={2000} 
+        />
+             
+           
+
+        <View style={styles.productContainer}>
+          <Text style={styles.productname}>{product.name}</Text>
+          <Text style={styles.productname}>Disponible: {product.quantity}</Text>
+
+          
+          <Text style={styles.Textcard}>{product.description}</Text>
+         
+            <View style={styles.quantityContainer}>
+                <TouchableOpacity onPress={() => decrementQuantity()}>
+
+                  <Text style={styles.quantityButton}>-</Text>
+                </TouchableOpacity>
+                <Text style={styles.quantity}>{product.quantity}</Text>
+                <TouchableOpacity onPress={() => incrementQuantity()}>
                   
-                
-                    </View>
-                  
-                </BottomSheet>
-                </>
+                  <Text style={styles.quantityButton}>+</Text>
+                </TouchableOpacity>
+              </View>
+            
+            <Text style={styles.productPrice}>${product.price}.mx</Text>
+             
+            {/* <Text style={styles.productname}>Disponible: {quantity}</Text>
+
+            <Text style={styles.quantity}>{quantity}</Text>
+      */}   
+        
+
+
+
+          <TouchableOpacity style={styles.buyButton} 
+            onPress={() => navigation.navigate('shopping', {})}>
+            <Text style={styles.buyButtonText}>Comprar</Text>
+          </TouchableOpacity>
+          </View>      
+      </View>
+    </BottomSheet>
+        
+       </>
   )
 };
 const styles = StyleSheet.create({
 
     container: {
+      marginBottom: 10,
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
+      margin: 10,
+      borderRadius: 10,
     },
+    // container: {
+    //   flex: 1,
+    //   justifyContent: 'center',
+    //   alignItems: 'center',
+    // },
+
     productItem: {
       margin: 10,
       alignItems: 'center',
@@ -114,16 +133,19 @@ const styles = StyleSheet.create({
       borderRadius: 10,
     },
     productname:{
-      fontSize: 20,
+      
+      fontSize: 15,
       fontWeight: 'bold',
       color:'black',
-      marginVertical: 10,
+      marginVertical: 20,
+
     },
     productPrice: {
       fontSize: 20,
       fontWeight: 'bold',
       color:'#1e90ff',
       marginVertical: 10,
+      
     },
     buyButton: {
       backgroundColor: '#ff69b4',
@@ -164,6 +186,7 @@ const styles = StyleSheet.create({
       paddingHorizontal: 10,
     },
     quantity: {
+      color: "gray",
       fontSize: 16,
       fontWeight: 'bold',
       marginHorizontal: 10,
@@ -180,6 +203,19 @@ const styles = StyleSheet.create({
         resizeMode: 'cover',
         margin: 10,
 
+      },
+      productDescription: {
+        fontSize: 16,
+        marginBottom: 10,
+      },
+      productContainer: {
+        padding: 20,
+      },
+      Textcard: {
+          fontSize: 17,
+          // fontWeight: 'bold',
+          color:'gray',
+          marginVertical: 10,
       }
 
 });

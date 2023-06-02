@@ -1,34 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
-import API from "../API/API";
+
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
+import { Product } from '../interfaces/ProductsCategoryInterface';
+import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
- import { useNavigation } from "@react-navigation/native";
 
 
 
-export const ShoppingScreen = () => {
+
+interface Props {
+  product:  Product;
+}
+
+
+export const ShoppingScreen = ({product}: Props) => {
   const navigation = useNavigation();
-  const [categories, setCategories] = useState();
-  const getCategories = async () => {
-    try {
-      const { data } = await API.get('/categories');
-      setCategories(data.categories);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  useEffect(() => {
-    getCategories();
-  }, []);
-  if (!categories) {
-    return null;
-  } else {
+  const bottomSheet = useRef();
+  
+
 
   return(
- 
-
-
+    <>
     <View>
+
         <Text style={styles.TextContainer}> WAPIZIMA</Text>
         <TouchableOpacity style={styles.IconContainer}
             onPress={() => navigation.navigate('shopping', { })}>
@@ -40,34 +34,26 @@ export const ShoppingScreen = () => {
             backgroundColor: '#D3AFD4',
             borderBottomLeftRadius: 20,
             borderBottomRightRadius:20,
-
+     
           }}
         />
+
+
         <View>  
         <Text style={(styles.TextContainer)}> Productos añadidos</Text>
         </View>
 
-         <View>
-         
-       
-         </View>
-      
-        
-
-
-      
+          <View style={styles.container}>
+            <Text>Productos  </Text>
+            <Text style={styles.TextContainer}>{product.name}</Text>
+            <Image style={styles.productImage} source={{ uri: product.multimedia[0].images['400x400'] }} />
+            <Text style={styles.TextContainer}>{product.quantity}</Text>
+          </View>
 
     </View>
-    
+    </>
+  
     )}
-  
-   
-    
-
-
-  
-    }
- 
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -104,5 +90,26 @@ export const ShoppingScreen = () => {
       top: 20,
       left: 25,
       zIndex: 1,
-    }
+    },
+    productItem: {
+      margin: 10,
+      alignItems: 'center',
+    },
+    productImage: {
+      width: 150,
+      height: 150,
+      borderRadius: 10,
+    },
+    productname:{
+      fontSize: 20,
+      fontWeight: 'bold',
+      color:'black',
+      marginVertical: 10,
+    },
+    productPrice: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      color:'#1e90ff',
+      marginVertical: 10,
+    },
   });

@@ -3,6 +3,7 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import API from '../API/API';
 import { FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import LoadingScreen from '../Screens/loadintgScreen';
 import { Actionsheet, Button, useDisclose } from "native-base";
@@ -43,10 +44,14 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
   }
   return (
     <View>
-      <Text style={styles.TextContainer}> WAPIZIMA</Text>
-      <TouchableOpacity style={styles.IconContainer}>
-        <Icon name="shopping-cart" size={30} color="#000" />
-      </TouchableOpacity>
+      {/* <Text style={styles.TextContainer}> WAPIZIMA</Text> */}
+      {/* <TouchableOpacity
+          style={styles.IconContainer}
+          onPress={() => navigation.navigate('shopping', {})}>
+          <Icon name="shopping-cart" size={30} color="#000" />
+        </TouchableOpacity> */}
+
+
       <View style={{ height: '8%', backgroundColor: '#D3AFD4' }} />
       <FlatList
         data={products}

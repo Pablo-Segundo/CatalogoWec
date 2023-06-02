@@ -51,7 +51,7 @@ export const Navigation = ()=> {
         name="products"
         component={ShoppingScreen}
         options={{
-          headerShown: false,
+          headerShown: true,
         }}
         />
        
