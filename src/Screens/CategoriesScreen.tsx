@@ -36,16 +36,19 @@ export const CategoriesScreen = () => {
 
     return (
       <View>
-        <Text style={styles.TextContainer}>WAPIZIMA</Text>
+         <Text style={[styles.TextContainer, { fontSize: 20, color: '#FFF' }]}>WAPIZIMA</Text>
 
         <TouchableOpacity
           style={styles.IconContainer}
           onPress={() => navigation.navigate('shopping', {})}>
-          <Icon name="shopping-cart" size={30} color="#000" />
+       <View style={styles.IconCircle}>
+         <Icon name="shopping-cart" size={30} color="#000" />
+         </View>
         </TouchableOpacity>
 
-        <View style={styles.divider} />
 
+
+        <View style={styles.divider} />
         <FlatList
           data={categories}
           renderItem={({ item }) => (
@@ -103,7 +106,17 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   divider: {
-    height: '8%',
+    height: '9%',
     backgroundColor: '#D3AFD4',
+    // borderBottomLeftRadius: 20,
+    // borderBottomRightRadius: 20,
+  },
+  IconCircle: {
+    width: 45,
+    height:  45,
+    borderRadius: 25,
+    backgroundColor: '#FFF',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

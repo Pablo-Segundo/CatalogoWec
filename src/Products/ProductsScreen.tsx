@@ -44,12 +44,15 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
   }
   return (
     <View>
-      {/* <Text style={styles.TextContainer}> WAPIZIMA</Text> */}
-      {/* <TouchableOpacity
+      <Text style={[styles.TextContainer, { fontSize: 20, color: '#FFF' }]}>WAPIZIMA</Text>
+      <TouchableOpacity
           style={styles.IconContainer}
           onPress={() => navigation.navigate('shopping', {})}>
-          <Icon name="shopping-cart" size={30} color="#000" />
-        </TouchableOpacity> */}
+       <View style={styles.IconCircle}>
+         <Icon name="shopping-cart" size={30} color="#000" />
+         </View>
+        </TouchableOpacity>
+
 
 
       <View style={{ height: '8%', backgroundColor: '#D3AFD4' }} />
@@ -133,6 +136,14 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
           fontSize: 16,
           fontWeight: 'bold',
           marginHorizontal: 10,
+        },
+        IconCircle: {
+          width: 45,
+          height:  45,
+          borderRadius: 25,
+          backgroundColor: '#FFF',
+          alignItems: 'center',
+          justifyContent: 'center',
         },
     
 });

@@ -110,12 +110,12 @@ export const ProductCard = ({product}: Props) => {
 const styles = StyleSheet.create({
 
     container: {
-      marginBottom: 10,
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
       margin: 10,
       borderRadius: 10,
+      marginBottom: 10,
     },
     // container: {
     //   flex: 1,
