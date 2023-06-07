@@ -4,107 +4,93 @@ import { Product } from '../interfaces/ProductsCategoryInterface';
 import { useNavigation } from '@react-navigation/native';
 import BottomSheet from "react-native-gesture-bottom-sheet";
 import Carousel from 'react-native-snap-carousel';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Card } from 'react-native-paper';
-
+import { Button, Card } from 'react-native-paper';
 
 
 
 
 interface Props {
-    product:  Product;
+   product: Product;
+   route : any
+   
 }
 
-
-export const ProductCard = ({product}: Props) => {
+export const ProductCard = ({product }: Props) => {
     const navigation = useNavigation();
     const bottomSheet = useRef();
     const [quantity, setQuantity] = useState(product.quantity);
+   
+      const decrementQuantity = () => {
+        if (quantity > 0) {
+          setQuantity(quantity - 1);
+        }
+      };
     
-
-    const incrementQuantity = () => {
-      if ( quantity < product.quantity) {
-        setQuantity(quantity + 1);
-      }
-    };
-
-    const decrementQuantity = () => {
-      if (quantity > 1) {
-        setQuantity(quantity - 1);
-      }
-    };
-
+      const incrementQuantity = () => {
+        if (quantity < product.quantity) {
+          setQuantity(quantity + 1);
+        }
+      };
+      const navigateToShoppingScreen = () => {
+        navigation.navigate('Shopping', { quantity, ProductName: product.name });
+      };
+    
+    
+     
   return (
-    <> 
-       <Card  style={styles.container}>
-                <Image style={styles.productImage} source={{ uri: product.multimedia[0].images['400x400'] }} />
-                <Text  style={styles.productname}>{product.name}</Text>
-                <Text>Disponible:{product.quantity}</Text>
-                <Text style={styles.productPrice}>${product.price}</Text>
-             
-                <TouchableOpacity style={styles.buyButton} onPress={() => bottomSheet.current.show()}>
-                <Text style={styles.buyButtonText}>Ver Detalles</Text>
-                    </TouchableOpacity>
-                </Card>
+    <>
+    <Card style={styles.container}>
+      <Image style={styles.productImage} source={{ uri: product.multimedia[0].images['400x400'] }} />
+      <Text style={styles.productname}>{product.name}</Text>
+      <Text>Disponible: {product.quantity}</Text>
+      <Text style={styles.productPrice}>${product.price} </Text>
 
-              
+      <TouchableOpacity style={styles.buyButton} onPress={() => bottomSheet.current.show()}>
+        <Text style={styles.buyButtonText}>Ver Detalles</Text>
+      </TouchableOpacity>
+    </Card>
 
-
-      <BottomSheet hasDraggableIcon ref={bottomSheet} height={600}>
-        <View style={styles.productItem}>
-        <Text style={styles.text1}>products uwu </Text>
+    <BottomSheet hasDraggableIcon ref={bottomSheet} height={600}>
+      <View style={styles.productItem}>
+        <Text style={styles.text1}>products uwu</Text>
         <Carousel
           data={product.multimedia}
           renderItem={({ item }) => (
             <Image style={styles.cardImage} source={{ uri: item.images['400x400'] }} />
           )}
-          sliderWidth={600} 
+          sliderWidth={600}
           itemWidth={300}
           loop={true}
-          autoplay={true} 
-          autoplayInterval={2000} 
+          autoplay={true}
+          autoplayInterval={2000}
         />
-             
-           
 
         <View style={styles.productContainer}>
           <Text style={styles.productname}>{product.name}</Text>
           <Text style={styles.productname}>Disponible: {product.quantity}</Text>
 
-          
           <Text style={styles.Textcard}>{product.description}</Text>
-         
-            <View style={styles.quantityContainer}>
-                <TouchableOpacity onPress={() => decrementQuantity()}>
 
-                  <Text style={styles.quantityButton}>-</Text>
-                </TouchableOpacity>
-                <Text style={styles.quantity}>{product.quantity}</Text>
-                <TouchableOpacity onPress={() => incrementQuantity()}>
-                  
-                  <Text style={styles.quantityButton}>+</Text>
-                </TouchableOpacity>
-              </View>
-            
-            <Text style={styles.productPrice}>${product.price}.mx</Text>
-             
-            {/* <Text style={styles.productname}>Disponible: {quantity}</Text>
-
+          <View style={styles.quantityContainer}>
+            <TouchableOpacity onPress={decrementQuantity}>
+              <Text style={styles.quantityButton}>-</Text>
+            </TouchableOpacity>
             <Text style={styles.quantity}>{quantity}</Text>
-      */}   
-        
+            <TouchableOpacity onPress={incrementQuantity}>
+              <Text style={styles.quantityButton}>+</Text>
+            </TouchableOpacity>
+          </View>
 
-
-
-          <TouchableOpacity style={styles.buyButton} 
-            onPress={() => navigation.navigate('shopping', {})}>
-            <Text style={styles.buyButtonText}>Comprar</Text>
-          </TouchableOpacity>
-          </View>      
-      </View>
-    </BottomSheet>
-        
-       </>
+       <TouchableOpacity style={styles.buyButton} onPress={navigateToShoppingScreen}>
+              <Text style={styles.buyButtonText}>Comprar</Text>
+              
+            </TouchableOpacity>
+        </View>
+        </View>
+      </BottomSheet>
+      
+  
+  </>
   )
 };
 const styles = StyleSheet.create({

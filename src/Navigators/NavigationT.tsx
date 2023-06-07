@@ -7,15 +7,13 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Svg, { Path } from 'react-native-svg'
 import Animated, { useAnimatedStyle, withTiming, useDerivedValue } from 'react-native-reanimated'
 import Lottie from 'lottie-react-native'
-
 import { CategoriesScreen } from '../Screens/CategoriesScreen';
-
 import { ShoppingScreen } from '../Screens/shoppingcart'
+
 import { apiprueba } from '../Products/ProductsTest'
 import LoadingScreen from '../Screens/loadintgScreen'
 import { MyActionSheet } from '../Screens/Actionproduct'
-import products from '../Screens/products'
-
+import { ProductCard } from '../components/ProductCard'
 
 
 

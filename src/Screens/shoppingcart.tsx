@@ -1,71 +1,68 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { Product } from '../interfaces/ProductsCategoryInterface';
-import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Card } from 'react-native-paper';
+import { Product } from '../interfaces/ProductsCategoryInterface';
+import { useNavigation } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
+import { AsyncStorage } from 'react-native';
 
 
-export const ShoppingScreen = () => {
+// interface Props {
+//   product: Product;
+//   route: any;
+// }
 
+// export const ShoppingScreen = ({ route }: Props) => {
+  export const ShoppingScreen = () => {
+  const route = useRoute();
   const navigation = useNavigation();
-  const data = [
-    { id: 1, name: 'Producto 1', price: 10 },
-     { id: 2, name: 'Producto 2', price: 20 },
-    // { id: 3, name: 'Producto 3', price: 30 },
-  ];
+  const [quantity, ProductName] = useState();
 
-  // const handleBuy = () => {
-    // Lógica para realizar la compra del producto con el ID dado
-    // console.log('Compraste el producto con ID:', id);
-  // };
+  const cartShopping = async() => {
+    try {
+         await AsyncStorage.setProducts();
+
+    }catch (error) {
+  
+    }
+  }
+
+  // const { quantity, ProductName } = route.params;
+
+
 
   return (
     <>
-    <View style={styles.style}>
-    <Text style={[styles.TextContainer, { fontSize: 20, color: '#FFF' }]}>WAPIZIMA</Text>
-      <TouchableOpacity style={styles.IconContainer}
-        onPress={() => navigation.navigate('shopping', {})}>
-        <View style={styles.IconCircle}>
-      <Icon name="shopping-cart" size={30} color="#000" />
-    </View>
-    </TouchableOpacity>
-      </View> 
-
-      <View>
-        <Text style={styles.TextContainer}> Productos añadidos </Text>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>WAPIZIMA</Text>
+        <TouchableOpacity
+          style={styles.shoppingCartButton}
+          onPress={() => navigation.navigate('Shopping', {})}
+        >
+          <View style={styles.shoppingCartIcon}>
+            <Icon name="shopping-cart" size={30} color="#000" />
+          </View>
+        </TouchableOpacity>
       </View>
+      
 
-  
-
-       <Card style={styles.cardContainer}>
-        <Text>Datos de direcion </Text>
-        </Card>    
-   
-
-
-
-
-    <View style={styles.container}>
-      <View style={styles.tableHeader}>
-        <Text style={styles.headerText}>Nombre</Text>
-        <Text  style={styles.headerText}> Cantidad</Text>
-        <Text style={styles.headerText}>Precio</Text>
-      </View>
-
-      {data.map((item) => (
-        <View style={styles.tableRow} key={item.id}>
-          <Text style={styles.rowText}>{item.name}</Text>
-          <Text style={styles.rowText}>{item.price}</Text>
-        </View>
-      ))}
-
-      <TouchableOpacity style={styles.buyButton}>
-        <Text style={styles.buyButtonText}>Comprar</Text>
+      <TouchableOpacity style={styles.cardContainer} >
+      <Card style={styles.cardContainer} onPress={() => navigation.navigate('datos')}>
+        <Text style={styles.headerText}>Agregue su dirección </Text>
+      </Card>
       </TouchableOpacity>
-    </View>
+      
+
+      
+      
+
+       <Text> hola uwu</Text>
 
    
+
+     
+      
     </>
   );
 };
@@ -76,19 +73,28 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   cardContainer:{
-    height: '30%',
+    height: '20%',
     display: 'flex',
     flexDirection: 'column',
+
+  },
+  productname:{
+    fontSize: 15,
+    fontWeight: 'bold',
+    color:'black',
+    marginVertical: 20,
 
   },
   tableHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 8,
+    color:'black',
   },
   headerText: {
     fontWeight: 'bold',
     fontSize: 16,
+    color: 'black',
   },
   tableRow: {
     flexDirection: 'row',
@@ -97,6 +103,7 @@ const styles = StyleSheet.create({
   },
   rowText: {
     fontSize: 14,
+    color: 'black'
   },
   buyButton: {
     backgroundColor: '#D3AFD4',
@@ -135,8 +142,22 @@ const styles = StyleSheet.create({
       backgroundColor: '#D3AFD4',
       borderBottomLeftRadius: 20,
       borderBottomRightRadius: 20,
-    
-  }
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+    backgroundColor: '#D3AFD4',
+  },
+
+  shoppingCartButton: {
+    marginRight: 10,
+  },
+  shoppingCartIcon: {
+    padding: 5,
+    borderRadius: 50,
+    backgroundColor: '#FFF',
+  },
+
 });
-
-

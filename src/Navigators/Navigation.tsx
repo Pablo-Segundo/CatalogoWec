@@ -6,7 +6,8 @@ import { NavigationTab } from './NavigationT';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { PetañaScreen } from '../Products/ProductsScreen';
 import { ShoppingScreen } from '../Screens/shoppingcart';
-
+import { ShoppingTest } from '../Screens/shhoppinTEXT';
+import { direction } from '../Screens/DireccionPerson';
 
 
 
@@ -27,7 +28,7 @@ export const Navigation = ()=> {
         }}
          />
            <Stack.Screen
-        name="shopping" 
+        name="Shopping" 
         component={ShoppingScreen}
         options={{ headerStyle: { backgroundColor: '#d3afd4', },
           
@@ -49,12 +50,19 @@ export const Navigation = ()=> {
         
         <Stack.Screen
         name="products"
-        component={ShoppingScreen}
+        component={ShoppingTest}
         options={{
           headerShown: true,
         }}
         />
-       
+
+        <Stack.Screen
+        name='datos'
+        component={direction}
+        options={{
+          headerShown: false,
+        }}
+        />
            
 
 
