@@ -10,10 +10,7 @@ import Lottie from 'lottie-react-native'
 import { CategoriesScreen } from '../Screens/CategoriesScreen';
 import { ShoppingScreen } from '../Screens/shoppingcart'
 
-import { apiprueba } from '../Products/ProductsTest'
-import LoadingScreen from '../Screens/loadintgScreen'
-import { MyActionSheet } from '../Screens/Actionproduct'
-import { ProductCard } from '../components/ProductCard'
+import { direction } from '../Screens/directionsP'
 
 
 

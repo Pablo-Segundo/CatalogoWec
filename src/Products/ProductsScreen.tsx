@@ -60,7 +60,7 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
         data={products}
         numColumns={2}
         renderItem={({ item }) => (
-          <ProductCard product={item} />
+          <ProductCard product={item} route={undefined} />
       )}/>
       </View>
   );

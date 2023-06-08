@@ -34,66 +34,96 @@ import { AsyncStorage } from 'react-native';
 
   return (
     <>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>WAPIZIMA</Text>
-        <TouchableOpacity
-          style={styles.shoppingCartButton}
-          onPress={() => navigation.navigate('Shopping', {})}
-        >
-          <View style={styles.shoppingCartIcon}>
-            <Icon name="shopping-cart" size={30} color="#000" />
-          </View>
-        </TouchableOpacity>
+  <View style={styles.header}>
+    <Text style={styles.headerText}>WAPIZIMA</Text>
+    <TouchableOpacity
+      style={styles.shoppingCartButton}
+      // onPress={() => navigation.navigate('Shopping', {})}
+    >
+      <View style={styles.shoppingCartIcon}>
+        <Icon name="shopping-cart" size={30} color="#000" />
       </View>
-      
+    </TouchableOpacity>
+  </View>
+     
+  <View style={styles.container}>
+    
 
-      <TouchableOpacity style={styles.cardContainer} >
-      <Card style={styles.cardContainer} onPress={() => navigation.navigate('datos')}>
-        <Text style={styles.headerText}>Agregue su dirección </Text>
+    <TouchableOpacity style={styles.cardcontent}
+      onPress={() => navigation.navigate('Directions', {})}
+    >
+      <Card style={styles.card}>
       </Card>
       </TouchableOpacity>
-      
 
-      
-      
+    <Text style={styles.headerText}>Productos</Text> 
 
-       <Text> hola uwu</Text>
+    <View style={styles.table}>
+      <View style={styles.tableHeader}>
+        <Text style={styles.headerText}>Nombre</Text>
+        <Text style={styles.headerText}>Cantidad</Text>
+        <Text style={styles.headerText}>Precio</Text>
+      </View>
 
-   
+      <View style={styles.tableRow}>
+        <Text style={styles.headerText}>xd{}</Text>
+        <Text style={styles.rowText}>uwu{}</Text>
+        <Text style={styles.rowText}>${}</Text>
+        
+      </View>
+    </View>
 
-     
-      
-    </>
+    <TouchableOpacity style={styles.buyButton}>
+      <Text style={styles.buyButtonText}>Comprar</Text>
+    </TouchableOpacity>
+  </View>
+</>
   );
 };
 
 const styles = StyleSheet.create({
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+    backgroundColor: '#D3AFD4',
+  },
+  headerText: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    color: 'black',
+  },
+  shoppingCartButton: {
+    marginRight: 10,
+  },
+  shoppingCartIcon: {
+    padding: 5,
+    borderRadius: 50,
+    backgroundColor: '#FFF',
+  },
   container: {
     flex: 1,
     padding: 16,
+    backgroundColor: '#FFF',
   },
-  cardContainer:{
-    height: '20%',
-    display: 'flex',
-    flexDirection: 'column',
-
+  cardContainer: {
+    marginBottom: 16,
   },
-  productname:{
-    fontSize: 15,
-    fontWeight: 'bold',
-    color:'black',
-    marginVertical: 20,
-
+  card: {
+    height: '15%',
+  
+   
+    
+    
+  },
+  table: {
+    marginBottom: 16,
   },
   tableHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 8,
-    color:'black',
-  },
-  headerText: {
-    fontWeight: 'bold',
-    fontSize: 16,
     color: 'black',
   },
   tableRow: {
@@ -103,7 +133,7 @@ const styles = StyleSheet.create({
   },
   rowText: {
     fontSize: 14,
-    color: 'black'
+    color: 'black',
   },
   buyButton: {
     backgroundColor: '#D3AFD4',
@@ -111,53 +141,16 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     alignItems: 'center',
   },
+  cardcontent: {
+    backgroundColor: '#dcdcdc',
+    paddingVertical: 12,
+    borderRadius: 4,
+    alignItems: 'center',
+  },
+  
   buyButtonText: {
     color: 'white',
     fontWeight: 'bold',
     fontSize: 16,
   },
-  TextContainer: {
-    color: 'black',
-    position: 'absolute',
-    top: 20,
-    left: 25,
-    zIndex: 1,
-  },
-  IconContainer: {
-    position: 'absolute',
-    top: 15,
-    right: 25,
-    zIndex: 1,
-  },
-  IconCircle: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: '#FFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  style:{
-    height: '10%',
-      backgroundColor: '#D3AFD4',
-      borderBottomLeftRadius: 20,
-      borderBottomRightRadius: 20,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
-    backgroundColor: '#D3AFD4',
-  },
-
-  shoppingCartButton: {
-    marginRight: 10,
-  },
-  shoppingCartIcon: {
-    padding: 5,
-    borderRadius: 50,
-    backgroundColor: '#FFF',
-  },
-
 });
