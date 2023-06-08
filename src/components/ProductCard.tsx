@@ -2,11 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
 import { Product } from '../interfaces/ProductsCategoryInterface';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import BottomSheet from "react-native-gesture-bottom-sheet";
 import Carousel from 'react-native-snap-carousel';
 import { Button, Card } from 'react-native-paper';
-
-
 
 
 interface Props {
@@ -16,10 +15,11 @@ interface Props {
 }
 
 export const ProductCard = ({product }: Props) => {
+  console.log(product);
+  
     const navigation = useNavigation();
     const bottomSheet = useRef();
     const [quantity, setQuantity] = useState(product.quantity);
-   
       const decrementQuantity = () => {
         if (quantity > 0) {
           setQuantity(quantity - 1);
@@ -35,7 +35,39 @@ export const ProductCard = ({product }: Props) => {
         navigation.navigate('Shopping', { quantity, ProductName: product.name });
       };
     
+      const addToCart = async (product: Product, quantity: number) => {
+        
+          if (!quantity) quantity = 1;
+            const cartArray = await AsyncStorage.getItem('cart');
+            let cart = [];
     
+            const cartItem = {
+              product_id: product,
+              quantity,
+              _id: product._id
+            };
+    
+            if (cartArray) {
+              cart = JSON.parse(cartArray);
+              const productExists = cart.find(
+                (item) => item.product_id._id === product._id,
+              );
+    
+              if (productExists) {
+                const index = cart.findIndex(
+                  (item) => item.product_id._id === product._id,
+                );
+                cart[index].quantity = quantity;
+              }
+              else {
+                cart.push(cartItem);
+              }
+            } else{
+              cart.push(cartItem);
+    
+            }
+            await AsyncStorage.setItem('cart', JSON.stringify(cart));
+        } 
      
   return (
     <>
@@ -81,7 +113,7 @@ export const ProductCard = ({product }: Props) => {
             </TouchableOpacity>
           </View>
 
-       <TouchableOpacity style={styles.buyButton} onPress={navigateToShoppingScreen}>
+       <TouchableOpacity style={styles.buyButton} onPress={()=>addToCart(product , quantity)}>
               <Text style={styles.buyButtonText}>Comprar</Text>
               
             </TouchableOpacity>

@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Card } from 'react-native-paper';
 import { Product } from '../interfaces/ProductsCategoryInterface';
 import { useNavigation } from '@react-navigation/native';
 import { useRoute } from '@react-navigation/native';
-import { AsyncStorage } from 'react-native';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ProductCard } from '../components/ProductCard';
 
 // interface Props {
 //   product: Product;
@@ -18,19 +18,15 @@ import { AsyncStorage } from 'react-native';
   const route = useRoute();
   const navigation = useNavigation();
   const [quantity, ProductName] = useState();
+const [cart1 ,setCart]= useState([]);
 
   const cartShopping = async() => {
-    try {
-         await AsyncStorage.setProducts();
-
-    }catch (error) {
-  
-    }
+      const  cart   =   await AsyncStorage.getItem('cart');
+      setCart(JSON.parse(cart));
   }
-
-  // const { quantity, ProductName } = route.params;
-
-
+  useEffect(() => {
+    cartShopping();
+  }, []);
 
   return (
     <>
@@ -49,33 +45,16 @@ import { AsyncStorage } from 'react-native';
   <View style={styles.container}>
     
 
-    <TouchableOpacity style={styles.cardcontent}
-      onPress={() => navigation.navigate('Directions', {})}
-    >
-      <Card style={styles.card}>
-      </Card>
-      </TouchableOpacity>
+    
 
     <Text style={styles.headerText}>Productos</Text> 
-
-    <View style={styles.table}>
-      <View style={styles.tableHeader}>
-        <Text style={styles.headerText}>Nombre</Text>
-        <Text style={styles.headerText}>Cantidad</Text>
-        <Text style={styles.headerText}>Precio</Text>
-      </View>
-
-      <View style={styles.tableRow}>
-        <Text style={styles.headerText}>xd{}</Text>
-        <Text style={styles.rowText}>uwu{}</Text>
-        <Text style={styles.rowText}>${}</Text>
-        
-      </View>
-    </View>
-
-    <TouchableOpacity style={styles.buyButton}>
-      <Text style={styles.buyButtonText}>Comprar</Text>
-    </TouchableOpacity>
+    <FlatList
+        data={cart1}
+        renderItem={({ item }) => (
+          <Text style={{color:'black'} }>
+            {item.product_id.name}
+          </Text>
+      )}/>
   </View>
 </>
   );
