@@ -51,9 +51,11 @@ const [cart1 ,setCart]= useState([]);
     <FlatList
         data={cart1}
         renderItem={({ item }) => (
+          <View>
           <Text style={{color:'black'} }>
-            {item.product_id.name}
+            {item.product_id.name} ,  {item.product_id.quantity} .
           </Text>
+          </View>
       )}/>
   </View>
 </>

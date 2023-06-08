@@ -5,11 +5,13 @@ import { Button, Card } from "react-native-paper";
 import { TextInput } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
+
 export const direction = () => {
     const navigation = useNavigation();
-    const [text, setText] = React.useState("");
+    const [text, saetText] = React.useState("");
   return(
-    <View> 
+    
+    <> 
               <View style={styles.header}>
         <Text style={styles.headerText}>WAPIZIMA</Text>
         <TouchableOpacity
@@ -21,6 +23,8 @@ export const direction = () => {
           </View>
         </TouchableOpacity>
       </View>
+
+      
        
       <Text style={styles.productname}>Agregue su dirección </Text>
 
@@ -33,16 +37,20 @@ export const direction = () => {
       value={text}
       onChangeText={text => setText(text)}
     />
+
+
    
 
-    <TouchableOpacity style={styles.buyButton} >
+    <TouchableOpacity style={styles.buyButton}>
+
+      <Text> hola  </Text>
         <Text style={styles.buyButtonText}>Confirmar direccion</Text>
     </TouchableOpacity>
 
    
       
      
-    </View>
+    </>
   )
 }
 

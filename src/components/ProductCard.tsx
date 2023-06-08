@@ -58,6 +58,7 @@ export const ProductCard = ({product }: Props) => {
                   (item) => item.product_id._id === product._id,
                 );
                 cart[index].quantity = quantity;
+
               }
               else {
                 cart.push(cartItem);
@@ -67,6 +68,7 @@ export const ProductCard = ({product }: Props) => {
     
             }
             await AsyncStorage.setItem('cart', JSON.stringify(cart));
+            
         } 
      
   return (
@@ -114,7 +116,9 @@ export const ProductCard = ({product }: Props) => {
           </View>
 
        <TouchableOpacity style={styles.buyButton} onPress={()=>addToCart(product , quantity)}>
-              <Text style={styles.buyButtonText}>Comprar</Text>
+              <Text style={styles.buyButtonText}
+              
+              >Comprar</Text>
               
             </TouchableOpacity>
         </View>
