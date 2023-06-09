@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, FlatList, Button } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Card } from 'react-native-paper';
 import { Product } from '../interfaces/ProductsCategoryInterface';
@@ -28,6 +28,33 @@ const [cart1 ,setCart]= useState([]);
     cartShopping();
   }, []);
 
+
+    const deleteData = () => {
+      const deleteuwu = [cart1];
+
+      deleteuwu.splice(5, 1);
+
+      AsyncStorage.setItem('cart', JSON.stringify(deleteuwu))
+
+      .then(() => {
+        setCart(deleteuwu); 
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
+ 
+    
+    
+  
+     
+
+      
+
+ 
+ 
+
   return (
     <>
   <View style={styles.header}>
@@ -44,19 +71,51 @@ const [cart1 ,setCart]= useState([]);
      
   <View style={styles.container}>
     
+  <Text style={styles.headerText}>Productos Agregados  </Text>
+  
+  <View style={styles.tableHeader}>
+          <Text style={styles.headerText}>Nombre</Text>
+          <Text style={styles.headerText}>Cantidad</Text>
+          <Text> </Text>
+        </View>
+
+    <FlatList
+        data={cart1}
+        renderItem={({ item }) => (  
+
+          <View style={styles.container}>
+          <View style={styles.tableRow}>
+            <Text style={styles.rowText}>{item.product_id.name} </Text>
+            <Text style={styles.rowText}>{item.quantity}</Text>
+            
+         </View>
+         {/* <Button
+           title=""
+           action={() => {
+                 AsyncStorage.removeItem('');
+           }}
+            /> */}
+          
+     
+
+         </View>
+      )}/>
+
+    <View>
+
+    <TouchableOpacity style={styles.buyButton} onPress={deleteData} >
+            <Text style={styles.buyButtonText}>borrar Datos </Text>
+        </TouchableOpacity>
+
 
     
 
-    <Text style={styles.headerText}>Productos</Text> 
-    <FlatList
-        data={cart1}
-        renderItem={({ item }) => (
-          <View>
-          <Text style={{color:'black'} }>
-            {item.product_id.name} ,  {item.product_id.quantity} .
-          </Text>
-          </View>
-      )}/>
+     
+        <TouchableOpacity style={styles.buyButton}>
+          <Text style={styles.buyButtonText}> Comprar</Text>
+        </TouchableOpacity>
+      </View>
+
   </View>
 </>
   );
@@ -85,7 +144,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    padding: 16,
+    padding: 20,
     backgroundColor: '#FFF',
   },
   cardContainer: {
@@ -104,13 +163,13 @@ const styles = StyleSheet.create({
   tableHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 8,
+    marginBottom: 15,
     color: 'black',
   },
   tableRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 8,
+   
   },
   rowText: {
     fontSize: 14,

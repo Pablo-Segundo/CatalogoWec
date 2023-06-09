@@ -57,7 +57,7 @@ export const Navigation = ()=> {
         /> */}
 
         <Stack.Screen
-        name='Directions'
+        name='Diretions'
         component={direction}
         options={{
           headerShown: false,

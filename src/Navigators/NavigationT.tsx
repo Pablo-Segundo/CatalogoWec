@@ -9,7 +9,6 @@ import Animated, { useAnimatedStyle, withTiming, useDerivedValue } from 'react-n
 import Lottie from 'lottie-react-native'
 import { CategoriesScreen } from '../Screens/CategoriesScreen';
 import { ShoppingScreen } from '../Screens/shoppingcart'
-
 import { direction } from '../Screens/directionsP'
 
 
@@ -43,7 +42,7 @@ return (
               // @ts-ignore
               tabBarIcon: ({ ref }) => <Lottie ref={ref} loop={false} source={require('./assets/lottie/upload.icon.json')} style={styles.icon} />,
             }}
-            component={ShoppingScreen}
+            component={direction}
           />
        </Tab.Navigator>
 

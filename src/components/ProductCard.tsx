@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import BottomSheet from "react-native-gesture-bottom-sheet";
 import Carousel from 'react-native-snap-carousel';
 import { Button, Card } from 'react-native-paper';
+import { Item } from 'react-native-paper/lib/typescript/src/components/Drawer/Drawer';
 
 
 interface Props {
@@ -71,6 +72,8 @@ export const ProductCard = ({product }: Props) => {
             
         } 
      
+  
+     
   return (
     <>
     <Card style={styles.container}>
@@ -115,7 +118,7 @@ export const ProductCard = ({product }: Props) => {
             </TouchableOpacity>
           </View>
 
-       <TouchableOpacity style={styles.buyButton} onPress={()=>addToCart(product , quantity)}>
+       <TouchableOpacity style={styles.buyButton} onPress={()=>addToCart(product, quantity)}>
               <Text style={styles.buyButtonText}
               
               >Comprar</Text>

@@ -32,20 +32,27 @@ export const direction = () => {
         <Text style={styles.textMap}> Mapa xd</Text>
      </Card>
 
-     <TextInput
+     {/* <TextInput
       label="direcction"
       value={text}
       onChangeText={text => setText(text)}
-    />
+    /> */}
 
 
-   
-
-    <TouchableOpacity style={styles.buyButton}>
-
-      <Text> hola  </Text>
+      
+    {/* <TouchableOpacity style={styles.buyButton}>
         <Text style={styles.buyButtonText}>Confirmar direccion</Text>
-    </TouchableOpacity>
+    </TouchableOpacity>  */}
+
+    <Text style={styles.productname}> Datos de la persona  </Text>
+      <Text> Nombre: </Text>
+      <Text> etc: </Text>
+
+
+
+      <TouchableOpacity style={styles.buyButton}>
+        <Text style={styles.buyButtonText}>Confirmar Datos </Text>
+    </TouchableOpacity> 
 
    
       
