@@ -4,9 +4,11 @@ import { Product } from '../interfaces/ProductsCategoryInterface';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BottomSheet from "react-native-gesture-bottom-sheet";
+
 import Carousel from 'react-native-snap-carousel';
 import { Button, Card } from 'react-native-paper';
 import { Item } from 'react-native-paper/lib/typescript/src/components/Drawer/Drawer';
+import { FlatList, ScrollView } from 'react-native-gesture-handler';
 
 
 interface Props {
@@ -16,11 +18,12 @@ interface Props {
 }
 
 export const ProductCard = ({product }: Props) => {
-  console.log(product);
+  // console.log(product);
   
     const navigation = useNavigation();
     const bottomSheet = useRef();
-    const [quantity, setQuantity] = useState(product.quantity);
+    const [quantity, setQuantity] = useState(0);
+
       const decrementQuantity = () => {
         if (quantity > 0) {
           setQuantity(quantity - 1);
@@ -33,10 +36,10 @@ export const ProductCard = ({product }: Props) => {
         }
       };
       const navigateToShoppingScreen = () => {
-        navigation.navigate('Shopping', { quantity, ProductName: product.name });
+        navigation.navigate('Shopping', { quantity, ProductName: product.name, price: product.price });
       };
     
-      const addToCart = async (product: Product, quantity: number) => {
+      const addToCart = async (product: Product, quantity: number, price: number) => {
         
           if (!quantity) quantity = 1;
             const cartArray = await AsyncStorage.getItem('cart');
@@ -44,8 +47,9 @@ export const ProductCard = ({product }: Props) => {
     
             const cartItem = {
               product_id: product,
-              quantity,
-              _id: product._id
+              quantity,_id: product._id,
+              price:product.price
+
             };
     
             if (cartArray) {
@@ -59,6 +63,7 @@ export const ProductCard = ({product }: Props) => {
                   (item) => item.product_id._id === product._id,
                 );
                 cart[index].quantity = quantity;
+              
 
               }
               else {
@@ -71,44 +76,18 @@ export const ProductCard = ({product }: Props) => {
             await AsyncStorage.setItem('cart', JSON.stringify(cart));
             
         } 
-     
-  
-     
+
+
+
   return (
     <>
     <Card style={styles.container}>
       <Image style={styles.productImage} source={{ uri: product.multimedia[0].images['400x400'] }} />
       <Text style={styles.productname}>{product.name}</Text>
-      <Text>Disponible: {product.quantity}</Text>
-      <Text style={styles.productPrice}>${product.price} </Text>
 
-      <TouchableOpacity style={styles.buyButton} onPress={() => bottomSheet.current.show()}>
-        <Text style={styles.buyButtonText}>Ver Detalles</Text>
-      </TouchableOpacity>
-    </Card>
-
-    <BottomSheet hasDraggableIcon ref={bottomSheet} height={600}>
-      <View style={styles.productItem}>
-        <Text style={styles.text1}>products uwu</Text>
-        <Carousel
-          data={product.multimedia}
-          renderItem={({ item }) => (
-            <Image style={styles.cardImage} source={{ uri: item.images['400x400'] }} />
-          )}
-          sliderWidth={600}
-          itemWidth={300}
-          loop={true}
-          autoplay={true}
-          autoplayInterval={2000}
-        />
-
-        <View style={styles.productContainer}>
-          <Text style={styles.productname}>{product.name}</Text>
-          <Text style={styles.productname}>Disponible: {product.quantity}</Text>
-
-          <Text style={styles.Textcard}>{product.description}</Text>
-
-          <View style={styles.quantityContainer}>
+      <Text style={styles.textgray}>Disponible: {product.quantity}</Text>
+      
+      <View style={styles.quantityContainer}>
             <TouchableOpacity onPress={decrementQuantity}>
               <Text style={styles.quantityButton}>-</Text>
             </TouchableOpacity>
@@ -118,12 +97,60 @@ export const ProductCard = ({product }: Props) => {
             </TouchableOpacity>
           </View>
 
-       <TouchableOpacity style={styles.buyButton} onPress={()=>addToCart(product, quantity)}>
-              <Text style={styles.buyButtonText}
+
+     
+      <Text style={styles.productPrice}>${product.price} </Text>
+
+      <TouchableOpacity style={styles.buyButton} onPress={() => bottomSheet.current.show()}>
+        <Text style={styles.buyButtonText}>Ver Detalles</Text>
+      </TouchableOpacity>
+    </Card>
+
+
+    <BottomSheet hasDraggableIcon ref={bottomSheet} height={600}>
+      <View style={styles.productItem}>
+        <Text style={styles.text1}>products </Text>
+      
+      
+          <Carousel
+          data={product.multimedia}
+          renderItem={({ item }) => (
+            <Image style={styles.cardImage} source={{ uri: item.images['400x400'] }} />
+          )}
+          sliderWidth={600}
+          itemWidth={300}
+          loop={false}
+          autoplay={false}
+          autoplayInterval={2000}
+        /> 
+        
+        <View style={styles.productContainer}>      
+          <Text style={styles.productname}>{product.name}</Text>
+          <Text style={styles.productname}> Disponible: {product.quantity} </Text>
+           <Card style={styles.cardcontainer}>
+           <Text style={styles.Textcard}>{product.description}</Text>
+           </Card>
+         
+
+          <View style={styles.quantityContainer}>
+           
+            <TouchableOpacity onPress={decrementQuantity}>
+              <Text style={styles.quantityButton}>-</Text>
+            </TouchableOpacity>
+            <Text style={styles.quantity}>{quantity}</Text>
+            <TouchableOpacity onPress={incrementQuantity}>
+              <Text style={styles.quantityButton}>+</Text>
+            </TouchableOpacity>
+          </View>
+
+       <TouchableOpacity style={styles.buyButton} onPress={()=>addToCart (product, quantity, product.price)}>
+              <Text style={styles.buyButtonText}  
+              //  onPress={() => navigation.navigate('Shopping')}
               
-              >Comprar</Text>
+               >Comprar</Text>
               
             </TouchableOpacity>
+          
         </View>
         </View>
       </BottomSheet>
@@ -142,11 +169,12 @@ const styles = StyleSheet.create({
       borderRadius: 10,
       marginBottom: 10,
     },
-    // container: {
-    //   flex: 1,
-    //   justifyContent: 'center',
-    //   alignItems: 'center',
-    // },
+    textgray: {
+      color: 'gray',
+    },
+    cardcontainer: {
+      height: '35%',
+    },
 
     productItem: {
       margin: 10,
@@ -208,7 +236,9 @@ const styles = StyleSheet.create({
       color: 'black',
       fontSize: 20,
       fontWeight: 'bold',
-      paddingHorizontal: 10,
+      paddingHorizontal: 15,
+            
+
     },
     quantity: {
       color: "gray",

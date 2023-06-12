@@ -5,7 +5,7 @@ import { FlatList } from 'react-native';
 
 
 
-export const apiprueba = () => {
+export const Apiprueba = () => {
   const [products, setProduct] = useState();
 //   const _id =  "637fd33234834475d1f055b5" ;
   const getProducts = async () => {

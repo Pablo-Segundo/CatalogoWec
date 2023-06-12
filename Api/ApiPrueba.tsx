@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, Touchable } from 'react-native';
-import API from '../../API/API';
+import API from '../src/API/API';
 import { FlatList } from 'react-native';
 const App = () => {
   const [categories, setCategories] = useState();

@@ -44,7 +44,7 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
   }
   return (
     <View>
-      <Text style={[styles.TextContainer, { fontSize: 20, color: '#FFF' }]}>WAPIZIMA</Text>
+      <Text style={[styles.TextContainer, { fontSize: 20, color: '#FFF' }]}>WAPIZIMA UwU</Text>
       <TouchableOpacity
           style={styles.IconContainer}
           onPress={() => navigation.navigate('Shopping', {})}>

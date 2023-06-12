@@ -6,9 +6,9 @@ import { TextInput } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
 
-export const direction = () => {
+export const Direction = () => {
     const navigation = useNavigation();
-    const [text, saetText] = React.useState("");
+    // const [text, saetText] = React.useState("");
   return(
     
     <> 
@@ -45,8 +45,10 @@ export const direction = () => {
     </TouchableOpacity>  */}
 
     <Text style={styles.productname}> Datos de la persona  </Text>
-      <Text> Nombre: </Text>
-      <Text> etc: </Text>
+      <Text style={styles.textgray}> Nombre: </Text>
+      <Text style={styles.textgray}> etc: </Text>
+      <Text style={styles.textgray}> Telefono </Text>
+      <Text style={styles.textgray}> Uwu</Text>
 
 
 
@@ -79,6 +81,9 @@ const styles = StyleSheet.create({
         marginVertical: 25,
         marginHorizontal: 25,
     
+      },
+      textgray: {
+        color: 'gray',
       },
       textMap:{
         fontSize: 18,

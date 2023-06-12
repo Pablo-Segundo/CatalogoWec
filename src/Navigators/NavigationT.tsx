@@ -9,7 +9,8 @@ import Animated, { useAnimatedStyle, withTiming, useDerivedValue } from 'react-n
 import Lottie from 'lottie-react-native'
 import { CategoriesScreen } from '../Screens/CategoriesScreen';
 import { ShoppingScreen } from '../Screens/shoppingcart'
-import { direction } from '../Screens/directionsP'
+import { Direction } from '../Screens/directionsP'
+import { MyActionSheet } from '../Screens/Actionproduct'
 
 
 
@@ -35,14 +36,14 @@ return (
            
           />
             <Tab.Screen
-            name="Upload"
+            name="upload"
                              
             options={{
               headerShown: false,
               // @ts-ignore
               tabBarIcon: ({ ref }) => <Lottie ref={ref} loop={false} source={require('./assets/lottie/upload.icon.json')} style={styles.icon} />,
             }}
-            component={direction}
+            component={Direction}
           />
        </Tab.Navigator>
 
