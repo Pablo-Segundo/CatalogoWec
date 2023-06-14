@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Animated, TouchableWithoutFeedback} from 'react-native';
 import { Product } from '../interfaces/ProductsCategoryInterface';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BottomSheet from "react-native-gesture-bottom-sheet";
-
 import Carousel from 'react-native-snap-carousel';
 import { Button, Card } from 'react-native-paper';
+import { Modal } from 'react-native';
+
 import { Item } from 'react-native-paper/lib/typescript/src/components/Drawer/Drawer';
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
 
@@ -20,10 +21,12 @@ interface Props {
 export const ProductCard = ({product }: Props) => {
   // console.log(product);
   
+
+
     const navigation = useNavigation();
     const bottomSheet = useRef();
     const [quantity, setQuantity] = useState(0);
-
+  
       const decrementQuantity = () => {
         if (quantity > 0) {
           setQuantity(quantity - 1);
@@ -110,9 +113,12 @@ export const ProductCard = ({product }: Props) => {
     <BottomSheet hasDraggableIcon ref={bottomSheet} height={600}>
       <View style={styles.productItem}>
         <Text style={styles.text1}>products </Text>
+
+
+       
+  
       
-      
-          <Carousel
+         {/* <Carousel
           data={product.multimedia}
           renderItem={({ item }) => (
             <Image style={styles.cardImage} source={{ uri: item.images['400x400'] }} />
@@ -122,8 +128,8 @@ export const ProductCard = ({product }: Props) => {
           loop={false}
           autoplay={false}
           autoplayInterval={2000}
-        /> 
-        
+        />  */}
+      
         <View style={styles.productContainer}>      
           <Text style={styles.productname}>{product.name}</Text>
           <Text style={styles.productname}> Disponible: {product.quantity} </Text>

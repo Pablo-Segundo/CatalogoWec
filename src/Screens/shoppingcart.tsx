@@ -7,7 +7,8 @@ import { useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ProductCard } from '../components/ProductCard';
 import { Card } from 'react-native-paper'
-import { err } from 'react-native-svg/lib/typescript/xml';
+import { Item } from 'react-native-paper/lib/typescript/src/components/Drawer/Drawer';
+
 
 // interface Props {
 //   product: Product;
@@ -18,33 +19,54 @@ import { err } from 'react-native-svg/lib/typescript/xml';
   export const ShoppingScreen = () => {
     const route = useRoute();
     const navigation = useNavigation();
-    const [quantity, ProductName] = useState();
+    const [quantity, setQuantity] = useState(1);
     const [cart1, setCart] = useState([]);
-
+    const [totalPrice, setTotalPrice] = useState(0);
+  
     const cartShopping = async () => {
-      const cart = await AsyncStorage.getItem('cart');
-      setCart(JSON.parse(cart));
+      const storedCart = await AsyncStorage.getItem('cart');
+      const parsedCart = JSON.parse(storedCart);
+      let total = 0;
+      parsedCart.forEach(item => {
+        total += item.quantity * item.product_id.price;
+      });
+      setCart(parsedCart);
+      setTotalPrice(total);
     };
     useEffect(() => {
       cartShopping();
     }, []);
-
-
-
+    
+  
+  
     const deleteData = (index) => {
-      
-      const updatedCart = [...cart1]; 
-      
-      updatedCart.splice(index, 1);
+      const updatedCart = [...cart1];
+      const deletedProduct = updatedCart.splice(index, 1)[0];
+      const updatedPrice = deletedProduct.quantity * deletedProduct.product_id.price;
       AsyncStorage.setItem('cart', JSON.stringify(updatedCart))
-
         .then(() => {
           setCart(updatedCart);
+          setTotalPrice(totalPrice - updatedPrice);
+          
         })
         .catch(error => {
-        
+         
         });
     };
+
+
+
+    // const deleteData = (index) => {  
+    //   const updatedCart = [...cart1]; 
+    //   updatedCart.splice(index, 1);
+    //   AsyncStorage.setItem('cart', JSON.stringify(updatedCart))
+    //     .then(() => {
+    //       setCart(updatedCart);
+    //     })
+    //     .catch(error => {
+    //     });
+    // };
+      
       
    
      
@@ -82,9 +104,9 @@ import { err } from 'react-native-svg/lib/typescript/xml';
               <View style={styles.container}>
                 <View style={styles.tableRow}>
                  
-                  <Text style={styles.rowText}>{item.product_id.name} </Text>
-                  <Text style={styles.rowText}>{item.quantity}</Text>
-                  <Text style={styles.rowText}>{item.price} </Text>
+                  <Text style={styles.rowText}>{item.product_id.name}</Text>
+                  <Text style={styles.rowText}>( {item.quantity} ) X </Text>
+                  <Text style={styles.rowText}>${item.price} </Text>
                   
 
                   <TouchableOpacity onPress={() => deleteData(index)}>
@@ -97,19 +119,20 @@ import { err } from 'react-native-svg/lib/typescript/xml';
                </View>
             )}
           />
+          <Card>
           <View>
-            <Card> 
-              <Text style={styles.rowText}> </Text>
-            </Card>
+            <Text style={styles.rowText}> Productos : {}</Text>
+           <Text style={styles.headerText}>Precio Total: ${totalPrice} </Text>
           </View>
-            
           
           <View>
             <TouchableOpacity style={styles.buyButton}>
               <Text style={styles.buyButtonText}> Comprar</Text>
-            </TouchableOpacity>
+            </TouchableOpacity>  
           </View>
+          </Card>
         </View> 
+        
       </>
     );
   };
@@ -123,7 +146,7 @@ import { err } from 'react-native-svg/lib/typescript/xml';
         backgroundColor: '#D3AFD4',
       },
       textelimit: {
-        color: 'black',
+        color:'#1e90ff',
       },
       headerText: {
         fontWeight: 'bold',
