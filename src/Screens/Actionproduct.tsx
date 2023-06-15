@@ -14,10 +14,6 @@ export const MyActionSheet = () => {
         </View>
       </BottomSheet>
 
-     
-
-
-
 
       <TouchableOpacity
         style={styles.button}

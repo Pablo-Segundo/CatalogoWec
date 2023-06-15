@@ -7,6 +7,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { PetañaScreen } from '../Products/ProductsScreen';
 import { ShoppingScreen } from '../Screens/shoppingcart';
 import { Direction } from '../Screens/directionsP';
+import { CarruselUwU } from '../Screens/carruseluwu';
 
 
 
@@ -56,10 +57,13 @@ export const Navigation = ()=> {
           headerShown: false,
         }}
         />
+  
 
-    {/* <Stack.Screen
-        name="direction" 
-        component={direction}
+
+{/* 
+    <Stack.Screen
+        name="" 
+        component={CarruselUwU}
         options={{
           headerShown: false,
           

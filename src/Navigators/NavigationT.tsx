@@ -10,8 +10,7 @@ import Lottie from 'lottie-react-native'
 import { CategoriesScreen } from '../Screens/CategoriesScreen';
 import { ShoppingScreen } from '../Screens/shoppingcart'
 import { Direction } from '../Screens/directionsP'
-import { Carrusel } from '../Screens/carruseluwu'
-
+import { CarruselUwU } from '../Screens/carruseluwu'
 
 const Tab = createBottomTabNavigator()
 const AnimatedSvg = Animated.createAnimatedComponent(Svg)
@@ -42,7 +41,7 @@ return (
               // @ts-ignore
               tabBarIcon: ({ ref }) => <Lottie ref={ref} loop={false} source={require('./assets/lottie/upload.icon.json')} style={styles.icon} />,
             }}
-            component={ Carrusel }
+            component={ Direction }
           />
        </Tab.Navigator>
 
