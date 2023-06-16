@@ -1,11 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { Product } from '../interfaces/ProductsCategoryInterface';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BottomSheet from "react-native-gesture-bottom-sheet";
 import Carousel from 'react-native-snap-carousel';
-import { Button, Card } from 'react-native-paper';
+import { Card , Button} from 'react-native-paper';
+import { Box, useToast } from 'native-base';
+import RBSheet from "react-native-raw-bottom-sheet";
+
+
 
 interface Props {
   product: Product;
@@ -16,8 +20,11 @@ export const ProductCard = ({ product }: Props) => {
   const navigation = useNavigation();
   const bottomSheet = useRef();
   const [quantity, setQuantity] = useState(0);
+  const toast = useToast();
+  const refRBSheet = useRef();
 
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+
+  const [selectedImageIndex, setSelectedImageIndex] = useState(false);
   const [isImageSelected, setIsImageSelected] = useState(false);
 
   const decrementQuantity = () => {
@@ -33,19 +40,24 @@ export const ProductCard = ({ product }: Props) => {
   };
 
   const navigateToShoppingScreen = () => {
-    navigation.navigate('Shopping', { quantity, ProductName: product.name, price: product.price });
+    navigation.navigate('Shopping', { quantity, ProductName: product.name, price: product.price, image:product.multimedia });
   };
 
-  const addToCart = async (product: Product, quantity: number, price: number) => {
+  const addToCart = async (product: Product, quantity: number, price: number,  ) => {
     if (!quantity) quantity = 1;
     const cartArray = await AsyncStorage.getItem('cart');
     let cart = [];
+     
+
+    // Alert.alert('Producto Agregado', 'El producto ha sido agregado al carrito.');
 
     const cartItem = {
       product_id: product,
       quantity,
       _id: product._id,
       price: product.price,
+  
+     
     };
 
     if (cartArray) {
@@ -91,14 +103,28 @@ export const ProductCard = ({ product }: Props) => {
           </TouchableOpacity>
         </View>
         <Text style={styles.productPrice}>${product.price} </Text>
-        <TouchableOpacity style={styles.buyButton} onPress={() => bottomSheet.current.show()}>
+
+     
+        {/* <TouchableOpacity style={styles.buyButton} onPress={() => bottomSheet.current.show()}>
+          <Text style={styles.buyButtonText}>Ver Detalles</Text>
+        </TouchableOpacity> */}
+
+         {/* <BottomSheet hasDraggableIcon ref={bottomSheet} height={600}> */}
+      
+        
+
+        <TouchableOpacity style={styles.buyButton} onPress={() => refRBSheet.current.open()}>
           <Text style={styles.buyButtonText}>Ver Detalles</Text>
         </TouchableOpacity>
+
       </Card>
 
-      <BottomSheet hasDraggableIcon ref={bottomSheet} height={600}>
+      <RBSheet  ref={refRBSheet}  height={600}  closeOnDragDown={true}
+        closeOnPressMask={true} >
+     
         <View style={styles.productItem}>
           <Text style={styles.text1}>products </Text>
+
           <Carousel
             data={product.multimedia}
             renderItem={({ item, index }) => (
@@ -115,6 +141,7 @@ export const ProductCard = ({ product }: Props) => {
             autoplay={true}
             autoplayInterval={2000}
           />
+
           <View style={styles.productContainer}>
             <Text style={styles.productname}>{product.name}</Text>
             <Text style={styles.productname}> Disponible: {product.quantity} </Text>
@@ -132,15 +159,32 @@ export const ProductCard = ({ product }: Props) => {
                 <Text style={styles.quantityButton}>+</Text>
               </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              style={styles.buyButton}
-              onPress={() => addToCart(product, quantity, product.price)}
-            >
-              <Text style={styles.buyButtonText}>Agregar al Carrito </Text>
-            </TouchableOpacity>
+             
+            <Button onPress={() => { addToCart(product, quantity, product.price)
+      toast.show({
+        render: () => {
+          return <Box bg="emerald.500" px="2" py="1" rounded="sm" mb={5}>
+                  Hello! Have a nice day
+                </Box>;
+        }
+      });
+    }}>
+        Agregar al carrito 
+      </Button>
+      
+
+           
+          {/* // <TouchableOpacity
+          //   style={styles.buyButton}
+          //   onPress={() => addToCart(product, quantity, product.price)}
+          // >
+          //   <Text style={styles.buyButtonText}>Agregar al Carrito </Text>
+          // </TouchableOpacity> */}
+
           </View>
         </View>
-      </BottomSheet>
+      {/* </BottomSheet> */}
+      </RBSheet>
     </>
   );
 };
@@ -267,4 +311,3 @@ const styles = StyleSheet.create({
   
 
 });
-

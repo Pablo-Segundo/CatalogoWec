@@ -8,7 +8,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import LoadingScreen from '../Screens/loadintgScreen';
 import { Actionsheet, Button, useDisclose } from "native-base";
 import { ProductCard } from '../components/ProductCard';
-// import BottomSheet from "react-native-gesture-bottom-sheet";
+import BottomSheet from "react-native-gesture-bottom-sheet";
 
 
 

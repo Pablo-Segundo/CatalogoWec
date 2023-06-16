@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, FlatList, Button } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, FlatList, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Product } from '../interfaces/ProductsCategoryInterface';
 import { useNavigation } from '@react-navigation/native';
 import { useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ProductCard } from '../components/ProductCard';
-import { Card } from 'react-native-paper'
+import { Card, Button } from 'react-native-paper'
 import { Item } from 'react-native-paper/lib/typescript/src/components/Drawer/Drawer';
+import {  useToast, Box, Center, NativeBaseProvider } from "native-base";
+import { Image } from 'react-native-svg';
+
 
 
 // interface Props {
@@ -22,6 +25,9 @@ import { Item } from 'react-native-paper/lib/typescript/src/components/Drawer/Dr
     const [quantity, setQuantity] = useState(1);
     const [cart1, setCart] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
+    const toast = useToast();
+
+
   
     const cartShopping = async () => {
       const storedCart = await AsyncStorage.getItem('cart');
@@ -36,40 +42,40 @@ import { Item } from 'react-native-paper/lib/typescript/src/components/Drawer/Dr
     useEffect(() => {
       cartShopping();
     }, []);
-    
-  
-  
+
+
     const deleteData = (index) => {
       const updatedCart = [...cart1];
-      const deletedProduct = updatedCart.splice(index, 1)[0];
+      const deletedProduct = updatedCart[index];
       const updatedPrice = deletedProduct.quantity * deletedProduct.product_id.price;
+    
+      updatedCart.splice(index, 1); 
+    
       AsyncStorage.setItem('cart', JSON.stringify(updatedCart))
         .then(() => {
           setCart(updatedCart);
           setTotalPrice(totalPrice - updatedPrice);
-          
         })
         .catch(error => {
          
         });
     };
-
-
-
-    // const deleteData = (index) => {  
-    //   const updatedCart = [...cart1]; 
-    //   updatedCart.splice(index, 1);
+    
+    
+    // const deleteData = (index) => {
+    //   const updatedCart = [...cart1];
+    //   const deletedProduct = updatedCart.splice(index, 1)[0];
+    //   const updatedPrice = deletedProduct.quantity * deletedProduct.product_id.price;
     //   AsyncStorage.setItem('cart', JSON.stringify(updatedCart))
     //     .then(() => {
     //       setCart(updatedCart);
+    //       setTotalPrice(totalPrice - updatedPrice);
+          
     //     })
     //     .catch(error => {
+         
     //     });
     // };
-      
-      
-   
-     
 
     return (
       <>
@@ -84,10 +90,8 @@ import { Item } from 'react-native-paper/lib/typescript/src/components/Drawer/Dr
             </View>
           </TouchableOpacity>
         </View>
-{/*         
-        <View style={styles.cardContainer}>
-         <Card style={styles.card}> </Card>
-         </View> */}
+         
+    
          
        <View style={styles.container}>           
        <Text style={styles.headerText}>Productos agregados </Text>
@@ -120,17 +124,35 @@ import { Item } from 'react-native-paper/lib/typescript/src/components/Drawer/Dr
             )}
           />
           <Card>
-          <View>
-            <Text style={styles.rowText}> Productos : {}</Text>
-           <Text style={styles.headerText}>Precio Total: ${totalPrice} </Text>
-          </View>
-          
-          <View>
-            <TouchableOpacity style={styles.buyButton}>
-              <Text style={styles.buyButtonText}> Comprar</Text>
-            </TouchableOpacity>  
-          </View>
-          </Card>
+  <View>
+    <Text style={styles.headerText}>Productos: (_) </Text>
+    <Text style={styles.headerText}>Precio Total: ${totalPrice}</Text>
+  </View>
+  
+  <View>
+    <TextInput
+      style={styles.discountCodeInput}
+      placeholder="Código de descuento"
+     
+    />
+    <Button
+      onPress={() => {
+        toast.show({
+          render: () => {
+            return (
+              <Box bg="emerald.500" px="2" py="1" rounded="sm" mb={5}>
+              
+              </Box>
+            );
+          },
+        });
+      }}
+    >
+      comprar
+    </Button>
+  </View>
+</Card>
+ 
         </View> 
         
       </>
@@ -174,9 +196,13 @@ import { Item } from 'react-native-paper/lib/typescript/src/components/Drawer/Dr
       },
       card: {
         height: '50%',
-      
-      
-        
+      },
+      discountCodeInput: {
+        borderWidth: 1,
+        borderColor: 'gray',
+        borderRadius: 5,
+        padding: 10,
+        marginTop: 10,
         
       },
       table: {
