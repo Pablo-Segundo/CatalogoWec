@@ -3,7 +3,7 @@ import { View, Text, Image, StyleSheet, TouchableOpacity, Alert } from 'react-na
 import { Product } from '../interfaces/ProductsCategoryInterface';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import BottomSheet from "react-native-gesture-bottom-sheet";
+// import BottomSheet from "react-native-gesture-bottom-sheet";
 import Carousel from 'react-native-snap-carousel';
 import { Card , Button} from 'react-native-paper';
 import { Box, useToast } from 'native-base';
