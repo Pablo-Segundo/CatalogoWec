@@ -14,6 +14,7 @@ import { Image } from 'react-native-svg';
 
 
 
+
 // interface Props {
 //   product: Product;
 //   route: any;
@@ -69,6 +70,7 @@ import { Image } from 'react-native-svg';
     
     return (
       <>
+      
         <View style={styles.header}>
           <Text style={styles.headerText}>WAPIZIMA</Text>
           <TouchableOpacity
@@ -118,8 +120,11 @@ import { Image } from 'react-native-svg';
      <View>
     
       <Text style={styles.headerText}>Productos: ({totalProducts})</Text>
-      <Text style={styles.headerText}>Precio Total: ${totalPrice}</Text>
+      <Text style={styles.headerText}>Total: ${totalPrice}</Text>
     </View>
+
+
+   
 
     <View>
       <TextInput
@@ -127,13 +132,16 @@ import { Image } from 'react-native-svg';
         placeholder="Código de descuento"
       
       />
+
+    
+
       <Button
         onPress={() => {
           toast.show({
             render: () => {
               return (
                 <Box bg="emerald.500" px="2" py="1" rounded="sm" mb={5}>
-                  producto agregado  al carrito 
+                  hola uwu
                 </Box>
               );
             },
@@ -146,6 +154,8 @@ import { Image } from 'react-native-svg';
   </Card>
   
           </View> 
+
+         
         
       </>
     );

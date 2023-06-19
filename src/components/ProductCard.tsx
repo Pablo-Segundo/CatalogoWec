@@ -40,7 +40,7 @@ export const ProductCard = ({ product }: Props) => {
   };
 
   const navigateToShoppingScreen = () => {
-    navigation.navigate('Shopping', { quantity, ProductName: product.name, price: product.price, image:product.multimedia });
+    navigation.navigate('Shopping', { quantity, ProductName: product.name, price: product.price,  });
   };
 
   const addToCart = async (product: Product, quantity: number, price: number,  ) => {
@@ -76,15 +76,15 @@ export const ProductCard = ({ product }: Props) => {
     await AsyncStorage.setItem('cart', JSON.stringify(cart));
   };
     
-  const handleImagePress = (index: number) => {
-    if (selectedImageIndex === index) {
-      setSelectedImageIndex(-1);
-      setIsImageSelected(false);
-    } else {
-      setSelectedImageIndex(index);
-      setIsImageSelected(true);
-    }
-  };
+  // const handleImagePress = (index: number) => {
+  //   if (selectedImageIndex === index) {
+  //     setSelectedImageIndex(-1);
+  //     setIsImageSelected(false);
+  //   } else {
+  //     setSelectedImageIndex(index);
+  //     setIsImageSelected(true);
+  //   }
+  // };
   
     
   return (
@@ -124,7 +124,7 @@ export const ProductCard = ({ product }: Props) => {
      
         <View style={styles.productItem}>
           <Text style={styles.text1}>products </Text>
-
+{/* 
           <Carousel
             data={product.multimedia}
             renderItem={({ item, index }) => (
@@ -140,7 +140,7 @@ export const ProductCard = ({ product }: Props) => {
             loop={true}
             autoplay={true}
             autoplayInterval={2000}
-          />
+          /> */}
 
           <View style={styles.productContainer}>
             <Text style={styles.productname}>{product.name}</Text>
@@ -161,11 +161,11 @@ export const ProductCard = ({ product }: Props) => {
             </View>
              
             <Button onPress={() => { addToCart(product, quantity, product.price)
-      toast.show({
-        render: () => {
+          toast.show({
+             render: () => {
           return <Box bg="emerald.500" px="2" py="1" rounded="sm" mb={5}>
-                  Hello! Have a nice day
-                </Box>;
+                   Producto Agregado al carrito 
+                </Box>
         }
       });
     }}>
