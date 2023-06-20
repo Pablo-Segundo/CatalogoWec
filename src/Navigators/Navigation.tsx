@@ -7,7 +7,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { PetañaScreen } from '../Products/ProductsScreen';
 import { ShoppingScreen } from '../Screens/shoppingcart';
 import { Direction } from '../Screens/directionsP';
-import { CarruselUwU } from '../Screens/carruseluwu';
+import { MapScreen } from '../components/Map';
 
 
 
@@ -53,6 +53,14 @@ export const Navigation = ()=> {
         <Stack.Screen
         name="appprueba "
         component={Direction}
+        options={{
+          headerShown: false,
+        }}
+        />
+
+        <Stack.Screen
+        name="mapaapi "
+        component={MapScreen }
         options={{
           headerShown: false,
         }}
