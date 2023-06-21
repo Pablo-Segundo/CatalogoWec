@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Dimensions, Platform, Button, TouchableOpacity, Text } from 'react-native';
+import { StyleSheet, View, Dimensions, Platform,  TouchableOpacity, Text, TextInput } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import { mapStyle } from '../Styles/mapStyle';
 import Geolocation from 'react-native-geolocation-service';
@@ -7,9 +7,17 @@ import { request, PERMISSIONS } from 'react-native-permissions';
 import { ActionSheetProvider, useActionSheet } from '@expo/react-native-action-sheet';
 import { Card } from 'react-native-paper';
 
+import Buttonsh from 'react-native-paper';
+import { useDisclose, Button, Actionsheet, Icon  } from 'native-base';
+import { useNavigation } from '@react-navigation/native';
+
 export function MapScreen() {
   const [currentLocation, setCurrentLocation] = useState(null);
   const { showActionSheetWithOptions } = useActionSheet();
+  const { isOpen, onOpen, onClose} = useDisclose();
+  const navigation = useNavigation();
+
+
 
   const requestLocationPermission = async () => {
     try {
@@ -74,10 +82,25 @@ export function MapScreen() {
   };
 
   return (
-    <ActionSheetProvider>
-      <View style={styles.container}>
-        {currentLocation && (
-          <>
+    <> 
+         <View style={styles.header}>
+      <Text style={styles.headerText}>WAPIZIMA</Text>
+      <TouchableOpacity
+        style={styles.shoppingCartButton}
+        onPress={() => navigation.navigate('Shopping')}
+      >
+        <View style={styles.shoppingCartIcon}>
+          <Icon name="shopping-cart" size={30} color="#000" />
+        </View>
+      </TouchableOpacity>
+    </View>
+
+   
+
+    <ActionSheetProvider>    
+        <View style={styles.container}>
+          {currentLocation && (
+            <>
             <MapView
               customMapStyle={mapStyle}
               provider={PROVIDER_GOOGLE}
@@ -96,24 +119,56 @@ export function MapScreen() {
                 description="Esta es mi ubicación actual"
               />
             </MapView>
-             
-              <Button title="completa tus  datos" onPress={showActionSheet} />
  
-             <View style={styles.buyButton}>
-            <Card >
+   
+            <Actionsheet isOpen={isOpen} onClose={onClose}>
+           <Actionsheet.Content>
+            <View>  
 
-              <Text> hola ------------------- </Text>
-            </Card>
+              <Text> Nombre de quíen recibe:</Text>
+            <TextInput style={styles.discountCodeInput} placeholder="Código de descuento"/>
+            <TextInput style={styles.discountCodeInput} placeholder="Código de descuento"/>
+           
+            <TextInput style={styles.discountCodeInput} placeholder="Código de descuento"/>
+                <Text> Número telefónico </Text>
+            <TextInput style={styles.discountCodeInput} placeholder="Código de descuento"/>
+            <Text>Referencias: </Text>
+            <TextInput style={styles.discountCodeInput} placeholder="Código de descuento"/>
+             
+             <Button> Guardar </Button>
 
-            </View> 
+            </View>
+            </Actionsheet.Content>
+            </Actionsheet>
+             
+
+             {/* <View>     
+              <Card style={StyleSheet.cardcontainer}>
+            <Button onPress={onOpen}>     
+             Ver Detalles
+             </Button>
+             </Card>
+             </View>  */}
 
 
+             
+       <Button title='botton' onPress={onOpen}>     
+        Ver Detalles
+        </Button>
 
+        {/* <Card style={styles.cardcontainer}> 
+        <Text> hola ------------------- </Text>
+        </Card> */}
             
-          </>
-        )}
-      </View>
-    </ActionSheetProvider>
+              </>
+            )}
+          </View>
+        </ActionSheetProvider>
+
+        <Button title='botton' onPress={onOpen}>     
+        Agregue sus datos 
+        </Button>
+    </>
   );
 }
 
@@ -132,12 +187,45 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
   },
   buyButton: {
-    backgroundColor: '#ff69b4',
+    backgroundColor: 'gray',
     padding: 50,
     borderRadius: 5,
   },
-  buyButtonText: {
-    color: 'white',
+  cardcontainer: {
+    height: '70%',
+  },
+  CardInfo: {
+    height: '35%',
+    paddingHorizontal:'35%'
+  },
+  discountCodeInput: {
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 5,
+    padding: 10,
+    marginTop: 10,
+    
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+    backgroundColor: '#D3AFD4',
+    zIndex: 9999,
+  },
+  headerText: {
     fontWeight: 'bold',
+    fontSize: 16,
+    color: 'black',
+    padding: 5,
+  },
+  shoppingCartIcon: {
+    padding: 5,
+    borderRadius: 50,
+    backgroundColor: '#FFF',
+  },
+  shoppingCartButton: {
+    marginRight: 10,
   },
 });

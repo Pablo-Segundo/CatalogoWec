@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
   },
   divider: {
     height: '9%',
-    backgroundColor: '#D3AFD4',
+    backgroundColor: '#debdce',
     // borderBottomLeftRadius: 20,
     // borderBottomRightRadius: 20,
   },

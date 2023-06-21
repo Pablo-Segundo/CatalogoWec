@@ -9,7 +9,7 @@ import { ProductCard } from '../components/ProductCard';
 import { Card, Button } from 'react-native-paper'
 import { Item } from 'react-native-paper/lib/typescript/src/components/Drawer/Drawer';
 import {   Box, Center, NativeBaseProvider } from "native-base";
-import { useToast } from 'native-base';
+import { useToast, Modal } from 'native-base';
 import { Image } from 'react-native-svg';
 
 
@@ -29,6 +29,7 @@ import { Image } from 'react-native-svg';
     const [totalPrice, setTotalPrice] = useState(0);
     const [totalProducts, setTotalProducts] = useState(0); 
     const toast = useToast();
+    const [showModal, setShowModal] = useState(false);
 
   
     const cartShopping = async () => {
@@ -82,7 +83,8 @@ import { Image } from 'react-native-svg';
             </View>
           </TouchableOpacity>
         </View>
-         
+       
+      
     
          
        <View style={styles.container}>           
@@ -133,10 +135,38 @@ import { Image } from 'react-native-svg';
       
       />
 
+
+
+      <Button onPress={() => setShowModal(true)}>Button</Button>
+      <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+        <Modal.Content maxWidth="400px">
+          <Modal.CloseButton />
+          <Modal.Header>Método de Pago </Modal.Header>
+
+
+          <Modal.Body>
+            <Button> Tarjeta </Button>
+            
+            <Button> Pagos contra entrega </Button>
+          </Modal.Body>
+
+          <Modal.Footer>
+            <Center>
+          <Button> Continuar 
+          </Button>
+          </Center>
+            
+          </Modal.Footer>
+        </Modal.Content>
+      </Modal>
+    
     
 
-      <Button
-        onPress={() => {
+
+
+
+      <Button 
+        onPress={() =>  {
           toast.show({
             render: () => {
               return (
@@ -166,8 +196,13 @@ import { Image } from 'react-native-svg';
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: 10,
-        backgroundColor: '#D3AFD4',
+        padding: 50,
+        // backgrounColor: '#D3AFD4',
+        backgroundColor:'#debdce',
+        borderBottomLeftRadius: 20,
+        borderBottomRightRadius: 20,
+
+
       },
       textelimit: {
         color:'#1e90ff',
@@ -176,7 +211,7 @@ import { Image } from 'react-native-svg';
         fontWeight: 'bold',
         fontSize: 16,
         color: 'black',
-        padding: 5,
+        padding: 2,
       },
       shoppingCartButton: {
         marginRight: 10,

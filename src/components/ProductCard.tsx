@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, Dimensions } from 'react-native';
 import { Product } from '../interfaces/ProductsCategoryInterface';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import BottomSheet from "react-native-gesture-bottom-sheet";
+
 import Carousel from 'react-native-snap-carousel';
 import { Card , Button} from 'react-native-paper';
-import { Box, useToast } from 'native-base';
+import { Actionsheet, Box, useDisclose , useToast, Modal } from 'native-base';
 import RBSheet from "react-native-raw-bottom-sheet";
+import Animated from 'react-native-reanimated';
 
 
 
@@ -22,6 +23,8 @@ export const ProductCard = ({ product }: Props) => {
   const [quantity, setQuantity] = useState(0);
   const toast = useToast();
   const refRBSheet = useRef();
+  const { isOpen, onOpen, onClose } = useDisclose();
+  const [showModal, setShowModal] = useState(false);
 
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(false);
@@ -48,9 +51,6 @@ export const ProductCard = ({ product }: Props) => {
     const cartArray = await AsyncStorage.getItem('cart');
     let cart = [];
      
-
-    // Alert.alert('Producto Agregado', 'El producto ha sido agregado al carrito.');
-
     const cartItem = {
       product_id: product,
       quantity,
@@ -89,6 +89,10 @@ export const ProductCard = ({ product }: Props) => {
     
   return (
     <>
+     
+
+
+
       <Card style={styles.container}>
         <Image style={styles.productImage} source={{ uri: product.multimedia[0].images['400x400'] }} />
         <Text style={styles.productname}>{product.name}</Text>
@@ -105,27 +109,20 @@ export const ProductCard = ({ product }: Props) => {
         <Text style={styles.productPrice}>${product.price} </Text>
 
      
-        {/* <TouchableOpacity style={styles.buyButton} onPress={() => bottomSheet.current.show()}>
-          <Text style={styles.buyButtonText}>Ver Detalles</Text>
-        </TouchableOpacity> */}
+        <Button onPress={onOpen}>     
+        Ver Detalles
+        </Button>
 
-         {/* <BottomSheet hasDraggableIcon ref={bottomSheet} height={600}> */}
-      
-        
+        </Card>
 
-        <TouchableOpacity style={styles.buyButton} onPress={() => refRBSheet.current.open()}>
-          <Text style={styles.buyButtonText}>Ver Detalles</Text>
-        </TouchableOpacity>
 
-      </Card>
 
-      <RBSheet  ref={refRBSheet}  height={600}  closeOnDragDown={true}
-        closeOnPressMask={true} >
-     
-        <View style={styles.productItem}>
+        <Actionsheet isOpen={isOpen} onClose={onClose}>
+      <Actionsheet.Content>
+      <View style={styles.productItem}>
           <Text style={styles.text1}>products </Text>
-{/* 
-          <Carousel
+
+          {/* <Carousel
             data={product.multimedia}
             renderItem={({ item, index }) => (
               <TouchableOpacity onPress={() => handleImagePress(index)}>
@@ -141,6 +138,16 @@ export const ProductCard = ({ product }: Props) => {
             autoplay={true}
             autoplayInterval={2000}
           /> */}
+     
+        {/* <Animated.View>
+
+        
+        <Image style={index === selectedImageIndex ? styles.largeCardImage : styles.cardImage} source={{ uri: item.images['400x400'] }}   />
+
+        </Animated.View> */}
+
+
+
 
           <View style={styles.productContainer}>
             <Text style={styles.productname}>{product.name}</Text>
@@ -160,17 +167,30 @@ export const ProductCard = ({ product }: Props) => {
               </TouchableOpacity>
             </View>
              
-            <Button onPress={() => { addToCart(product, quantity, product.price)
-          toast.show({
-             render: () => {
-          return <Box bg="emerald.500" px="2" py="1" rounded="sm" mb={5}>
-                   Producto Agregado al carrito 
-                </Box>
-        }
-      });
-    }}>
-        Agregar al carrito 
-      </Button>
+        <Button onPress={() => {
+            addToCart(product, quantity, product.price);
+            toast.show({
+              render: () => {
+                return (
+                  <Box bg="emerald.500" px="2" py="1" rounded="sm" mb={5}  zIndex={9999}
+                  >
+                    Producto Agregado al carrito
+                  </Box>
+                );
+              },
+              placement: 'top',
+            });
+          }}>
+            Agregar al carrito
+          </Button>
+      
+
+
+
+
+
+
+
       
 
            
@@ -183,8 +203,23 @@ export const ProductCard = ({ product }: Props) => {
 
           </View>
         </View>
-      {/* </BottomSheet> */}
-      </RBSheet>
+
+
+
+
+  
+
+
+        
+
+
+        </Actionsheet.Content>
+    </Actionsheet>
+    
+
+     
+     
+    
     </>
   );
 };
@@ -308,6 +343,11 @@ const styles = StyleSheet.create({
       resizeMode: 'contain',
   
     },
+    image:{
+      resizeMode:'cover',
+      height: 500,
+      width: Dimensions.get('screen').width,
+    }
   
 
 });
