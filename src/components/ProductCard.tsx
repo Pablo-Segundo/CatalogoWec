@@ -43,22 +43,26 @@ export const ProductCard = ({ product }: Props) => {
   };
 
   const navigateToShoppingScreen = () => {
-    navigation.navigate('Shopping', { quantity, ProductName: product.name, price: product.price,  });
+    navigation.navigate('Shopping', { quantity, ProductName: product.name, price: product.price, multimedia: product.multimedia });
   };
 
-  const addToCart = async (product: Product, quantity: number, price: number,  ) => {
+  const addToCart = async (product: Product, quantity: number, price: number, multimedia: Multimedia[]) => {
     if (!quantity) quantity = 1;
     const cartArray = await AsyncStorage.getItem('cart');
     let cart = [];
-     
+  
     const cartItem = {
       product_id: product,
       quantity,
       _id: product._id,
       price: product.price,
-  
-     
+      multimedia: product.multimedia , 
     };
+  
+   
+ 
+  
+
 
     if (cartArray) {
       cart = JSON.parse(cartArray);
@@ -85,14 +89,15 @@ export const ProductCard = ({ product }: Props) => {
   //     setIsImageSelected(true);
   //   }
   // };
-  
+      
     
   return (
     <>
+
      
 
 
-
+   
       <Card style={styles.container}>
         <Image style={styles.productImage} source={{ uri: product.multimedia[0].images['400x400'] }} />
         <Text style={styles.productname}>{product.name}</Text>
@@ -114,6 +119,7 @@ export const ProductCard = ({ product }: Props) => {
         </Button>
 
         </Card>
+       
 
 
 
@@ -168,11 +174,11 @@ export const ProductCard = ({ product }: Props) => {
             </View>
              
         <Button onPress={() => {
-            addToCart(product, quantity, product.price);
+            addToCart(product, quantity, product.price, product.multimedia );
             toast.show({
               render: () => {
                 return (
-                  <Box bg="emerald.500" px="2" py="1" rounded="sm" mb={5}  zIndex={9999}
+                  <Box bg="emerald.500" px="8" py="5" rounded="sm" mb={5}  zIndex={999}
                   >
                     Producto Agregado al carrito
                   </Box>
@@ -183,16 +189,6 @@ export const ProductCard = ({ product }: Props) => {
           }}>
             Agregar al carrito
           </Button>
-      
-
-
-
-
-
-
-
-      
-
            
           {/* // <TouchableOpacity
           //   style={styles.buyButton}
@@ -204,21 +200,8 @@ export const ProductCard = ({ product }: Props) => {
           </View>
         </View>
 
-
-
-
-  
-
-
-        
-
-
         </Actionsheet.Content>
     </Actionsheet>
-    
-
-     
-     
     
     </>
   );
@@ -233,6 +216,7 @@ const styles = StyleSheet.create({
     margin: 10,
     borderRadius: 10,
     marginBottom: 10,
+   
   },
   textgray: {
     color: 'gray',

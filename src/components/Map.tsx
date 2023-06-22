@@ -5,11 +5,13 @@ import { mapStyle } from '../Styles/mapStyle';
 import Geolocation from 'react-native-geolocation-service';
 import { request, PERMISSIONS } from 'react-native-permissions';
 import { ActionSheetProvider, useActionSheet } from '@expo/react-native-action-sheet';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Card } from 'react-native-paper';
 
 import Buttonsh from 'react-native-paper';
 import { useDisclose, Button, Actionsheet, Icon  } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
+import { DatePickerIOS } from 'react-native';
 
 export function MapScreen() {
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -80,7 +82,7 @@ export function MapScreen() {
       }
     );
   };
-
+   
   return (
     <> 
          <View style={styles.header}>
@@ -125,15 +127,17 @@ export function MapScreen() {
            <Actionsheet.Content>
             <View>  
 
-              <Text> Nombre de quíen recibe:</Text>
+            <Text> Direccion </Text>
+            <TextInput style={styles.discountCodeInput} placeholder=" "/>
+
             <TextInput style={styles.discountCodeInput} placeholder="Código de descuento"/>
-            <TextInput style={styles.discountCodeInput} placeholder="Código de descuento"/>
-           
-            <TextInput style={styles.discountCodeInput} placeholder="Código de descuento"/>
+            <Text> Nombre de quíen recibe:</Text>
+            <TextInput style={styles.discountCodeInput} placeholder="Por favor, escriba su nombre"/>
                 <Text> Número telefónico </Text>
-            <TextInput style={styles.discountCodeInput} placeholder="Código de descuento"/>
-            <Text>Referencias: </Text>
-            <TextInput style={styles.discountCodeInput} placeholder="Código de descuento"/>
+            <TextInput style={styles.discountCodeInput} placeholder="por, favor ecriba su numero telefonico"/>
+            <Text>Referencias: (opccional) </Text>
+            <TextInput style={styles.discountCodeInput} placeholder="Casa de dos pisos "/>
+
              
              <Button> Guardar </Button>
 
@@ -203,7 +207,7 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     borderRadius: 5,
     padding: 10,
-    marginTop: 10,
+    marginTop: 20,
     
   },
   header: {

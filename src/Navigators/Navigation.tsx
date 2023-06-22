@@ -61,9 +61,11 @@ export const Navigation = ()=> {
         <Stack.Screen
         name="mapaapi "
         component={MapScreen }
-        options={{
-          headerShown: false,
-        }}
+        options={{ headerStyle: { backgroundColor: '#d3afd4', },
+          
+        headerShown: false,
+        
+      }}
         />
   
 
