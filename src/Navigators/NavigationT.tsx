@@ -166,7 +166,7 @@ type TabBarComponentProps = {
   
   const styles = StyleSheet.create({
     tabBar: {
-      backgroundColor: '#d3afd4',
+      backgroundColor: '#debdce',
      
     },
     activeBackground: {

@@ -20,7 +20,7 @@ export const ShoppingScreen = ({ product }: Props) => {
   const route = useRoute();
   const navigation = useNavigation();
   const [quantity, setQuantity] = useState(0);
-  const [cart1, setCart] = useState([]);
+  const [cart1, setCart] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalProducts, setTotalProducts] = useState(0);
   const toast = useToast();
@@ -45,12 +45,33 @@ export const ShoppingScreen = ({ product }: Props) => {
     cartShopping();
   }, []);
 
-  const decrementQuantity = () => {
-   
+  const decrementQuantity = (index) => {
+    const updatedCart = [...cart1];
+    const updatedProduct = updatedCart[index];
+    if (updatedProduct.quantity > 1) {
+      updatedProduct.quantity -= 1;
+      const updatedPrice = updatedProduct.quantity * updatedProduct.product_id.price;
+      AsyncStorage.setItem('cart', JSON.stringify(updatedCart))
+        .then(() => {
+          setCart(updatedCart);
+          setTotalPrice(totalPrice - updatedPrice);
+          setTotalProducts(totalProducts - 1);
+        })
+        .catch(error => {});
+    }
   };
-
-  const incrementQuantity = () => {
-   
+  const incrementQuantity = (index) => {
+    const updatedCart = [...cart1];
+    const updatedProduct = updatedCart[index];
+    updatedProduct.quantity += 1;
+    const updatedPrice = updatedProduct.quantity * updatedProduct.product_id.price;
+    AsyncStorage.setItem('cart', JSON.stringify(updatedCart))
+      .then(() => {
+        setCart(updatedCart);
+        setTotalPrice(totalPrice + updatedPrice);
+        setTotalProducts(totalProducts + 1);
+      })
+      .catch(error => {});
   };
 
   const deleteData = (index) => {
@@ -87,7 +108,7 @@ export const ShoppingScreen = ({ product }: Props) => {
         <TouchableOpacity  onPress={() => navigation.navigate('upload')}>
           <Card style={styles.cardcontainer}> 
             <View>
-            <Text> Selecciona tu direccion </Text>
+            <Text style={styles.textgray}> Selecciona tu direccion </Text>
             </View> 
             </Card>
           </TouchableOpacity>
@@ -103,7 +124,7 @@ export const ShoppingScreen = ({ product }: Props) => {
           <Text style={styles.headerText}> Precio: </Text>
         </View> */}
 
-        <FlatList
+<FlatList
   data={cart1}
   renderItem={({ item, index }) => (
     <View style={styles.container}>
@@ -119,19 +140,19 @@ export const ShoppingScreen = ({ product }: Props) => {
             <Text style={styles.productPrice}>${item.price} </Text>
           </View>
 
-          <View style={styles.quantityContainer}>
-            <TouchableOpacity onPress={decrementQuantity}>
-              <Text style={styles.quantityButton}>-</Text>
-            </TouchableOpacity>
-            <Text style={styles.quantity}>{quantity}</Text>
-            <TouchableOpacity onPress={incrementQuantity}>
-              <Text style={styles.quantityButton}>+</Text>
-            </TouchableOpacity>
-          </View>
-
-          <TouchableOpacity onPress={() => deleteData(index)}>
-            <Text style={styles.textelimit}>Eliminar</Text>
+        <View style={styles.quantityContainer}>
+          <TouchableOpacity onPress={() => decrementQuantity(index)}>
+            <Text style={styles.quantityButton}>-</Text>
           </TouchableOpacity>
+          <Text style={styles.quantity}>{item.quantity}</Text>
+          <TouchableOpacity onPress={() => incrementQuantity(index)}>
+            <Text style={styles.quantityButton}>+</Text>
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity onPress={() => deleteData(index)}>
+           <Text style={styles.textelimit}>Eliminar</Text>
+      </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -190,7 +211,6 @@ export const ShoppingScreen = ({ product }: Props) => {
 
     const styles = StyleSheet.create({
       header: {
-       
         padding: 30,
         backgroundColor: '#debdce',
         borderBottomLeftRadius: 50,
@@ -216,6 +236,10 @@ export const ShoppingScreen = ({ product }: Props) => {
         fontSize: 16,
         color: '#ff',
         padding: 2,
+      },
+      textgray: {
+        color: 'gray',
+        fontSize: 18,
       },
 
 
@@ -294,6 +318,7 @@ export const ShoppingScreen = ({ product }: Props) => {
         borderRadius: 5,
         padding: 10,
         marginTop: 10,
+        color: 'gray'
       },
       rowContainer: {
         flexDirection: 'row',

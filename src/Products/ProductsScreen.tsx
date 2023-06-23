@@ -55,7 +55,7 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
 
 
 
-      <View style={{ height: '8%', backgroundColor: '#D3AFD4' }} />
+      <View style={{ height: '8%', backgroundColor: '#debdce' }} />
       <FlatList
         data={products}
         numColumns={2}

@@ -1,54 +1,72 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Button, Card } from "react-native-paper";
-import { TextInput } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export const Direction = () => {
     const navigation = useNavigation();
-    // const [text, saetText] = React.useState("");
+    const [datosGuardados, setDatosGuardados] = useState(null);
+   
+
+    useEffect(() => {
+      const obtenerDatosGuardados = async () => {
+        try {
+          const nombreGuardado = await AsyncStorage.getItem('nombre');
+          const numeroTelefonicoGuardado = await AsyncStorage.getItem('numeroTelefonico');
+          const referenciasGuardadas = await AsyncStorage.getItem('referencias');
+    
+          setDatosGuardados({
+            nombre: nombreGuardado,
+            numeroTelefonico: numeroTelefonicoGuardado,
+            referencias: referenciasGuardadas,
+          });
+        } catch (error) {
+          console.log('Error al obtener los datos guardados:', error);
+        }
+      };
+    
+      obtenerDatosGuardados();
+    }, [])
+    
   return(
     
     <> 
               <View style={styles.header}>
-        <Text style={styles.headerText}>WAPIZIMA</Text>
-        <TouchableOpacity
-          style={styles.shoppingCartButton}
-          onPress={() => navigation.navigate('Shopping', {})}
-        >
-          <View style={styles.shoppingCartIcon}>
-            <Icon name="shopping-cart" size={30} color="#000" />
-          </View>
-        </TouchableOpacity>
+        <Text style={styles.headerWITHE}>Carrito de compras </Text>
+        <View> 
+        <TouchableOpacity  onPress={() => navigation.navigate('upload')}>
+          <Card style={styles.cardcontainer}> 
+            <View>
+            <Text style={styles.textgray}> Agrega una nueva direccion  </Text>
+            </View> 
+            </Card>
+          </TouchableOpacity>
+        </View>
       </View>
 
       
-       
-      <Text style={styles.productname}>Agregue su dirección </Text>
+       <View style={styles.cardC}>
+       <Text style={styles.productname}>Direcciones guardadas   </Text>
+       </View>
+     
 
-     <Card style={styles.cardContainer}>
-        <Text style={styles.textMap}> Mapa xd</Text>
-     </Card>
-
-     {/* <TextInput
-      label="direcction"
-      value={text}
-      onChangeText={text => setText(text)}
-    /> */}
-
-
-      
-    {/* <TouchableOpacity style={styles.buyButton}>
-        <Text style={styles.buyButtonText}>Confirmar direccion</Text>
-    </TouchableOpacity>  */}
-
-    <Text style={styles.productname}> Datos de la persona  </Text>
-      <Text style={styles.textgray}> Nombre: </Text>
-      <Text style={styles.textgray}> etc: </Text>
-      <Text style={styles.textgray}> Telefono </Text>
-      <Text style={styles.textgray}> Uwu</Text>
+      <TouchableOpacity >
+          <Card style={styles.cardcontainer}> 
+                <View> 
+            {datosGuardados && (
+              <View >
+                <Text style={styles.productname}> {datosGuardados.nombre}</Text>
+                <Text style={styles.textgray}>Calle </Text> 
+                <Text style={styles.textgray}>Número telefónico: {datosGuardados.numeroTelefonico}</Text>
+                <Text style={styles.textgray} >Referencias: {datosGuardados.referencias}</Text>
+              </View>
+            )}
+          </View>
+            </Card>
+          </TouchableOpacity>
 
 
 
@@ -69,21 +87,22 @@ const styles = StyleSheet.create({
         padding: 16,
       },
       cardContainer:{
-        height: '45%',
-        display: 'flex',
-        flexDirection: 'column',
-    
+        height: '40%',
+      },
+      cardC:{
+        height: '10%',
+        padding: 20,
       },
       productname:{
         fontSize: 18,
         fontWeight: 'bold',
         color:'black',
-        marginVertical: 25,
-        marginHorizontal: 25,
+       
     
       },
       textgray: {
         color: 'gray',
+        fontSize: 18,
       },
       textMap:{
         fontSize: 18,
@@ -155,15 +174,24 @@ const styles = StyleSheet.create({
           borderBottomRightRadius: 20,
       },
       header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: 10,
-        backgroundColor: '#D3AFD4',
+        padding: 30,
+        backgroundColor: '#debdce',
+        borderBottomLeftRadius: 50,
+        borderBottomRightRadius: 50,
+      },
+      headerWITHE: {
+        fontWeight: 'bold',
+        fontSize: 16,
+        color: '#ff',
+        padding: 2,
       },
     
       shoppingCartButton: {
         marginRight: 10,
+      },
+      cardcontainer: {
+        padding: 20,
+        
       },
       shoppingCartIcon: {
         padding: 5,

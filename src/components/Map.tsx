@@ -6,18 +6,25 @@ import Geolocation from 'react-native-geolocation-service';
 import { request, PERMISSIONS } from 'react-native-permissions';
 import { ActionSheetProvider, useActionSheet } from '@expo/react-native-action-sheet';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Card } from 'react-native-paper';
 
-import Buttonsh from 'react-native-paper';
+
+
+
 import { useDisclose, Button, Actionsheet, Icon  } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
-import { DatePickerIOS } from 'react-native';
+
+
 
 export function MapScreen() {
   const [currentLocation, setCurrentLocation] = useState(null);
   const { showActionSheetWithOptions } = useActionSheet();
   const { isOpen, onOpen, onClose} = useDisclose();
   const navigation = useNavigation();
+
+  const [nombre, setNombre] = useState('');
+  const [numeroTelefonico, setNumeroTelefonico] = useState('');
+  const [referencias, setReferencias] = useState('');
+
 
 
 
@@ -82,6 +89,17 @@ export function MapScreen() {
       }
     );
   };
+
+  const guardarDatos = async () => {
+    try {
+      await AsyncStorage.setItem('nombre', nombre);
+      await AsyncStorage.setItem('numeroTelefonico', numeroTelefonico);
+      await AsyncStorage.setItem('referencias', referencias);
+      console.log('Datos guardados uwu');
+    } catch (error) {
+      console.log('Error al guardar los datos unu:', error);
+    }
+  };
    
   return (
     <> 
@@ -96,8 +114,6 @@ export function MapScreen() {
         </View>
       </TouchableOpacity>
     </View>
-
-   
 
     <ActionSheetProvider>    
         <View style={styles.container}>
@@ -123,54 +139,64 @@ export function MapScreen() {
             </MapView>
  
    
-            <Actionsheet isOpen={isOpen} onClose={onClose}>
+            <Actionsheet isOpen={isOpen} onClose={onClose} size="full">
            <Actionsheet.Content>
-            <View>  
-
-            <Text> Direccion </Text>
+            <View> 
+              <Text style={styles.textgray}> *IMPORTANTE* *recuerde poner los datos de quien va a recibir el paquete*</Text> 
+            <Text style={styles.headerText}> Direccion:  </Text>
             <TextInput style={styles.discountCodeInput} placeholder=" "/>
+  
 
-            <TextInput style={styles.discountCodeInput} placeholder="Código de descuento"/>
-            <Text> Nombre de quíen recibe:</Text>
-            <TextInput style={styles.discountCodeInput} placeholder="Por favor, escriba su nombre"/>
-                <Text> Número telefónico </Text>
-            <TextInput style={styles.discountCodeInput} placeholder="por, favor ecriba su numero telefonico"/>
-            <Text>Referencias: (opccional) </Text>
-            <TextInput style={styles.discountCodeInput} placeholder="Casa de dos pisos "/>
+            <Text style={styles.headerText}>Nombre de quien recibe:</Text>
+                <TextInput
+                  style={styles.discountCodeInput}
+                  placeholder="Por favor, escriba su nombre"
+                  value={nombre}
+                  onChangeText={text => setNombre(text)}
+                />
 
-             
-             <Button> Guardar </Button>
+                <Text style={styles.headerText}>Número telefónico:</Text>
+                <TextInput 
+                  style={styles.discountCodeInput}
+                  placeholder ="Por favor, escriba su número telefónico"
+                  value={numeroTelefonico}
+                  onChangeText={text => setNumeroTelefonico(text)}
+                />
 
+                <Text style={styles.headerText}>Referencias (opcional):</Text>
+                <TextInput
+                  style={styles.discountCodeInput}
+                  placeholder="Casa de dos pisos"
+                  value={referencias}
+                  onChangeText={text => setReferencias(text)}
+                />
+              <Button
+               
+              style={styles.CardInfo}
+                onPress={() => {
+                  guardarDatos();
+                  navigation.navigate('Direction');
+                }}
+            />
+
+                
             </View>
+
+
             </Actionsheet.Content>
             </Actionsheet>
              
-
-             {/* <View>     
-              <Card style={StyleSheet.cardcontainer}>
-            <Button onPress={onOpen}>     
-             Ver Detalles
-             </Button>
-             </Card>
-             </View>  */}
-
-
              
        <Button title='botton' onPress={onOpen}>     
         Ver Detalles
-        </Button>
-
-        {/* <Card style={styles.cardcontainer}> 
-        <Text> hola ------------------- </Text>
-        </Card> */}
-            
+        </Button>   
               </>
             )}
           </View>
         </ActionSheetProvider>
 
         <Button title='botton' onPress={onOpen}>     
-        Agregue sus datos 
+        Agregue sus Dtos 
         </Button>
     </>
   );
@@ -199,15 +225,16 @@ const styles = StyleSheet.create({
     height: '70%',
   },
   CardInfo: {
-    height: '35%',
-    paddingHorizontal:'35%'
+    height: '10%',
+    paddingHorizontal:'15%'
   },
   discountCodeInput: {
     borderWidth: 1,
     borderColor: 'gray',
     borderRadius: 5,
     padding: 10,
-    marginTop: 20,
+    marginTop: 10,
+    color: 'gray'
     
   },
   header: {
@@ -215,7 +242,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 10,
-    backgroundColor: '#D3AFD4',
+    backgroundColor: '#debdce',
     zIndex: 9999,
   },
   headerText: {
@@ -231,5 +258,9 @@ const styles = StyleSheet.create({
   },
   shoppingCartButton: {
     marginRight: 10,
+  },
+  textgray: {
+    color: 'gray',
+    fontSize: 15,
   },
 });

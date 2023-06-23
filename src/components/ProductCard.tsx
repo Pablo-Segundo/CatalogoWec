@@ -12,7 +12,8 @@ import Animated from 'react-native-reanimated';
 
 
 
-interface Props {
+interface Props { 
+
   product: Product;
   route: any;
 }
@@ -116,14 +117,18 @@ export const ProductCard = ({ product }: Props) => {
      
         <Button onPress={onOpen}>     
         Ver Detalles
-        </Button>
+        </Button> 
+        {/* <Button onPress={onOpen} style={{ backgroundColor: '#f185bf', color: '#FFF' }}>
+            Ver Detalles
+              </Button> */}
+
 
         </Card>
        
 
 
 
-        <Actionsheet isOpen={isOpen} onClose={onClose}>
+          <Actionsheet isOpen={isOpen} onClose={onClose}>
       <Actionsheet.Content>
       <View style={styles.productItem}>
           <Text style={styles.text1}>products </Text>
@@ -143,8 +148,8 @@ export const ProductCard = ({ product }: Props) => {
             loop={true}
             autoplay={true}
             autoplayInterval={2000}
-          /> */}
-     
+          />
+      */}
         {/* <Animated.View>
 
         

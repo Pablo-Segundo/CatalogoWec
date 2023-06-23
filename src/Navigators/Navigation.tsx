@@ -6,9 +6,9 @@ import { NavigationTab } from './NavigationT';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { PetañaScreen } from '../Products/ProductsScreen';
 import { ShoppingScreen } from '../Screens/shoppingcart';
-import { Direction } from '../Screens/directionsP';
-import { MapScreen } from '../components/Map';
 
+import { MapScreen } from '../components/Map';
+import { Direction } from '../Screens/directionsP';
 
 
 
@@ -67,6 +67,16 @@ export const Navigation = ()=> {
         
       }}
         />
+
+    <Stack.Screen
+        name="Direction" 
+        component={Direction}
+        options={{ headerStyle: { backgroundColor: '#d3afd4', },
+          
+          headerShown: false,
+          
+        }}
+         />
   
 
 
