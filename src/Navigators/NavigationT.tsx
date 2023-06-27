@@ -12,6 +12,7 @@ import { ShoppingScreen } from '../Screens/shoppingcart'
 import { Direction } from '../Screens/directionsP'
 import { ActionSh } from '../Screens/Actionproduct'
 import { MapScreen } from '../components/Map'
+import { MapaScreenUwU } from '../components/useMap'
 
 
 const Tab = createBottomTabNavigator()

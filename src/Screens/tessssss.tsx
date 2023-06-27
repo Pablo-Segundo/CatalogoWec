@@ -180,6 +180,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
   },
+ 
   image: {
     width: 100,
     height: 100,

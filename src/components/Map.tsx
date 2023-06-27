@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, View, Dimensions, Platform,  TouchableOpacity, Text, TextInput } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import { mapStyle } from '../Styles/mapStyle';
@@ -6,24 +6,24 @@ import Geolocation from 'react-native-geolocation-service';
 import { request, PERMISSIONS } from 'react-native-permissions';
 import { ActionSheetProvider, useActionSheet } from '@expo/react-native-action-sheet';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-
-
-
-import { useDisclose, Button, Actionsheet, Icon  } from 'native-base';
+import { useDisclose, Button, Actionsheet, Icon, Card  } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
+import Geocoder from 'react-native-geocoding';
+
+Geocoder.init('AIzaSyC7YaZv2qVSqYLG641QWMWezPz_QnGEj2M'); 
 
 
 
 export function MapScreen() {
-  const [currentLocation, setCurrentLocation] = useState(null);
   const { showActionSheetWithOptions } = useActionSheet();
   const { isOpen, onOpen, onClose} = useDisclose();
   const navigation = useNavigation();
-
   const [nombre, setNombre] = useState('');
   const [numeroTelefonico, setNumeroTelefonico] = useState('');
   const [referencias, setReferencias] = useState('');
+  const [selectedAddress, setSelectedAddress] = useState('');
+  const [currentLocation, setCurrentLocation] = useState(null);
+  
 
 
 
@@ -64,31 +64,6 @@ export function MapScreen() {
     requestLocationPermission();
   }, []);
 
-  const showActionSheet = () => {
-    const options = ['Datos 1', 'Option 2', 'Cancel'];
-
-
-
-    const destructiveButtonIndex = 1;
-    const cancelButtonIndex = 2;
-
-    showActionSheetWithOptions(
-      {
-        options,
-        cancelButtonIndex,
-        destructiveButtonIndex,
-      },
-      (buttonIndex) => {
-        if (buttonIndex === 0) {
-          console.log('Option 1 selected');
-        } else if (buttonIndex === 1) {
-          console.log('Option 2 selected');
-        } else {
-          console.log('Cancel button pressed');
-        }
-      }
-    );
-  };
 
   const guardarDatos = async () => {
     try {
@@ -100,52 +75,83 @@ export function MapScreen() {
       console.log('Error al guardar los datos unu:', error);
     }
   };
+
+  const handleMapPress = async (coordinate) => {
+    try {
+      const response = await Geocoder.from(coordinate.latitude, coordinate.longitude);
+      const address = response.results[0].formatted_address;
+      setSelectedAddress(address);
+    } catch (error) {
+      console.log('Error retrieving address:', error);
+    }
+  };
+
+  const handleAddressChange = async (text) => {
+    setSelectedAddress(text);
+    try {
+      const response = await Geocoder.from(text);
+      if (response.results.length > 0) {
+        const { lat, lng } = response.results[0].geometry.location;
+        setCurrentLocation({ latitude: lat, longitude: lng });
+      }
+    } catch (error) {
+      console.log('Error retrieving coordinates:', error);
+    }
+  };
+
+  
    
   return (
     <> 
-         <View style={styles.header}>
-      <Text style={styles.headerText}>WAPIZIMA</Text>
-      <TouchableOpacity
-        style={styles.shoppingCartButton}
-        onPress={() => navigation.navigate('Shopping')}
-      >
-        <View style={styles.shoppingCartIcon}>
-          <Icon name="shopping-cart" size={30} color="#000" />
+    
+    <View style={styles.header}>
+        <View style={styles.headerinput}>
+          <TextInput
+            style={styles.discountCodeInput}
+            placeholder="Escriba su calle"
+            value={selectedAddress}
+            onChangeText={handleAddressChange}
+          />
         </View>
-      </TouchableOpacity>
-    </View>
+      </View>
 
     <ActionSheetProvider>    
         <View style={styles.container}>
           {currentLocation && (
             <>
-            <MapView
-              customMapStyle={mapStyle}
-              provider={PROVIDER_GOOGLE}
-              style={styles.mapStyle}
-              region={{
-                latitude: currentLocation.latitude,
-                longitude: currentLocation.longitude,
-                latitudeDelta: 0.003,
-                longitudeDelta: 0.003,
-              }}
-              mapType="standard"
-            >
-              <Marker
-                coordinate={{ latitude: currentLocation.latitude, longitude: currentLocation.longitude }}
-                title="Mi ubicación"
-                description="Esta es mi ubicación actual"
-              />
-            </MapView>
+    <MapView
+        provider={PROVIDER_GOOGLE}
+        style={styles.mapStyle}
+        region={{
+          latitude: currentLocation?.latitude || 0,
+          longitude: currentLocation?.longitude || 0,
+          latitudeDelta: 0.003,
+          longitudeDelta: 0.003,
+        }}
+        mapType="standard"
+        onPress={e => handleMapPress(e.nativeEvent.coordinate)}
+      >
+        {currentLocation && (
+          <Marker
+            coordinate={{ latitude: currentLocation.latitude, longitude: currentLocation.longitude }}
+            title="Mi ubicación"
+            description="Esta es mi ubicación actual"
+          />
+        )}
+      </MapView>
+
  
    
-            <Actionsheet isOpen={isOpen} onClose={onClose} size="full">
+            <Actionsheet isOpen={isOpen} onClose={onClose} size="100%"   >
            <Actionsheet.Content>
+          
+
             <View> 
+         
+
               <Text style={styles.textgray}> *IMPORTANTE* *recuerde poner los datos de quien va a recibir el paquete*</Text> 
             <Text style={styles.headerText}> Direccion:  </Text>
             <TextInput style={styles.discountCodeInput} placeholder=" "/>
-  
 
             <Text style={styles.headerText}>Nombre de quien recibe:</Text>
                 <TextInput
@@ -170,34 +176,39 @@ export function MapScreen() {
                   value={referencias}
                   onChangeText={text => setReferencias(text)}
                 />
-              <Button
-               
-              style={styles.CardInfo}
-                onPress={() => {
-                  guardarDatos();
-                  navigation.navigate('Direction');
-                }}
-            />
 
-                
-            </View>
+              <TouchableOpacity style={styles.buyButton}
+               onPress={() => {
+                guardarDatos();
+                navigation.navigate('Direction');
+              }}
+              >
+               <Text style={styles.headerWITHE}> Guardar Datos </Text>
+              </TouchableOpacity>
 
-
+              
+            </View> 
+                   
             </Actionsheet.Content>
+            
             </Actionsheet>
              
              
-       <Button title='botton' onPress={onOpen}>     
+       {/* <Button title='botton' onPress={onOpen}>     
         Ver Detalles
-        </Button>   
+        </Button>    */}
               </>
             )}
           </View>
         </ActionSheetProvider>
 
-        <Button title='botton' onPress={onOpen}>     
-        Agregue sus Dtos 
-        </Button>
+        <TouchableOpacity onPress={onOpen} style={styles.buyButton}>
+             <Text style={styles.headerWITHE}> Agregue sus datos </Text>
+        </TouchableOpacity>
+
+        
+
+
     </>
   );
 }
@@ -215,11 +226,19 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: 'gray',
+    flex: 1,
   },
   buyButton: {
-    backgroundColor: 'gray',
-    padding: 50,
-    borderRadius: 5,
+    backgroundColor: '#ff1493',
+        paddingVertical: 10,
+        alignItems: 'center',
+        borderRadius: 25,
+  },
+  headerWITHE: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    color: '#fff',
+    padding: 2,
   },
   cardcontainer: {
     height: '70%',
@@ -229,20 +248,22 @@ const styles = StyleSheet.create({
     paddingHorizontal:'15%'
   },
   discountCodeInput: {
-    borderWidth: 1,
     borderColor: 'gray',
     borderRadius: 5,
-    padding: 10,
-    marginTop: 10,
-    color: 'gray'
+    padding: 5,
+    marginTop: 5,
+    color: 'black',
+   
+    
     
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
+    padding: 15,
     backgroundColor: '#debdce',
+    zIndex: 9999,
+  },
+  headerinput: {
+    backgroundColor: '#fff',
     zIndex: 9999,
   },
   headerText: {

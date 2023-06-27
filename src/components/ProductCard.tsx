@@ -60,10 +60,6 @@ export const ProductCard = ({ product }: Props) => {
       multimedia: product.multimedia , 
     };
   
-   
- 
-  
-
 
     if (cartArray) {
       cart = JSON.parse(cartArray);
@@ -95,15 +91,16 @@ export const ProductCard = ({ product }: Props) => {
   return (
     <>
 
-     
-
-
-   
+     <TouchableOpacity onPress={onOpen} style={styles.container}>
       <Card style={styles.container}>
         <Image style={styles.productImage} source={{ uri: product.multimedia[0].images['400x400'] }} />
+       
         <Text style={styles.productname}>{product.name}</Text>
-        <Text style={styles.textgray}>Disponible: {product.quantity}</Text>
+      
+        {/* <Text style={styles.textgray}>Disponible: {product.quantity}</Text> */}
+        <Text style={styles.productPrice}>${product.price} </Text>
         <View style={styles.quantityContainer}>
+
           <TouchableOpacity onPress={decrementQuantity}>
             <Text style={styles.quantityButton}>-</Text>
           </TouchableOpacity>
@@ -112,16 +109,10 @@ export const ProductCard = ({ product }: Props) => {
             <Text style={styles.quantityButton}>+</Text>
           </TouchableOpacity>
         </View>
-        <Text style={styles.productPrice}>${product.price} </Text>
-
-     
-        <Button onPress={onOpen}>     
-        Ver Detalles
-        </Button> 
-        {/* <Button onPress={onOpen} style={{ backgroundColor: '#f185bf', color: '#FFF' }}>
-            Ver Detalles
-              </Button> */}
-
+       
+         <TouchableOpacity onPress={onOpen} style={styles.buyButton}>
+            <Text style={styles.textWhite}>Agregar al carrito </Text>
+         </TouchableOpacity>
 
         </Card>
        
@@ -150,15 +141,7 @@ export const ProductCard = ({ product }: Props) => {
             autoplayInterval={2000}
           />
       */}
-        {/* <Animated.View>
-
-        
-        <Image style={index === selectedImageIndex ? styles.largeCardImage : styles.cardImage} source={{ uri: item.images['400x400'] }}   />
-
-        </Animated.View> */}
-
-
-
+     
 
           <View style={styles.productContainer}>
             <Text style={styles.productname}>{product.name}</Text>
@@ -177,36 +160,31 @@ export const ProductCard = ({ product }: Props) => {
                 <Text style={styles.quantityButton}>+</Text>
               </TouchableOpacity>
             </View>
-             
-        <Button onPress={() => {
-            addToCart(product, quantity, product.price, product.multimedia );
-            toast.show({
-              render: () => {
-                return (
-                  <Box bg="emerald.500" px="8" py="5" rounded="sm" mb={5}  zIndex={999}
-                  >
-                    Producto Agregado al carrito
-                  </Box>
-                );
-              },
-              placement: 'top',
-            });
-          }}>
-            Agregar al carrito
-          </Button>
-           
-          {/* // <TouchableOpacity
-          //   style={styles.buyButton}
-          //   onPress={() => addToCart(product, quantity, product.price)}
-          // >
-          //   <Text style={styles.buyButtonText}>Agregar al Carrito </Text>
-          // </TouchableOpacity> */}
+
+         <TouchableOpacity style={styles.buyButton} onPress={() => {
+           addToCart(product, quantity, product.price, product.multimedia );
+           toast.show({
+            render: () => {
+              return(
+                <Box bg="emerald.500" px="8" py="5" rounded="sm" mb={5}  zIndex={999}
+                >
+                  producto Agregado al carrito   
+                </Box>
+              );
+            },
+            placement: 'top',
+           });
+         }}>
+             <Text style={styles.textWhite}>Agregar al carrito </Text>
+         </TouchableOpacity>
+
 
           </View>
         </View>
 
         </Actionsheet.Content>
     </Actionsheet>
+    </TouchableOpacity>
     
     </>
   );
@@ -218,16 +196,17 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    margin: 10,
+    margin: 5,
     borderRadius: 10,
     marginBottom: 10,
+    
    
   },
   textgray: {
     color: 'gray',
   },
   cardcontainer: {
-    height: '35%',
+    height: '28%',
   },
 
   productItem: {
@@ -251,17 +230,26 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color:'#1e90ff',
-    marginVertical: 10,
+    
     
   },
   buyButton: {
-    backgroundColor: '#ff69b4',
-    padding: 5,
-    borderRadius: 5,
+    backgroundColor: '#ff1493',
+    paddingVertical: 5,
+    alignItems: 'center',
+    borderRadius: 25,
+    marginBottom: 15,
   },
   buyButtonText: {
     color: 'white',
     fontWeight: 'bold',
+    fontSize: 16,
+    alignItems: 'center',
+    borderWidth:1,
+    padding: 10,
+   marginBottom: 10,
+    borderRadius:70,
+    borderColor: '#ff1493'
   },
   IconBarra: {
     flex: 1,
@@ -285,7 +273,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 10,
+    marginBottom: 10,
+    borderRadius:70,
+    borderColor: '#ff1493'
   },
+
+
   quantityButton: {
     color: 'black',
     fontSize: 20,
@@ -300,8 +293,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginHorizontal: 10,
   },
-  text1: {
-      color: "gray",
+  textWhite: {
+      color: "#FFF",
       fontSize: 15,
       fontWeight: "bold",
     },

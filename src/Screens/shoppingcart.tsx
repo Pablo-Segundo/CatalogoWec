@@ -10,6 +10,8 @@ import { Card, Button } from 'react-native-paper';
 import { Box, Center, NativeBaseProvider } from 'native-base';
 import { useToast, Modal, useDisclose,Actionsheet } from 'native-base';
 import { Navigation } from '../Navigators/Navigation';
+import { BorderlessButton } from 'react-native-gesture-handler';
+import { border } from 'native-base/lib/typescript/theme/styled-system';
 
 interface Props {
   product: Product;
@@ -64,7 +66,7 @@ export const ShoppingScreen = ({ product }: Props) => {
     const updatedCart = [...cart1];
     const updatedProduct = updatedCart[index];
     updatedProduct.quantity += 1;
-    const updatedPrice = updatedProduct.quantity * updatedProduct.product_id.price;
+    const updatedPrice = updatedProduct.product_id.price;;
     AsyncStorage.setItem('cart', JSON.stringify(updatedCart))
       .then(() => {
         setCart(updatedCart);
@@ -135,10 +137,19 @@ export const ShoppingScreen = ({ product }: Props) => {
 
         <View style={styles.detailsContainer}>
           <View style={styles.tableRow}>
+         
             <Text style={styles.rowText}>{item.product_id.name}</Text>
-            <Text style={styles.rowText}>( {item.quantity} ) X </Text>
-            <Text style={styles.productPrice}>${item.price} </Text>
+            {/* <Text style={styles.rowText}>( {item.quantity} ) X </Text> 
+            <Text style={styles.productPrice}>${item.price} </Text> */}
           </View>
+
+         <View style={styles.rowContainer}>
+         <Text style={styles.rowText}>( {item.quantity} ) X </Text>
+         <Text style={styles.productPrice}>${item.price} </Text>
+          </View> 
+
+
+
 
         <View style={styles.quantityContainer}>
           <TouchableOpacity onPress={() => decrementQuantity(index)}>
@@ -172,18 +183,33 @@ export const ShoppingScreen = ({ product }: Props) => {
             <Button onPress={() => setShowModal(true)}>Continuar</Button>
 
             <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-              <Modal.Content maxWidth="400px">
+              <Modal.Content maxWidth="500px">
                 <Modal.CloseButton />
                 <Modal.Header>Método de Pago </Modal.Header>
                 <Modal.Body>
-                  <Button> Tarjeta </Button>
-                  <Button> Pagos contra entrega </Button>
+                  
+                  <TouchableOpacity style={styles.buyButtonText}> 
+                    <Text style={styles.headerText}> Tarjeta</Text> 
+                  </TouchableOpacity>
+
+                  <TouchableOpacity style={styles.buyButtonText}>
+                    <Text style={styles.headerText}> Pago contra entrega</Text>
+                  </TouchableOpacity>
+                  
+               
+                
+                  
                 </Modal.Body>
-                <Modal.Footer>
-                  <Center>
-                    <Button onPress={() => navigation.navigate('mapaapi')}> Conntinuar </Button>
-                  </Center>
-                </Modal.Footer>
+              
+                  
+                    <TouchableOpacity style={styles.buyButton}>
+                      <Text style={styles.headerTextWhite}> Continuar</Text>
+                    </TouchableOpacity>
+
+
+                    {/* <Button onPress={() => navigation.navigate('mapaapi')}> Continuar </Button> */}
+                  
+              
               </Modal.Content>
             </Modal>
 
@@ -210,6 +236,7 @@ export const ShoppingScreen = ({ product }: Props) => {
 };
 
     const styles = StyleSheet.create({
+  
       header: {
         padding: 30,
         backgroundColor: '#debdce',
@@ -231,10 +258,18 @@ export const ShoppingScreen = ({ product }: Props) => {
         color: 'black',
         padding: 2,
       },      
+      headerTextWhite: {
+        fontWeight: 'bold',
+        fontSize: 20,
+        color: '#FFF',
+        padding: 2,
+      }, 
+
+
       headerWITHE: {
         fontWeight: 'bold',
         fontSize: 16,
-        color: '#ff',
+        color: '#fff',
         padding: 2,
       },
       textgray: {
@@ -278,23 +313,33 @@ export const ShoppingScreen = ({ product }: Props) => {
         fontSize: 14,
         color: 'black',
       },
+
       buyButton: {
-        backgroundColor: '#D3AFD4',
-        paddingVertical: 12,
-        borderRadius: 4,
+        backgroundColor: '#ff1493',
+        paddingVertical: 5,
         alignItems: 'center',
+        borderRadius: 25,
       },
+      
       cardcontent: {
         backgroundColor: '#dcdcdc',
         paddingVertical: 12,
         borderRadius: 4,
         alignItems: 'center',
       },
+
       buyButtonText: {
         color: 'white',
         fontWeight: 'bold',
         fontSize: 16,
+        alignItems: 'center',
+        borderWidth:1,
+        padding: 10,
+       marginBottom: 10,
+        borderRadius:70,
+        borderColor: '#ff1493'
       },
+
       quantityContainer: {
         flexDirection: 'row',
         alignItems: 'center',

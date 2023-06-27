@@ -35,7 +35,7 @@ export const Direction = () => {
     
     <> 
               <View style={styles.header}>
-        <Text style={styles.headerWITHE}>Carrito de compras </Text>
+        <Text style={styles.headerWITHE}>Direcciones del usuario  </Text>
         <View> 
         <TouchableOpacity  onPress={() => navigation.navigate('upload')}>
           <Card style={styles.cardcontainer}> 
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
       headerWITHE: {
         fontWeight: 'bold',
         fontSize: 16,
-        color: '#ff',
+        color: '#fff',
         padding: 2,
       },
     
