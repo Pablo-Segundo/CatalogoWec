@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { Button, Card } from "react-native-paper";
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';

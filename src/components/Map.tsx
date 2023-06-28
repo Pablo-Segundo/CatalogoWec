@@ -10,10 +10,6 @@ import { useDisclose, Button, Actionsheet, Icon, Card  } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import Geocoder from 'react-native-geocoding';
 
-Geocoder.init('AIzaSyC7YaZv2qVSqYLG641QWMWezPz_QnGEj2M'); 
-
-
-
 export function MapScreen() {
   const { showActionSheetWithOptions } = useActionSheet();
   const { isOpen, onOpen, onClose} = useDisclose();
@@ -48,6 +44,7 @@ export function MapScreen() {
   };
 
   const getCurrentLocation = () => {
+    Geocoder.init('AIzaSyDFHYFl_pImNIwTzu2YwjL5R8pH-nlWCE4');   
     Geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
@@ -66,6 +63,7 @@ export function MapScreen() {
 
 
   const guardarDatos = async () => {
+
     try {
       await AsyncStorage.setItem('nombre', nombre);
       await AsyncStorage.setItem('numeroTelefonico', numeroTelefonico);
@@ -77,6 +75,7 @@ export function MapScreen() {
   };
 
   const handleMapPress = async (coordinate) => {
+     
     try {
       const response = await Geocoder.from(coordinate.latitude, coordinate.longitude);
       const address = response.results[0].formatted_address;
@@ -87,6 +86,7 @@ export function MapScreen() {
   };
 
   const handleAddressChange = async (text) => {
+    
     setSelectedAddress(text);
     try {
       const response = await Geocoder.from(text);
@@ -99,8 +99,6 @@ export function MapScreen() {
     }
   };
 
-  
-   
   return (
     <> 
     
