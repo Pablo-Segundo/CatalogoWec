@@ -9,9 +9,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDisclose, Button, Actionsheet, Icon, Card  } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import Geocoder from 'react-native-geocoding';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+
 
 export function MapScreen() {
-  const { showActionSheetWithOptions } = useActionSheet();
   const { isOpen, onOpen, onClose} = useDisclose();
   const navigation = useNavigation();
   const [nombre, setNombre] = useState('');
@@ -19,9 +20,9 @@ export function MapScreen() {
   const [referencias, setReferencias] = useState('');
   const [selectedAddress, setSelectedAddress] = useState('');
   const [currentLocation, setCurrentLocation] = useState(null);
+
+  const [selectedLocation, setSelectedLocation] = useState(null);
   
-
-
 
 
   const requestLocationPermission = async () => {
@@ -80,12 +81,13 @@ export function MapScreen() {
       const response = await Geocoder.from(coordinate.latitude, coordinate.longitude);
       const address = response.results[0].formatted_address;
       setSelectedAddress(address);
+      setSelectedLocation(coordinate);
     } catch (error) {
       console.log('Error retrieving address:', error);
     }
   };
 
-  const handleAddressChange = async (text) => {
+  const  handleAddressChange = async (text,) => {
     
     setSelectedAddress(text);
     try {
@@ -99,16 +101,21 @@ export function MapScreen() {
     }
   };
 
+
+ 
+
+
+
   return (
     <> 
-    
+
+
     <View style={styles.header}>
         <View style={styles.headerinput}>
           <TextInput
-            style={styles.discountCodeInput}
+            style={styles.directionInput}
             placeholder="Escriba su calle"
-            value={selectedAddress}
-            onChangeText={handleAddressChange}
+             onChangeText={handleAddressChange}
           />
         </View>
       </View>
@@ -132,9 +139,16 @@ export function MapScreen() {
         {currentLocation && (
           <Marker
             coordinate={{ latitude: currentLocation.latitude, longitude: currentLocation.longitude }}
-            title="Mi ubicación"
-            description="Esta es mi ubicación actual"
+            title="ubicación"
+            description="Ubicacion aproximada de la calle "
+           
           />
+        //   <Marker
+        //   coordinate={selectedLocation}
+        //   title="Ubicación seleccionada"
+        //   description="Esta es la ubicación que has seleccionado"
+        //   pinColor="blue" 
+        // />
         )}
       </MapView>
 
@@ -148,11 +162,19 @@ export function MapScreen() {
          
 
               <Text style={styles.textgray}> *IMPORTANTE* *recuerde poner los datos de quien va a recibir el paquete*</Text> 
-            <Text style={styles.headerText}> Direccion:  </Text>
-            <TextInput style={styles.discountCodeInput} placeholder=" "/>
 
-            <Text style={styles.headerText}>Nombre de quien recibe:</Text>
-                <TextInput
+            <Text style={styles.headerText}> Direccion:  </Text>
+            <TextInput
+            style={styles.discountCodeInput} 
+            placeholder="Escriba su calle" 
+            value={selectedAddress} 
+            onChangeText={handleAddressChange}
+            />
+
+
+
+            <Text style={styles.headerText}>Nombre de quien recibe:</Text> 
+                 <TextInput
                   style={styles.discountCodeInput}
                   placeholder="Por favor, escriba su nombre"
                   value={nombre}
@@ -173,7 +195,7 @@ export function MapScreen() {
                   placeholder="Casa de dos pisos"
                   value={referencias}
                   onChangeText={text => setReferencias(text)}
-                />
+                /> 
 
               <TouchableOpacity style={styles.buyButton}
                onPress={() => {
@@ -246,15 +268,22 @@ const styles = StyleSheet.create({
     paddingHorizontal:'15%'
   },
   discountCodeInput: {
-    borderColor: 'gray',
+    borderColor: 'gray', 
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 15,
+    marginTop: 10,
+    color: 'black',
+  },
+  directionInput: {
+    borderColor: 'gray', 
+    borderWidth: 1,
     borderRadius: 5,
     padding: 5,
     marginTop: 5,
     color: 'black',
-   
-    
-    
   },
+
   header: {
     padding: 15,
     backgroundColor: '#debdce',

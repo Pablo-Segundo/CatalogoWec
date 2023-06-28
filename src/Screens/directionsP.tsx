@@ -14,6 +14,7 @@ export const Direction = () => {
       const obtenerDatosGuardados = async () => {
         try {
           const nombreGuardado = await AsyncStorage.getItem('nombre');
+          const dirrecionselectedAddress = await AsyncStorage.getItem('direccion');
           const numeroTelefonicoGuardado = await AsyncStorage.getItem('numeroTelefonico');
           const referenciasGuardadas = await AsyncStorage.getItem('referencias');
     
@@ -21,6 +22,7 @@ export const Direction = () => {
             nombre: nombreGuardado,
             numeroTelefonico: numeroTelefonicoGuardado,
             referencias: referenciasGuardadas,
+            direccion: dirrecionselectedAddress
           });
         } catch (error) {
           console.log('Error al obtener los datos guardados:', error);
@@ -58,7 +60,7 @@ export const Direction = () => {
             {datosGuardados && (
               <View >
                 <Text style={styles.productname}> {datosGuardados.nombre}</Text>
-                <Text style={styles.textgray}>Calle </Text> 
+                <Text style={styles.textgray}>Calle: {datosGuardados.direccion}</Text> 
                 <Text style={styles.textgray}>Número telefónico: {datosGuardados.numeroTelefonico}</Text>
                 <Text style={styles.textgray} >Referencias: {datosGuardados.referencias}</Text>
               </View>
