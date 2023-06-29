@@ -9,8 +9,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDisclose, Button, Actionsheet, Icon, Card  } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import Geocoder from 'react-native-geocoding';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-
 
 export function MapScreen() {
   const { isOpen, onOpen, onClose} = useDisclose();
@@ -20,9 +18,11 @@ export function MapScreen() {
   const [referencias, setReferencias] = useState('');
   const [selectedAddress, setSelectedAddress] = useState('');
   const [currentLocation, setCurrentLocation] = useState(null);
-
   const [selectedLocation, setSelectedLocation] = useState(null);
+
+
   
+
 
 
   const requestLocationPermission = async () => {
@@ -33,7 +33,7 @@ export function MapScreen() {
       } else if (Platform.OS === 'ios') {
         permission = PERMISSIONS.IOS.LOCATION_WHEN_IN_USE;
       }
-      const granted = await request(permission);
+      const granted = await request(permissionn);
       if (granted === 'granted') {
         getCurrentLocation();
       } else {
@@ -43,6 +43,7 @@ export function MapScreen() {
       console.log(error);
     }
   };
+
 
   const getCurrentLocation = () => {
     Geocoder.init('AIzaSyDFHYFl_pImNIwTzu2YwjL5R8pH-nlWCE4');   
@@ -69,6 +70,7 @@ export function MapScreen() {
       await AsyncStorage.setItem('nombre', nombre);
       await AsyncStorage.setItem('numeroTelefonico', numeroTelefonico);
       await AsyncStorage.setItem('referencias', referencias);
+      await AsyncStorage.setItem('selectedAddress', selectedAddress);
       console.log('Datos guardados uwu');
     } catch (error) {
       console.log('Error al guardar los datos unu:', error);
@@ -102,9 +104,6 @@ export function MapScreen() {
   };
 
 
- 
-
-
 
   return (
     <> 
@@ -119,6 +118,22 @@ export function MapScreen() {
           />
         </View>
       </View>
+
+
+      {/* <View style={styles.header}>
+        <View style={styles.headerinput}>
+           <GooglePlacesAutocomplete
+            placeholder='Escriba su calle plox uwu '
+            onPress={(data, details = null) => {
+              console.log(data.details);
+            }}
+            query={{
+              key:'AIzaSyDFHYFl_pImNIwTzu2YwjL5R8pH-nlWCE4',
+              language: 'es'
+            }}
+           />
+           </View>
+      </View> */}
 
     <ActionSheetProvider>    
         <View style={styles.container}>
@@ -136,19 +151,13 @@ export function MapScreen() {
         mapType="standard"
         onPress={e => handleMapPress(e.nativeEvent.coordinate)}
       >
-        {currentLocation && (
+        {currentLocation && ( 
           <Marker
             coordinate={{ latitude: currentLocation.latitude, longitude: currentLocation.longitude }}
             title="ubicación"
-            description="Ubicacion aproximada de la calle "
-           
+            description="Ubicacion aproximada de la calle "  
+            draggable    
           />
-        //   <Marker
-        //   coordinate={selectedLocation}
-        //   title="Ubicación seleccionada"
-        //   description="Esta es la ubicación que has seleccionado"
-        //   pinColor="blue" 
-        // />
         )}
       </MapView>
 
@@ -168,7 +177,7 @@ export function MapScreen() {
             style={styles.discountCodeInput} 
             placeholder="Escriba su calle" 
             value={selectedAddress} 
-            onChangeText={handleAddressChange}
+            onChangeText={handleAddressChange =>setSelectedAddress(handleAddressChange) }
             />
 
 
@@ -195,6 +204,7 @@ export function MapScreen() {
                   placeholder="Casa de dos pisos"
                   value={referencias}
                   onChangeText={text => setReferencias(text)}
+                  
                 /> 
 
               <TouchableOpacity style={styles.buyButton}

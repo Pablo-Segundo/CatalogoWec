@@ -1,19 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, Dimensions } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, Dimensions, FlatList } from 'react-native';
 import { Product } from '../interfaces/ProductsCategoryInterface';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-import Carousel from 'react-native-snap-carousel';
 import { Card , Button} from 'react-native-paper';
 import { Actionsheet, Box, useDisclose , useToast, Modal } from 'native-base';
-import RBSheet from "react-native-raw-bottom-sheet";
-import Animated from 'react-native-reanimated';
+import Carousel from 'react-native-snap-carousel';
 
-
-
-interface Props { 
-
+interface Props {
   product: Product;
   route: any;
 }
@@ -28,7 +22,7 @@ export const ProductCard = ({ product }: Props) => {
   const [showModal, setShowModal] = useState(false);
 
 
-  const [selectedImageIndex, setSelectedImageIndex] = useState(false);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isImageSelected, setIsImageSelected] = useState(false);
 
   const decrementQuantity = () => {
@@ -51,15 +45,15 @@ export const ProductCard = ({ product }: Props) => {
     if (!quantity) quantity = 1;
     const cartArray = await AsyncStorage.getItem('cart');
     let cart = [];
-  
+
     const cartItem = {
       product_id: product,
       quantity,
       _id: product._id,
       price: product.price,
-      multimedia: product.multimedia , 
+      multimedia: product.multimedia ,
     };
-  
+
 
     if (cartArray) {
       cart = JSON.parse(cartArray);
@@ -76,28 +70,28 @@ export const ProductCard = ({ product }: Props) => {
     }
     await AsyncStorage.setItem('cart', JSON.stringify(cart));
   };
-    
-  // const handleImagePress = (index: number) => {
-  //   if (selectedImageIndex === index) {
-  //     setSelectedImageIndex(-1);
-  //     setIsImageSelected(false);
-  //   } else {
-  //     setSelectedImageIndex(index);
-  //     setIsImageSelected(true);
-  //   }
-  // };
-      
-    
+
+
+
+  const handleImagePress = (index: number) => {
+    if (selectedImageIndex === index) {
+      setSelectedImageIndex(-1);
+      setIsImageSelected(false);
+    } else {
+      setSelectedImageIndex(index);
+      setIsImageSelected(true);
+    }
+  };
+     
   return (
     <>
-
      <TouchableOpacity onPress={onOpen} style={styles.container}>
       <Card style={styles.container}>
         <Image style={styles.productImage} source={{ uri: product.multimedia[0].images['400x400'] }} />
-       
+
         <Text style={styles.productname}>{product.name}</Text>
-      
-        {/* <Text style={styles.textgray}>Disponible: {product.quantity}</Text> */}
+
+        <Text style={styles.textgray}>Disponible: {product.quantity}</Text>
         <Text style={styles.productPrice}>${product.price} </Text>
         <View style={styles.quantityContainer}>
 
@@ -109,22 +103,19 @@ export const ProductCard = ({ product }: Props) => {
             <Text style={styles.quantityButton}>+</Text>
           </TouchableOpacity>
         </View>
-       
+
          <TouchableOpacity onPress={onOpen} style={styles.buyButton}>
             <Text style={styles.textWhite}>Agregar al carrito </Text>
          </TouchableOpacity>
 
         </Card>
-       
-
-
 
           <Actionsheet isOpen={isOpen} onClose={onClose}>
       <Actionsheet.Content>
       <View style={styles.productItem}>
           <Text style={styles.text1}>products </Text>
-
-          {/* <Carousel
+        
+           {/* <Carousel
             data={product.multimedia}
             renderItem={({ item, index }) => (
               <TouchableOpacity onPress={() => handleImagePress(index)}>
@@ -139,10 +130,26 @@ export const ProductCard = ({ product }: Props) => {
             loop={true}
             autoplay={true}
             autoplayInterval={2000}
-          />
-      */}
-     
+          />   */}
 
+      
+        <FlatList
+          data={product.multimedia}
+          renderItem={({ item, index }) => (
+            <TouchableOpacity onPress={() => (index)}>
+              <Image
+                style={index === selectedImageIndex ? styles.largeCardImage : styles.cardImage}
+                source={{ uri: item.images['400x400'] }}
+              />
+            </TouchableOpacity>
+          )}
+          horizontal
+          keyExtractor={(item, index) => index.toString()}
+          showsHorizontalScrollIndicator={false}
+          pagingEnabled
+        /> 
+
+     
           <View style={styles.productContainer}>
             <Text style={styles.productname}>{product.name}</Text>
             <Text style={styles.productname}> Disponible: {product.quantity} </Text>
@@ -150,7 +157,7 @@ export const ProductCard = ({ product }: Props) => {
               <Text style={styles.Textcard}>{product.description}</Text>
             </Card>
 
-            
+
             <View style={styles.quantityContainer}>
               <TouchableOpacity onPress={decrementQuantity}>
                 <Text style={styles.quantityButton}>-</Text>
@@ -168,7 +175,7 @@ export const ProductCard = ({ product }: Props) => {
               return(
                 <Box bg="emerald.500" px="8" py="5" rounded="sm" mb={5}  zIndex={999}
                 >
-                  producto Agregado al carrito   
+                  producto Agregado al carrito u
                 </Box>
               );
             },
@@ -185,10 +192,12 @@ export const ProductCard = ({ product }: Props) => {
         </Actionsheet.Content>
     </Actionsheet>
     </TouchableOpacity>
-    
+
     </>
   );
 };
+
+
 
 const styles = StyleSheet.create({
 
@@ -199,18 +208,17 @@ const styles = StyleSheet.create({
     margin: 5,
     borderRadius: 10,
     marginBottom: 10,
-    
-   
+
+
   },
   textgray: {
     color: 'gray',
   },
   cardcontainer: {
-    height: '28%',
+    height: '15%',
   },
 
   productItem: {
-    margin: 10,
     alignItems: 'center',
   },
   productImage: {
@@ -219,7 +227,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   productname:{
-    
+
     fontSize: 15,
     fontWeight: 'bold',
     color:'black',
@@ -230,8 +238,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color:'#1e90ff',
-    
-    
+
+
   },
   buyButton: {
     backgroundColor: '#ff1493',
@@ -253,12 +261,12 @@ const styles = StyleSheet.create({
   },
   IconBarra: {
     flex: 1,
-    paddingTop: 20, 
+    paddingTop: 20,
     paddingHorizontal: 10,
   },
   IconContainer: {
    position: 'absolute',
-   top: 10, 
+   top: 10,
    right: 10,
    zIndex: 1,
   },
@@ -268,7 +276,7 @@ const styles = StyleSheet.create({
     top: 20,
     left: 25,
     zIndex: 1,
-  },  
+  },
   quantityContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -284,7 +292,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     paddingHorizontal: 15,
-          
+
 
   },
   quantity: {
@@ -301,7 +309,7 @@ const styles = StyleSheet.create({
     cardImage: {
       width: 300,
       backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      height: 170,
+      height: 190,
       resizeMode: 'cover',
       margin: 10,
 
@@ -323,13 +331,12 @@ const styles = StyleSheet.create({
       width: 320,
       height: 320,
       resizeMode: 'contain',
-  
+
     },
     image:{
       resizeMode:'cover',
       height: 500,
       width: Dimensions.get('screen').width,
     }
-  
 
 });

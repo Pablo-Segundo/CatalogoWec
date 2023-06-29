@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList, TextInput, Image } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { Product } from '../interfaces/ProductsCategoryInterface';
 import { useNavigation } from '@react-navigation/native';
 import { useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { Card, Button } from 'react-native-paper';
-import { Box, Center, NativeBaseProvider } from 'native-base';
-import { useToast, Modal, useDisclose,Actionsheet } from 'native-base';
-import { Navigation } from '../Navigators/Navigation';
-import { BorderlessButton } from 'react-native-gesture-handler';
-import { border } from 'native-base/lib/typescript/theme/styled-system';
+
+import { useToast, Modal, useDisclose } from 'native-base';
+
 
 interface Props {
   product: Product;
@@ -95,16 +92,14 @@ export const ShoppingScreen = ({ product }: Props) => {
 
   return (
     <>
-
-     
       <View style={styles.header}>
         <Text style={styles.headerWITHE}>Carrito de compras </Text>
-        
+
          {/* <TouchableOpacity style={styles.shoppingCartButton} onPress={() => navigation.navigate('Shopping')}>
           <View style={styles.shoppingCartIcon}>
             <Icon name="shopping-cart" size={30} color="#000" />
           </View>
-        </TouchableOpacity>   */}
+        </TouchableOpacity> */}
 
         <View> 
         <TouchableOpacity  onPress={() => navigation.navigate('upload')}>
@@ -120,55 +115,48 @@ export const ShoppingScreen = ({ product }: Props) => {
       <View style={styles.container}>
         <Text style={styles.headerText}>Productos agregados  ({totalProducts}) </Text>
 
-        {/* <View style={styles.tableHeader}>
+        {/*<View style={styles.tableHeader}>
           <Text style={styles.headerText}>Nombre: </Text>
           <Text style={styles.headerText}> Cantidad:</Text>
           <Text style={styles.headerText}> Precio: </Text>
         </View> */}
 
-<FlatList
-  data={cart1}
-  renderItem={({ item, index }) => (
-    <View style={styles.container}>
-      <View style={styles.rowContainer}>
-        <View style={styles.imageContainer}>
-          <Image style={styles.image} source={{ uri: item.multimedia[0].images['400x400'] }} />
-        </View>
+        <FlatList
+          data={cart1}
+          renderItem={({ item, index }) => (
+            <View style={styles.container}>
+              <View style={styles.rowContainer}>
+                <View style={styles.imageContainer}>
+                  <Image style={styles.image} source={{ uri: item.multimedia[0].images['400x400'] }} />
+                </View>
+                <View style={styles.detailsContainer}>
+                  <View style={styles.tableRow}>
+                    <Text style={styles.rowText}>{item.product_id.name}</Text>
+                  </View>
 
-        <View style={styles.detailsContainer}>
-          <View style={styles.tableRow}>
-         
-            <Text style={styles.rowText}>{item.product_id.name}</Text>
-            {/* <Text style={styles.rowText}>( {item.quantity} ) X </Text> 
-            <Text style={styles.productPrice}>${item.price} </Text> */}
-          </View>
+                <View style={styles.rowContainer}>
+                <Text style={styles.rowText}>( {item.quantity} ) X </Text>
+                <Text style={styles.productPrice}>${item.price} </Text>
+                  </View> 
 
-         <View style={styles.rowContainer}>
-         <Text style={styles.rowText}>( {item.quantity} ) X </Text>
-         <Text style={styles.productPrice}>${item.price} </Text>
-          </View> 
+                <View style={styles.quantityContainer}>
+                  <TouchableOpacity onPress={() => decrementQuantity(index)}>
+                    <Text style={styles.quantityButton}>-</Text>
+                  </TouchableOpacity>
+                  <Text style={styles.quantity}>{item.quantity}</Text>
+                  <TouchableOpacity onPress={() => incrementQuantity(index)}>
+                    <Text style={styles.quantityButton}>+</Text>
+                  </TouchableOpacity>
+                </View>
 
-
-
-
-        <View style={styles.quantityContainer}>
-          <TouchableOpacity onPress={() => decrementQuantity(index)}>
-            <Text style={styles.quantityButton}>-</Text>
-          </TouchableOpacity>
-          <Text style={styles.quantity}>{item.quantity}</Text>
-          <TouchableOpacity onPress={() => incrementQuantity(index)}>
-            <Text style={styles.quantityButton}>+</Text>
-          </TouchableOpacity>
-        </View>
-
-        <TouchableOpacity onPress={() => deleteData(index)}>
-           <Text style={styles.textelimit}>Eliminar</Text>
-      </TouchableOpacity>
-        </View>
-      </View>
-    </View>
-  )}
-/>
+                <TouchableOpacity onPress={() => deleteData(index)}>
+                  <Text style={styles.textelimit}>Eliminar</Text>
+              </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          )}
+        />
 
 
           <Card>
@@ -194,40 +182,16 @@ export const ShoppingScreen = ({ product }: Props) => {
 
                   <TouchableOpacity style={styles.buyButtonText}>
                     <Text style={styles.headerText}> Pago contra entrega</Text>
-                  </TouchableOpacity>
-                  
-               
-                
-                  
+                  </TouchableOpacity> 
                 </Modal.Body>
-              
-                  
                     <TouchableOpacity style={styles.buyButton}>
                       <Text style={styles.headerTextWhite}> Continuar</Text>
                     </TouchableOpacity>
 
-
                     {/* <Button onPress={() => navigation.navigate('mapaapi')}> Continuar </Button> */}
-                  
-              
+             
               </Modal.Content>
             </Modal>
-
-            {/* <Button
-              onPress={() => {
-                toast.show({
-                  render: () => {
-                    return (
-                      <Box bg="emerald.500" px="2" py="1" rounded="sm" mb={5}>
-                        hola uwu
-                      </Box>
-                    );
-                  },
-                });
-              }}
-            >
-              comprar
-            </Button> */}
           </View>
           </Card>
       </View>
@@ -276,9 +240,6 @@ export const ShoppingScreen = ({ product }: Props) => {
         color: 'gray',
         fontSize: 18,
       },
-
-
-
       shoppingCartButton: {
         marginRight: 10,
       },
