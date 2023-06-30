@@ -20,6 +20,8 @@ export function MapScreen() {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
 
+  const [isMarkerDraggable, setIsMarkerDraggable] = useState(false);
+
 
   
 
@@ -33,7 +35,7 @@ export function MapScreen() {
       } else if (Platform.OS === 'ios') {
         permission = PERMISSIONS.IOS.LOCATION_WHEN_IN_USE;
       }
-      const granted = await request(permissionn);
+      const granted = await request(permission);
       if (granted === 'granted') {
         getCurrentLocation();
       } else {
@@ -102,7 +104,9 @@ export function MapScreen() {
       console.log('Error retrieving coordinates:', error);
     }
   };
-
+  const handleMarkerDrag = (e) => {
+    setSelectedLocation(e.nativeEvent.coordinate);
+  };
 
 
   return (
@@ -153,12 +157,24 @@ export function MapScreen() {
       >
         {currentLocation && ( 
           <Marker
-            coordinate={{ latitude: currentLocation.latitude, longitude: currentLocation.longitude }}
-            title="ubicación"
-            description="Ubicacion aproximada de la calle "  
-            draggable    
-          />
+                coordinate={{ latitude: currentLocation.latitude, longitude: currentLocation.longitude }}
+                title=" Tu ubicación Actual"
+                description="Ubicacion aproximada  "  
+                draggable    
+              />
         )}
+         {selectedLocation && (
+                  <Marker
+                    coordinate={{
+                      latitude: selectedLocation.latitude,
+                      longitude: selectedLocation.longitude,
+                    }}
+                    title="Nueva ubicación"
+                    description="Ubicación seleccionada"
+                    draggable={isMarkerDraggable}
+                    onDragEnd={handleMarkerDrag}
+                  />
+                )}
       </MapView>
 
  
@@ -224,9 +240,7 @@ export function MapScreen() {
             </Actionsheet>
              
              
-       {/* <Button title='botton' onPress={onOpen}>     
-        Ver Detalles
-        </Button>    */}
+  
               </>
             )}
           </View>

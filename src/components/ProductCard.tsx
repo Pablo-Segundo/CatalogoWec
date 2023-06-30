@@ -7,6 +7,7 @@ import { Card , Button} from 'react-native-paper';
 import { Actionsheet, Box, useDisclose , useToast, Modal } from 'native-base';
 import Carousel from 'react-native-snap-carousel';
 
+
 interface Props {
   product: Product;
   route: any;
@@ -20,11 +21,10 @@ export const ProductCard = ({ product }: Props) => {
   const refRBSheet = useRef();
   const { isOpen, onOpen, onClose } = useDisclose();
   const [showModal, setShowModal] = useState(false);
-
-
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isImageSelected, setIsImageSelected] = useState(false);
 
+  
   const decrementQuantity = () => {
     if (quantity > 0) {
       setQuantity(quantity - 1);
@@ -113,7 +113,6 @@ export const ProductCard = ({ product }: Props) => {
           <Actionsheet isOpen={isOpen} onClose={onClose}>
       <Actionsheet.Content>
       <View style={styles.productItem}>
-          <Text style={styles.text1}>products </Text>
         
            {/* <Carousel
             data={product.multimedia}
@@ -132,24 +131,22 @@ export const ProductCard = ({ product }: Props) => {
             autoplayInterval={2000}
           />   */}
 
-      
         <FlatList
           data={product.multimedia}
           renderItem={({ item, index }) => (
-            <TouchableOpacity onPress={() => (index)}>
+            <TouchableOpacity style={{ width: Dimensions.get('window').width, backgroundColor:'black', height:'100%'}} onPress={() => (index)}>
               <Image
-                style={index === selectedImageIndex ? styles.largeCardImage : styles.cardImage}
+                style={{width: '100%', height:'100%', resizeMode: 'contain'}}
                 source={{ uri: item.images['400x400'] }}
               />
             </TouchableOpacity>
           )}
-          horizontal
-          keyExtractor={(item, index) => index.toString()}
+          horizontal={true}
           showsHorizontalScrollIndicator={false}
           pagingEnabled
         /> 
+        
 
-     
           <View style={styles.productContainer}>
             <Text style={styles.productname}>{product.name}</Text>
             <Text style={styles.productname}> Disponible: {product.quantity} </Text>
@@ -310,8 +307,10 @@ const styles = StyleSheet.create({
       width: 300,
       backgroundColor: 'rgba(0, 0, 0, 0.5)',
       height: 190,
-      resizeMode: 'cover',
-      margin: 10,
+
+    
+    
+      marginRight: 10
 
     },
     productDescription: {
@@ -326,7 +325,7 @@ const styles = StyleSheet.create({
         // fontWeight: 'bold',
         color:'gray',
         marginVertical: 10,
-    },
+    },  
     largeCardImage: {
       width: 320,
       height: 320,

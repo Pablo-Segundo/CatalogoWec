@@ -90,6 +90,17 @@ export const ShoppingScreen = ({ product }: Props) => {
       
   };
 
+  const handleContinuar = () => {
+    
+    AsyncStorage.setItem('cart', JSON.stringify(cart1))
+      .then(() => {  
+        navigation.navigate('');
+      })
+      .catch(error => {
+        console.error('Error al guardar en AsyncStorage:', error);
+      });
+  };
+
   return (
     <>
       <View style={styles.header}>
@@ -184,10 +195,10 @@ export const ShoppingScreen = ({ product }: Props) => {
                     <Text style={styles.headerText}> Pago contra entrega</Text>
                   </TouchableOpacity> 
                 </Modal.Body>
-                    <TouchableOpacity style={styles.buyButton}>
+                    <TouchableOpacity onPress={handleContinuar} style={styles.buyButton}>
                       <Text style={styles.headerTextWhite}> Continuar</Text>
                     </TouchableOpacity>
-
+                 
                     {/* <Button onPress={() => navigation.navigate('mapaapi')}> Continuar </Button> */}
              
               </Modal.Content>
