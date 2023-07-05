@@ -107,7 +107,7 @@ export const ProductCard = ({ product }: Props) => {
       <Card style={styles.container}>
      
       <Image style={styles.productImage} source={{ uri: product.multimedia[0].images['400x400'] }} />
-      <TouchableOpacity onPress={navigateToFavorites} style={styles.container}>
+     
      <View style={styles.favoriteContainer}>
           <TouchableOpacity onPress={toggleFavorite} style={styles.favoriteButton}>
             <Icon
@@ -117,8 +117,7 @@ export const ProductCard = ({ product }: Props) => {
             />
           </TouchableOpacity>
         </View>
-        </TouchableOpacity>
-   
+    
    
 
         <Text style={styles.productname}>{product.name}</Text>
@@ -136,7 +135,20 @@ export const ProductCard = ({ product }: Props) => {
           </TouchableOpacity>
         </View>
 
-         <TouchableOpacity onPress={onOpen} style={styles.buyButton}>
+         <TouchableOpacity style={styles.buyButton} onPress={() => {
+           addToCart(product, quantity, product.price, product.multimedia );
+           toast.show({
+            render: () => {
+              return(
+                <Box bg="emerald.500" px="8" py="5" rounded="sm" mb={5}  zIndex={999}
+                >
+                  producto Agregado al carrito u
+                </Box>
+              );
+            },
+            placement: 'top',
+           });
+         }}>
             <Text style={styles.textWhite}>Agregar al carrito </Text>
          </TouchableOpacity>
 

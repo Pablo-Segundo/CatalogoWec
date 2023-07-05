@@ -1,13 +1,35 @@
 import { View, Text, TouchableOpacity, StyleSheet, FlatList, TextInput, Image } from 'react-native';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Card } from "react-native-paper";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const TarjetaScreen = () => {
     const navigation = useNavigation();
     const [totalProducts, setTotalProducts] = useState(0);
+    const [cart1, setCart] = useState(0);
+     const [totalPrice, setTotalPrice] = useState(0);
 
+
+
+    const cartShopping = async () => {
+      const storedCart = await AsyncStorage.getItem('cart');
+      const parsedCart = JSON.parse(storedCart);
+      let total = 0;
+      let productCount = 0;
+      parsedCart.forEach(item => {
+        total += item.quantity * item.product_id.price;
+        productCount += item.quantity;
+      });
+      setCart(parsedCart);
+      setTotalPrice(total);
+      setTotalProducts(productCount);
+    };
+
+      useEffect(() => {
+    cartShopping();
+  }, []);
 
     
    return(
@@ -25,15 +47,20 @@ export const TarjetaScreen = () => {
   </View>
 
 <Card style={styles.cardcontainer}>
-<Text style={styles.textRosa}>  Total a Pagar    </Text>
-<Text>{totalProducts} </Text>
+<Text style={styles.textRosa}>  Total a Pagar:   </Text>
+<Text style={styles.headerText}>$ {totalPrice} </Text>
+</Card>
+ 
+
+<Card style={styles.detailsContainer}>
+  <Text>Tarjeta de credito </Text>
 </Card>
 
 
 
-
- 
-
+    <TouchableOpacity style={styles.buyButton}>
+          <Text style={styles.headerTextWhite}> Continuar</Text>
+    </TouchableOpacity>
 
 
 </>
@@ -84,7 +111,7 @@ const styles = StyleSheet.create({
     },
     headerText: {
       fontWeight: 'bold',
-      fontSize: 16,
+      fontSize: 30,
       color: 'black',
       padding: 2,
     },      
@@ -104,7 +131,7 @@ const styles = StyleSheet.create({
     textRosa: {
       fontWeight: 'bold',
       color: '#debdce',
-      fontSize: 20,
+      fontSize: 25,
       alignItems: 'center'
     },
     shoppingCartButton: {
@@ -113,11 +140,6 @@ const styles = StyleSheet.create({
     shoppingCartIcon: {
       padding: 5,
       borderRadius: 50,
-      backgroundColor: '#FFF',
-    },
-    container: {
-      flex: 1,
-      padding: 20,
       backgroundColor: '#FFF',
     },
     tableHeader: {
@@ -147,6 +169,7 @@ const styles = StyleSheet.create({
       paddingVertical: 5,
       alignItems: 'center',
       borderRadius: 20,
+      marginTop: 50
     },
     
     cardcontent: {
@@ -202,10 +225,13 @@ const styles = StyleSheet.create({
       marginRight: 15,
     },
     detailsContainer: {
-      flex: 1,
+      padding: 60,
+      marginTop: 25,
+      borderRadius: 35,
+
     },
     cardcontainer: {
-      padding: 50,
+      padding: 75,
       marginTop: 25,
       borderRadius: 35,
       

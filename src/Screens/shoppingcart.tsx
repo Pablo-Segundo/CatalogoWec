@@ -206,7 +206,7 @@ export const ShoppingScreen = ({ product }: Props) => {
 
             <Button onPress={() => setShowModal(true)}>Continuar</Button>
 
-            <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+           <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
       <Modal.Content maxWidth="500px">
         <Modal.CloseButton />
         <Modal.Header>Método de Pago</Modal.Header>

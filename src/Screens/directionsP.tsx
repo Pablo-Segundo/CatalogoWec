@@ -3,11 +3,14 @@ import { View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
 import { Button, Card } from "react-native-paper";
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { useToast, Modal, useDisclose } from 'native-base';
 
 export const Direction = () => {
     const navigation = useNavigation();
     const [datosGuardados, setDatosGuardados] = useState(null);
+  
+    const [modalVisible, setModalVisible] = useState(null);
+    const [modalData, setModalData] = useState(null);
    
 
     useEffect(() => {
@@ -33,11 +36,12 @@ export const Direction = () => {
     
       obtenerDatosGuardados();
     }, [])
+
     
   return(
     
     <> 
-              <View style={styles.header}>
+      <View style={styles.header}>
         <Text style={styles.headerWITHE}>Direcciones del usuario  </Text>
         <View> 
         <TouchableOpacity  onPress={() => navigation.navigate('upload')}>
@@ -55,10 +59,12 @@ export const Direction = () => {
        <Text style={styles.productname}>Direcciones guardadas   </Text>
        </View>
      
-
-      <TouchableOpacity >
+       <TouchableOpacity onPress={() => {
+          setModalVisible(true);
+          setModalData(datosGuardados);
+        }}>
           <Card style={styles.cardcontainer}> 
-                <View> 
+          <View>             
             {datosGuardados && (
               <View >
                 <Text style={styles.productname}> {datosGuardados.nombre}</Text>
@@ -66,14 +72,27 @@ export const Direction = () => {
                 <Text style={styles.textgray}>Número telefónico: {datosGuardados.numeroTelefonico}</Text>
                 <Text style={styles.textgray}>Refernecia {datosGuardados.referencias} </Text>
               </View>
-            )}
+            )} 
           </View>
-            </Card>
-          </TouchableOpacity>
+          </Card>
+         </TouchableOpacity>
+         
 
 
-
-     
+         <Modal visible={modalVisible} onRequestClose={() => setModalVisible(false)}>
+            <View style={styles.container}>
+              {modalData && (
+                <View>
+                  <Text style={styles.productname}>{modalData.nombre}</Text>
+                  <Text style={styles.textgray}>Calle: {modalData.selectedAddress}</Text>
+                  <Text style={styles.textgray}>Número telefónico: {modalData.numeroTelefonico}</Text>
+                  <Text style={styles.textgray}>Referencia: {modalData.referencias}</Text>
+                </View>
+              )}
+              <Button title="Close" onPress={() => setModalVisible(false)} />
+            </View>
+        </Modal>
+ 
 
     </>
   )
