@@ -9,6 +9,7 @@ import { View, ActivityIndicator, StyleSheet, Text } from 'react-native';
 
   <View style={styles.container}>
     <ActivityIndicator size="large" color="#0000FF" />
+    
   </View>
 
 );

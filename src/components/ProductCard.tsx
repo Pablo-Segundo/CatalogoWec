@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Card , Button} from 'react-native-paper';
 import { Actionsheet, Box, useDisclose , useToast, Modal } from 'native-base';
 import Carousel from 'react-native-snap-carousel';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 interface Props {
@@ -23,6 +24,8 @@ export const ProductCard = ({ product }: Props) => {
   const [showModal, setShowModal] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isImageSelected, setIsImageSelected] = useState(false);
+
+  const [favorites, setFavorites] = useState<Product[]>([]);
 
   
   const decrementQuantity = () => {
@@ -71,8 +74,6 @@ export const ProductCard = ({ product }: Props) => {
     await AsyncStorage.setItem('cart', JSON.stringify(cart));
   };
 
-
-
   const handleImagePress = (index: number) => {
     if (selectedImageIndex === index) {
       setSelectedImageIndex(-1);
@@ -82,12 +83,43 @@ export const ProductCard = ({ product }: Props) => {
       setIsImageSelected(true);
     }
   };
+
+  const toggleFavorite = () => {
+    const isFavorite = favorites.some((fav) => fav._id === product._id);
+     if(isFavorite) {
+      const updatedFavorites = favorites.filter((fav) => fav._id !== product._id);
+      setFavorites(updatedFavorites);
+     } else {
+      setFavorites([...favorites, product]);
+     }
+    };
+
+    const navigateToFavorites = () => {
+      navigation.navigate('tarjetaScreen', { favorites });
+    };
+  
+
      
   return (
     <>
      <TouchableOpacity onPress={onOpen} style={styles.container}>
+  
       <Card style={styles.container}>
-        <Image style={styles.productImage} source={{ uri: product.multimedia[0].images['400x400'] }} />
+     
+      <Image style={styles.productImage} source={{ uri: product.multimedia[0].images['400x400'] }} />
+      <TouchableOpacity onPress={navigateToFavorites} style={styles.container}>
+     <View style={styles.favoriteContainer}>
+          <TouchableOpacity onPress={toggleFavorite} style={styles.favoriteButton}>
+            <Icon
+              name={favorites.some((fav) => fav._id === product._id) ? 'heart' : 'heart-o'}
+              size={25}
+              color={favorites.some((fav) => fav._id === product._id) ? 'red' : 'gray'}
+            />
+          </TouchableOpacity>
+        </View>
+        </TouchableOpacity>
+   
+   
 
         <Text style={styles.productname}>{product.name}</Text>
 
@@ -208,8 +240,29 @@ const styles = StyleSheet.create({
 
 
   },
+  favoriteButton: {
+    backgroundColor: 'transparent',
+    padding: 2,
+    marginLeft: 100,
+  },
+  favoriteContainer: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    zIndex: 1,
+  },
+  favoriteMarker: {
+    position: 'absolute',
+    top: 30,
+    left: 10,
+    width: 30,
+    height: 20,
+    backgroundColor: 'red',
+    borderRadius: 10,
+  },
   textgray: {
     color: 'gray',
+    marginLeft: 15,
   },
   cardcontainer: {
     height: '15%',
@@ -222,6 +275,7 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     borderRadius: 10,
+   
   },
   productname:{
 
@@ -229,12 +283,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color:'black',
     marginVertical: 20,
+    marginLeft: 15,
+
 
   },
   productPrice: {
     fontSize: 20,
     fontWeight: 'bold',
     color:'#1e90ff',
+    marginLeft: 15,
 
 
   },
@@ -278,9 +335,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 10,
-    marginBottom: 10,
+    marginBottom: 15,
     borderRadius:70,
-    borderColor: '#ff1493'
+    borderColor: '#ff1493',
+    marginLeft: 30
+  
   },
 
 

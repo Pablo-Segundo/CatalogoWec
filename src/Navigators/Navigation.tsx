@@ -9,6 +9,7 @@ import { ShoppingScreen } from '../Screens/shoppingcart';
 
 import { MapScreen } from '../components/Map';
 import { Direction } from '../Screens/directionsP';
+import { TarjetaScreen } from '../Screens/Tarjeta';
 
 
 
@@ -57,18 +58,7 @@ export const Navigation = ()=> {
           headerShown: false,
         }}
         />
-
-        <Stack.Screen
-        name="mapaapi "
-        component={MapScreen }
-        options={{ headerStyle: { backgroundColor: '#d3afd4', },
-          
-        headerShown: false,
-        
-      }}
-        />
-
-    <Stack.Screen
+       <Stack.Screen
         name="Direction" 
         component={Direction}
         options={{ headerStyle: { backgroundColor: '#d3afd4', },
@@ -77,19 +67,23 @@ export const Navigation = ()=> {
           
         }}
          />
-  
-
-
-{/* 
-    <Stack.Screen
-        name="" 
-        component={CarruselUwU}
+       <Stack.Screen
+        name="mapaScreen" 
+        component={MapScreen}
+        options={{ headerStyle: { backgroundColor: '#d3afd4', },
+          headerShown: false,
+        }}
+         />
+       <Stack.Screen
+        name="tarjetaScreen"
+        component={TarjetaScreen}
         options={{
           headerShown: false,
-          
         }}
-        /> */}
-           
+        />
+
+
+
 
 
 

@@ -10,6 +10,8 @@ import { useDisclose, Button, Actionsheet, Icon, Card  } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import Geocoder from 'react-native-geocoding';
 
+
+
 export function MapScreen() {
   const { isOpen, onOpen, onClose} = useDisclose();
   const navigation = useNavigation();
@@ -19,12 +21,8 @@ export function MapScreen() {
   const [selectedAddress, setSelectedAddress] = useState('');
   const [currentLocation, setCurrentLocation] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
-
   const [isMarkerDraggable, setIsMarkerDraggable] = useState(false);
-
-
-  
-
+  const [datosGuardados, setDatosGuardados] = useState(null);
 
 
   const requestLocationPermission = async () => {
@@ -63,6 +61,18 @@ export function MapScreen() {
 
   useEffect(() => {
     requestLocationPermission();
+    const obtenerDatosGuardados = async () => {
+      try {
+        const nombreGuardado = await AsyncStorage.getItem('nombre');
+        setDatosGuardados({
+          nombre: nombreGuardado,
+        });
+      } catch (error) {
+        console.log('Error al obtener los datos guardados:', error);
+      }
+    };
+  
+    obtenerDatosGuardados();
   }, []);
 
 
@@ -226,7 +236,7 @@ export function MapScreen() {
               <TouchableOpacity style={styles.buyButton}
                onPress={() => {
                 guardarDatos();
-                navigation.navigate('Direction');
+                navigation.navigate('Shopping');
               }}
               >
                <Text style={styles.headerWITHE}> Guardar Datos </Text>
@@ -254,6 +264,7 @@ export function MapScreen() {
 
 
     </>
+          
   );
 }
 

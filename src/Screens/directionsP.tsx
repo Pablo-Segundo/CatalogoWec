@@ -16,7 +16,7 @@ export const Direction = () => {
           const nombreGuardado = await AsyncStorage.getItem('nombre');
           const numeroTelefonicoGuardado = await AsyncStorage.getItem('numeroTelefonico');
           const referenciasGuardadas = await AsyncStorage.getItem('referencias');
-          const direcionesGuardadas = await AsyncStorage.getItem('selectedAddress')
+          const direcionesGuardadas = await AsyncStorage.getItem('selectedAddress');
 
     
           setDatosGuardados({
@@ -43,7 +43,7 @@ export const Direction = () => {
         <TouchableOpacity  onPress={() => navigation.navigate('upload')}>
           <Card style={styles.cardcontainer}> 
             <View>
-            <Text style={styles.textgray}> Agrega una nueva direccion  </Text>
+            <Text style={styles.textgray}> Agregar una nueva direccion   </Text>
             </View> 
             </Card>
           </TouchableOpacity>
@@ -64,7 +64,7 @@ export const Direction = () => {
                 <Text style={styles.productname}> {datosGuardados.nombre}</Text>
                 <Text style={styles.textgray}>Calle: {datosGuardados.selectedAddress}</Text> 
                 <Text style={styles.textgray}>Número telefónico: {datosGuardados.numeroTelefonico}</Text>
-                <Text style={styles.textgray} >Referencias: {datosGuardados.referencias}</Text>
+                <Text style={styles.textgray}>Refernecia {datosGuardados.referencias} </Text>
               </View>
             )}
           </View>
@@ -73,13 +73,8 @@ export const Direction = () => {
 
 
 
-      <TouchableOpacity style={styles.buyButton}>
-        <Text style={styles.buyButtonText}>Confirmar Datos </Text>
-    </TouchableOpacity> 
-
-   
-      
      
+
     </>
   )
 }
@@ -100,8 +95,6 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         color:'black',
-       
-    
       },
       textgray: {
         color: 'gray',
@@ -113,9 +106,6 @@ const styles = StyleSheet.create({
         color:'black',
         marginVertical: 100,
         marginHorizontal: 140,
-    
-      
-    
       },
       tableHeader: {
         flexDirection: 'row',
@@ -194,7 +184,7 @@ const styles = StyleSheet.create({
       },
       cardcontainer: {
         padding: 20,
-        
+        marginBottom: 15,
       },
       shoppingCartIcon: {
         padding: 5,

@@ -4,11 +4,10 @@ import { Product } from '../interfaces/ProductsCategoryInterface';
 import { useNavigation } from '@react-navigation/native';
 import { useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import { Card, Button } from 'react-native-paper';
-
 import { useToast, Modal, useDisclose } from 'native-base';
-
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faCreditCard, faMoneyBill } from '@fortawesome/free-solid-svg-icons';
 
 interface Props {
   product: Product;
@@ -24,7 +23,12 @@ export const ShoppingScreen = ({ product }: Props) => {
   const [totalProducts, setTotalProducts] = useState(0);
   const toast = useToast();
   const [showModal, setShowModal] = useState(false);
-  const { isOpen, onOpen, onClose} = useDisclose();
+  const { isOpen, onOpen, onClose} = useDisclose(); 
+  const [datosGuardados, setDatosGuardados] = useState(null);
+  
+  const [selectedOption, setSelectedOption] = useState(null);
+
+
 
   const cartShopping = async () => {
     const storedCart = await AsyncStorage.getItem('cart');
@@ -42,6 +46,19 @@ export const ShoppingScreen = ({ product }: Props) => {
 
   useEffect(() => {
     cartShopping();
+    const obtenerDatosGuardados = async () => {
+      try {
+        const nombreGuardado = await AsyncStorage.getItem('nombre');
+        setDatosGuardados({
+          nombre: nombreGuardado,
+         
+        });
+      } catch (error) {
+        console.log('Error al obtener los datos guardados:', error);
+      }
+    };
+  
+    obtenerDatosGuardados();
   }, []);
 
   const decrementQuantity = (index) => {
@@ -49,7 +66,7 @@ export const ShoppingScreen = ({ product }: Props) => {
     const updatedProduct = updatedCart[index];
     if (updatedProduct.quantity > 1) {
       updatedProduct.quantity -= 1;
-      const updatedPrice = updatedProduct.quantity * updatedProduct.product_id.price;
+      const updatedPrice = updatedProduct.product_id.price;
       AsyncStorage.setItem('cart', JSON.stringify(updatedCart))
         .then(() => {
           setCart(updatedCart);
@@ -89,17 +106,19 @@ export const ShoppingScreen = ({ product }: Props) => {
       .catch(error => {});
       
   };
-
-  const handleContinuar = () => {
-    
+  const handleContinuar = () => {      
+    {totalProducts}
     AsyncStorage.setItem('cart', JSON.stringify(cart1))
       .then(() => {  
-        navigation.navigate('');
+        navigation.navigate('tarjetaScreen');
       })
       .catch(error => {
         console.error('Error al guardar en AsyncStorage:', error);
       });
   };
+
+
+
 
   return (
     <>
@@ -112,12 +131,18 @@ export const ShoppingScreen = ({ product }: Props) => {
           </View>
         </TouchableOpacity> */}
 
+
         <View> 
-        <TouchableOpacity  onPress={() => navigation.navigate('upload')}>
+        <TouchableOpacity  onPress={() => navigation.replace('mapaScreen', {owner:' '})}>
           <Card style={styles.cardcontainer}> 
-            <View>
-            <Text style={styles.textgray}> Selecciona tu direccion </Text>
-            </View> 
+          <View> 
+            {datosGuardados && (
+              <View >
+                <Text style={styles.textgray}> Enviar a: {datosGuardados.nombre}</Text>
+               
+              </View>
+            )}
+          </View>
             </Card>
           </TouchableOpacity>
         </View>
@@ -177,32 +202,41 @@ export const ShoppingScreen = ({ product }: Props) => {
           </View>
 
           <View>
-            <TextInput style={styles.discountCodeInput} placeholder="Código de descuento" />
+            {/* <TextInput style={styles.discountCodeInput} placeholder="Código de descuento" /> */}
 
             <Button onPress={() => setShowModal(true)}>Continuar</Button>
 
             <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-              <Modal.Content maxWidth="500px">
-                <Modal.CloseButton />
-                <Modal.Header>Método de Pago </Modal.Header>
-                <Modal.Body>
-                  
-                  <TouchableOpacity style={styles.buyButtonText}> 
-                    <Text style={styles.headerText}> Tarjeta</Text> 
-                  </TouchableOpacity>
-
-                  <TouchableOpacity style={styles.buyButtonText}>
-                    <Text style={styles.headerText}> Pago contra entrega</Text>
-                  </TouchableOpacity> 
-                </Modal.Body>
-                    <TouchableOpacity onPress={handleContinuar} style={styles.buyButton}>
-                      <Text style={styles.headerTextWhite}> Continuar</Text>
-                    </TouchableOpacity>
-                 
-                    {/* <Button onPress={() => navigation.navigate('mapaapi')}> Continuar </Button> */}
-             
-              </Modal.Content>
-            </Modal>
+      <Modal.Content maxWidth="500px">
+        <Modal.CloseButton />
+        <Modal.Header>Método de Pago</Modal.Header>
+        <Modal.Body>
+          <TouchableOpacity
+            style={[
+              styles.buyButtonText,
+              selectedOption === 'Tarjeta' && styles.selectedOption,
+            ]}
+            onPress={() => handleOptionSelect('Tarjeta')}
+          >
+            <FontAwesomeIcon icon={faCreditCard} size={20} color="#000" />
+            <Text style={styles.headerText}>Tarjeta</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.buyButtonText,
+              selectedOption === 'PagoContraEntrega' && styles.selectedOption,
+            ]}
+            onPress={() => handleOptionSelect('PagoContraEntrega')}
+          >
+            <FontAwesomeIcon icon={faMoneyBill} size={20} color="#000" />
+            <Text style={styles.headerText}>Pago contra entrega</Text>
+          </TouchableOpacity>
+        </Modal.Body>
+        <TouchableOpacity onPress={handleContinuar} style={styles.buyButton}>
+          <Text style={styles.headerTextWhite}>Continuar</Text>
+        </TouchableOpacity>
+      </Modal.Content>
+    </Modal>
           </View>
           </Card>
       </View>
@@ -239,8 +273,6 @@ export const ShoppingScreen = ({ product }: Props) => {
         color: '#FFF',
         padding: 2,
       }, 
-
-
       headerWITHE: {
         fontWeight: 'bold',
         fontSize: 16,
@@ -288,9 +320,11 @@ export const ShoppingScreen = ({ product }: Props) => {
 
       buyButton: {
         backgroundColor: '#ff1493',
-        paddingVertical: 5,
+        paddingVertical: 10,
         alignItems: 'center',
         borderRadius: 25,
+        marginHorizontal: 15,
+       
       },
       
       cardcontent: {
@@ -352,5 +386,3 @@ export const ShoppingScreen = ({ product }: Props) => {
         padding: 20,
       },
     });
-
-

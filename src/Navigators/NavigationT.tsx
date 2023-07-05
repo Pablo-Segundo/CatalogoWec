@@ -11,8 +11,7 @@ import { CategoriesScreen } from '../Screens/CategoriesScreen';
 import { ShoppingScreen } from '../Screens/shoppingcart'
 import { Direction } from '../Screens/directionsP'
 import { ActionSh } from '../Screens/Actionproduct'
-import { MapScreen } from '../components/Map'
-import { MapaScreenUwU } from '../components/useMap'
+import { CreditCardScreen } from '../Screens/tessssss'
 
 
 const Tab = createBottomTabNavigator()
@@ -44,7 +43,7 @@ return (
               // @ts-ignore
               tabBarIcon: ({ ref }) => <Lottie ref={ref} loop={false} source={require('./assets/lottie/upload.icon.json')} style={styles.icon} />,
             }}
-            component={ MapScreen }
+            component={ Direction }
           />
        </Tab.Navigator>
 
