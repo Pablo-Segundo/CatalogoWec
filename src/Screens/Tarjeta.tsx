@@ -9,7 +9,10 @@ export const TarjetaScreen = () => {
     const navigation = useNavigation();
     const [totalProducts, setTotalProducts] = useState(0);
     const [cart1, setCart] = useState(0);
-     const [totalPrice, setTotalPrice] = useState(0);
+    const [totalPrice, setTotalPrice] = useState(0);
+    const [cardNumber, setCardNumber] = useState("");
+    const [expirationDate, setExpirationDate] = useState("");
+    const [securityCode, setSecurityCode] = useState("");
 
 
 
@@ -31,7 +34,19 @@ export const TarjetaScreen = () => {
     cartShopping();
   }, []);
 
-    
+  const handleCardNumberChange = (text) => {
+    setCardNumber(text);
+  };
+  const handleExpirationDateChange = (text) => {
+    setExpirationDate(text);
+  };
+  const handleSecurityCodeChange = (text) => {
+    setSecurityCode(text);
+  };
+  const handleContinue = () => {
+  } 
+
+
    return(
     <>
     <View style={styles.header}>
@@ -51,17 +66,34 @@ export const TarjetaScreen = () => {
 <Text style={styles.headerText}>$ {totalPrice} </Text>
 </Card>
  
-
 <Card style={styles.detailsContainer}>
-  <Text>Tarjeta de credito </Text>
-</Card>
+        <Text style={styles.detailsTitle}>Tarjeta de crédito</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Número de tarjeta"
+          value={cardNumber}
+          onChangeText={handleCardNumberChange}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Fecha de vencimiento (MM/AA)"
+          value={expirationDate}
+          onChangeText={handleExpirationDateChange}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Código de seguridad"
+          value={securityCode}
+          onChangeText={handleSecurityCodeChange}
+        />
+      </Card>
+      {/* <TouchableOpacity style={styles.buyButton} onPress={handleContinue}>
+        <Text style={styles.buyButtonText}>Continuar</Text>
+      </TouchableOpacity> */}
 
-
-
-    <TouchableOpacity style={styles.buyButton}>
-          <Text style={styles.headerTextWhite}> Continuar</Text>
-    </TouchableOpacity>
-
+      <TouchableOpacity style={styles.buyButton} onPress={handleContinue} >
+        <Text style={styles.buyButtonText}>Continuar  </Text>
+      </TouchableOpacity>
 
 </>
 
@@ -80,12 +112,24 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginBottom: 8,
       },
+      detailsContainer: {
+        backgroundColor: "#F5F5F5",
+        padding: 15,
+        margin: 15,
+        borderRadius: 8,
+      },
+      detailsTitle: {
+        fontSize: 18,
+        fontWeight: "bold",
+        marginBottom: 10,
+      },
       input: {
         height: 40,
-        borderColor: 'gray',
+        borderColor: "#ccc",
         borderWidth: 1,
-        marginBottom: 16,
-        paddingHorizontal: 8,
+        borderRadius: 4,
+        paddingHorizontal: 10,
+        marginBottom: 10,
       },
       buttonContainer: {
         marginTop: 16,
@@ -232,7 +276,7 @@ const styles = StyleSheet.create({
     },
     cardcontainer: {
       padding: 75,
-      marginTop: 25,
+      marginTop: 5,
       borderRadius: 35,
       
     },

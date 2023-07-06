@@ -10,6 +10,7 @@ import { ShoppingScreen } from '../Screens/shoppingcart';
 import { MapScreen } from '../components/Map';
 import { Direction } from '../Screens/directionsP';
 import { TarjetaScreen } from '../Screens/Tarjeta';
+import { FavoritesScreen } from '../Products/Favorites';
 
 
 
@@ -64,7 +65,7 @@ export const Navigation = ()=> {
         options={{ headerStyle: { backgroundColor: '#d3afd4', },
           
           headerShown: false,
-          
+    
         }}
          />
        <Stack.Screen
@@ -81,6 +82,13 @@ export const Navigation = ()=> {
           headerShown: false,
         }}
         />
+       <Stack.Screen
+        name="Favorites" 
+        component={FavoritesScreen}
+        options={{ headerStyle: { backgroundColor: '#d3afd4', },
+          headerShown: false,
+        }}
+         />
 
 
 

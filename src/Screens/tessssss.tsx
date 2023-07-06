@@ -1,89 +1,90 @@
-import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { View, Text, TouchableOpacity, StyleSheet, TextInput, Button } from 'react-native';
+import React, { useState } from "react";
 import { Card } from 'react-native-paper';
-import { Product } from '../interfaces/ProductsCategoryInterface';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
-interface Props {
-  product: Product;
-}
 
-export const ProductCard = ({ product }: Props) => {
-  const navigation = useNavigation();
-  const [favorites, setFavorites] = useState<Product[]>([]);
+export const TarjetaScreen = () => {
+  const [cardNumber, setCardNumber] = useState("");
+  const [expirationDate, setExpirationDate] = useState("");
+  const [securityCode, setSecurityCode] = useState("");
 
-  const toggleFavorite = () => {
-    const isFavorite = favorites.some((fav) => fav._id === product._id);
-    if (isFavorite) {
-      const updatedFavorites = favorites.filter((fav) => fav._id !== product._id);
-      setFavorites(updatedFavorites);
-    } else {
-      setFavorites([...favorites, product]);
-    }
+
+  const handleCardNumberChange = (text) => {
+    setCardNumber(text);
   };
-
-  const navigateToFavorites = () => {
-    navigation.navigate('Favorites', { favorites });
+  const handleExpirationDateChange = (text) => {
+    setExpirationDate(text);
   };
-
+  const handleSecurityCodeChange = (text) => {
+    setSecurityCode(text);
+  };
+  const handleContinue = () => {
+  }
+   
   return (
-    <TouchableOpacity onPress={navigateToFavorites} style={styles.container}>
-      <Card style={styles.card}>
-        <View style={styles.favoriteContainer}>
-          <TouchableOpacity onPress={toggleFavorite} style={styles.favoriteButton}>
-            <Icon
-              name={favorites.some((fav) => fav._id === product._id) ? 'heart' : 'heart-o'}
-              size={20}
-              color={favorites.some((fav) => fav._id === product._id) ? 'red' : 'white'}
-            />
-          </TouchableOpacity>
-        </View>
-
-        <Image style={styles.productImage} source={{ uri: product.imageUrl }} />
-
-        <Text style={styles.productName}>{product.name}</Text>
-        <Text style={styles.productPrice}>${product.price}</Text>
+    <>
+      
+      <Card style={styles.detailsContainer}>
+        <Text style={styles.detailsTitle}>Tarjeta de crédito</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Número de tarjeta"
+          value={cardNumber}
+          onChangeText={handleCardNumberChange}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Fecha de vencimiento (MM/AA)"
+          value={expirationDate}
+          onChangeText={handleExpirationDateChange}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Código de seguridad"
+          value={securityCode}
+          onChangeText={handleSecurityCodeChange}
+        />
       </Card>
-    </TouchableOpacity>
+      <TouchableOpacity style={styles.buyButton} onPress={handleContinue}>
+        <Text style={styles.buyButtonText}>Continuar</Text>
+      </TouchableOpacity>
+    </>
   );
 };
 
+
+
 const styles = StyleSheet.create({
-  container: {
-    margin: 5,
-    borderRadius: 10,
+  detailsContainer: {
+    backgroundColor: "#F5F5F5",
+    padding: 20,
+    margin: 20,
+    borderRadius: 8,
   },
-  card: {
-    padding: 10,
-    borderRadius: 10,
+  detailsTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
   },
-  favoriteContainer: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    zIndex: 1,
+  input: {
+    height: 40,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 4,
+    paddingHorizontal: 10,
+    marginBottom: 10,
   },
-  favoriteButton: {
-    backgroundColor: 'transparent',
-    padding: 5,
+  buyButton: {
+    backgroundColor: "#FF5C77",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 4,
+    marginTop: 20,
+    alignSelf: "center",
   },
-  productImage: {
-    width: 150,
-    height: 150,
-    borderRadius: 10,
-  },
-  productName: {
+  buyButtonText: {
+    color: "white",
+    fontWeight: "bold",
     fontSize: 16,
-    fontWeight: 'bold',
-    marginTop: 10,
-  },
-  productPrice: {
-    fontSize: 14,
-    color: 'gray',
-    marginTop: 5,
   },
 });
-
-export default ProductCard;

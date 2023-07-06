@@ -84,24 +84,50 @@ export const ProductCard = ({ product }: Props) => {
     }
   };
 
-  const toggleFavorite = () => {
-    const isFavorite = favorites.some((fav) => fav._id === product._id);
-     if(isFavorite) {
-      const updatedFavorites = favorites.filter((fav) => fav._id !== product._id);
-      setFavorites(updatedFavorites);
-     } else {
-      setFavorites([...favorites, product]);
-     }
-    };
+  const navigateToFavorites = () => {
+    navigation.navigate('Favorites', { favorites });
+  };
 
-    const navigateToFavorites = () => {
-      navigation.navigate('tarjetaScreen', { favorites });
-    };
+  const toggleFavorite = async () => {
+    const isFavorite = favorites.some((fav) => fav._id === product._id, product.multimedia);
+    let updatedFavorites = [];
+    if (isFavorite) {
+      updatedFavorites = favorites.filter((fav) => fav._id !== product._id, product.multimedia);
+    } else {
+      updatedFavorites = [...favorites, product];
+    }
+    setFavorites(updatedFavorites);
+    try {
+      await AsyncStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+    } catch (error) {
+      
+      console.log('Error al guardar los favoritos:', error);
+    }
+  };
   
+  useEffect(() => {
+    const loadFavorites = async () => {
+      try {
+        const favoritesData = await AsyncStorage.getItem('favorites');
+        if (favoritesData) {
+          setFavorites(JSON.parse(favoritesData));
+        }
+      } catch (error) {
+        
+        console.log('Error al cargar los favoritos:', error);
+      }
+    };
+    loadFavorites();
+  }, []);
+
+  
+
 
      
   return (
     <>
+    
+
      <TouchableOpacity onPress={onOpen} style={styles.container}>
   
       <Card style={styles.container}>
@@ -142,7 +168,7 @@ export const ProductCard = ({ product }: Props) => {
               return(
                 <Box bg="emerald.500" px="8" py="5" rounded="sm" mb={5}  zIndex={999}
                 >
-                  producto Agregado al carrito u
+                  producto Agregado al carrito 
                 </Box>
               );
             },
@@ -151,6 +177,12 @@ export const ProductCard = ({ product }: Props) => {
          }}>
             <Text style={styles.textWhite}>Agregar al carrito </Text>
          </TouchableOpacity>
+
+         {/* <TouchableOpacity style={styles.buyButton} onPress={navigateToFavorites}>
+      <Text>Ver favoritos</Text>
+    </TouchableOpacity> */}
+
+   
 
         </Card>
 
@@ -214,9 +246,9 @@ export const ProductCard = ({ product }: Props) => {
            toast.show({
             render: () => {
               return(
-                <Box bg="emerald.500" px="8" py="5" rounded="sm" mb={5}  zIndex={999}
+                <Box bg="emerald.500" px="8" py="5" rounded="sm" mb={1}  zIndex={999}
                 >
-                  producto Agregado al carrito u
+                  producto Agregado al carrito 
                 </Box>
               );
             },

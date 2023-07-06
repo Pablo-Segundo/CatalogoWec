@@ -11,7 +11,7 @@ import { CategoriesScreen } from '../Screens/CategoriesScreen';
 import { ShoppingScreen } from '../Screens/shoppingcart'
 import { Direction } from '../Screens/directionsP'
 import { ActionSh } from '../Screens/Actionproduct'
-import { CreditCardScreen } from '../Screens/tessssss'
+import { FavoritesScreen } from '../Products/Favorites'
 
 
 const Tab = createBottomTabNavigator()

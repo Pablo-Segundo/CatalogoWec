@@ -8,8 +8,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import LoadingScreen from '../Screens/loadintgScreen';
 import { Actionsheet, Button, useDisclose } from "native-base";
 import { ProductCard } from '../components/ProductCard';
-import BottomSheet from "react-native-gesture-bottom-sheet";
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 interface Props extends NativeStackScreenProps<any, any> {}
@@ -17,7 +16,7 @@ interface Props extends NativeStackScreenProps<any, any> {}
 export const PetañaScreen = ({ route, navigation }: Props) => {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
+ 
   //  const bottomSheet = useRef();
   
  
@@ -38,24 +37,34 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
       setIsLoading(false);
     };
     fetchData();
+   
   }, []);
   if (isLoading) {
     return <LoadingScreen />;
   }
+
+  
+ 
   return (
     <View>
-      <Text style={[styles.TextContainer, { fontSize: 20, color: '#FFF' }]}>WAPIZIMA UwU</Text>
-      <TouchableOpacity
+        <Text style={[styles.TextContainer, { fontSize: 20, color: '#FFF' }]}>WAPIZIMA </Text>
+     {/* <View> 
+   <TouchableOpacity style={styles.buyButton} onPress={navigateToFavorites}>
+      <Text>Ver favoritos</Text>
+    </TouchableOpacity>
+   </View> */}
+
+   <TouchableOpacity
           style={styles.IconContainer}
           onPress={() => navigation.navigate('Shopping', {})}>
        <View style={styles.IconCircle}>
          <Icon name="shopping-cart" size={30} color="#000" />
          </View>
-        </TouchableOpacity>
+        </TouchableOpacity>   
 
 
 
-      <View style={{ height: '8%', backgroundColor: '#debdce' }} />
+      <View style={{ height: '8%', backgroundColor: '#debdce'}} /> 
       <FlatList
         data={products}
         numColumns={2}
