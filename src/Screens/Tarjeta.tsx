@@ -86,15 +86,14 @@ export const TarjetaScreen = () => {
           value={securityCode}
           onChangeText={handleSecurityCodeChange}
         />
-      </Card>
-      {/* <TouchableOpacity style={styles.buyButton} onPress={handleContinue}>
-        <Text style={styles.buyButtonText}>Continuar</Text>
-      </TouchableOpacity> */}
+       
+</Card>
 
-      <TouchableOpacity style={styles.buyButton} onPress={handleContinue} >
-        <Text style={styles.buyButtonText}>Continuar  </Text>
+    <TouchableOpacity style={styles.buyButton} onPress={handleContinue}>
+        <Text style={styles.buyButtonText}>Continuar</Text>
       </TouchableOpacity>
 
+    
 </>
 
     
@@ -170,7 +169,6 @@ const styles = StyleSheet.create({
       fontSize: 20,
       color: '#fff',
       padding: 2,
-     
     },
     textRosa: {
       fontWeight: 'bold',

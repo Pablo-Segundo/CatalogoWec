@@ -1,98 +1,52 @@
 import React, { useState } from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, Dimensions, FlatList } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, Dimensions, FlatList, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Product } from '../interfaces/ProductsCategoryInterface';
 import { Card } from "react-native-paper";
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { ScrollView } from "react-native-gesture-handler";
 
 
 interface Props {
   product: Product;
   route: any;
 }
-export const FavoritesScreen = ({ route,product }: Props) => {
+
+
+export const FavoritesScreen = ({ route, product }: Props) => {
   const { favorites } = route.params;
   const navigation = useNavigation();
   return (
-   <> 
-   <View style={styles.header}>
-    <Text style={styles.headerWITHE}> Productos Favoritos  </Text>
-  
-      <TouchableOpacity
-       style={styles.IconContainer}
-         onPress={() => navigation.navigate('Shopping', {})}>
-       <View style={styles.IconCircle}>
-         <Icon name="shopping-cart" size={30} color="#000" />
-         </View>
-        </TouchableOpacity>
-    
-   </View>
+
+    <ScrollView>
+
+        <View style={styles.header}>
+          <Text style={styles.headerWITHE}>Productos guardados   </Text>
+
+          <TouchableOpacity
+                style={styles.IconContainer}
+                onPress={() => navigation.navigate('Shopping', {})}>
+            <View style={styles.IconCircle}>
+              <Icon name="shopping-cart" size={30} color="#000" />
+              </View>
+              </TouchableOpacity>
+           </View>
 
 
-    <View>
-     <Text style={styles.TextProduc}>Tus Productos Favoritos  </Text>
-    </View>
-    
-
+      <View>
+        <Text style={styles.TextProduc}>Tus Productos Favoritos  </Text>
+      </View>
       <Card style={styles.cardcontent}>
-      
-      
-      {favorites.map((product) => (
-        
-       // <Text style={styles.TextProducss}  key={product._id}>{product.name}</Text>
-         
-        //<Image style={styles.TextProducss}  key={product._id}>{product.multimedia}</Image>
-
-        //  <Image style={styles.productImage} key={product._id}>{product.multimedia}</Image>
-
-
-         <Image style={styles.productImage} source={{ uri: product.multimedia[0].images['400x400'] }} />
-      ))}
-         
+        {favorites.map((product) => (
+          <View key={product._id} style={styles.productContainer}>
+            <Image style={styles.productImage} source={{ uri: product.multimedia[0].images['400x400'] }} />
+            <Text style={styles.productName}>{product.name}</Text>
+          </View>
+        ))}
       </Card>
-   
-      
-   
-
-
-
-    </>
+    </ScrollView>
   );
 };
-
-
 const styles = StyleSheet.create({
-  TextContainer: {
-    color: 'black',
-    position: 'absolute',
-    top: 20,
-    left: 25,
-   
-  }, 
-  productImage: {
-    width: 150,
-    height: 150,
-    borderRadius: 10,
-   
-  },
-  container: {
-    flex: 1,
-    paddingTop: 20,
-    paddingHorizontal: 10,
-  },
-  TextProduc: {
-    color: 'gray',
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginHorizontal: 10,
-  },
-  TextProducss: {
-    color: 'black',
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginHorizontal: 10,
-  },
   header: {
     padding: 30,
     backgroundColor: '#debdce',
@@ -119,11 +73,30 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  cardcontent: {
-    backgroundColor: '#dcdcdc',
-    paddingVertical: 12,
-    borderRadius: 4,
-    alignItems: 'center',
+  TextProduc: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginTop: 20,
+    marginHorizontal: 20,
   },
-}
- )
+  cardcontent: {
+    margin: 20,
+    borderRadius: 10,
+    padding: 10,
+  },
+  productContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  productImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 10,
+    marginRight: 10,
+  },
+  productName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+});
