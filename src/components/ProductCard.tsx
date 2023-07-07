@@ -6,12 +6,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Card , Button} from 'react-native-paper';
 import { Actionsheet, Box, useDisclose , useToast, Modal } from 'native-base';
 import Carousel from 'react-native-snap-carousel';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 interface Props {
   product: Product;
   route: any;
 }
+
+
 
 export const ProductCard = ({ product }: Props) => {
   const navigation = useNavigation();
@@ -23,29 +26,49 @@ export const ProductCard = ({ product }: Props) => {
   const [showModal, setShowModal] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isImageSelected, setIsImageSelected] = useState(false);
+  const [favorites, setFavorites] = useState<Product[]>([]);
 
-  
+
   const decrementQuantity = () => {
     if (quantity > 0) {
       setQuantity(quantity - 1);
     }
   };
-
   const incrementQuantity = () => {
     if (quantity < product.quantity) {
       setQuantity(quantity + 1);
     }
   };
-
   const navigateToShoppingScreen = () => {
     navigation.navigate('Shopping', { quantity, ProductName: product.name, price: product.price, multimedia: product.multimedia });
   };
-
-  const addToCart = async (product: Product, quantity: number, price: number, multimedia: Multimedia[]) => {
+  const addToCart = async (product: Product, quantity: number, price: number, multimedia: Multimedia[]) => { 
+    if (quantity === 1) {
+      toast.show({
+        render: () => {
+          return (
+            <Box bg="red.500" px="8" py="5" rounded="sm" mb={1} zIndex={999}>
+              Agregue al menos un producto al carrito
+            </Box>
+          );
+        },
+        placement: 'top',
+      });
+    }else
+    toast.show({
+     render: () => {
+       return(
+         <Box bg="emerald.500" px="8" py="5" rounded="sm" mb={1}  zIndex={999}
+         >
+           producto Agregado al carrito uwu
+         </Box>
+       );
+     },
+     placement: 'top',
+    });
     if (!quantity) quantity = 1;
     const cartArray = await AsyncStorage.getItem('cart');
     let cart = [];
-
     const cartItem = {
       product_id: product,
       quantity,
@@ -53,12 +76,9 @@ export const ProductCard = ({ product }: Props) => {
       price: product.price,
       multimedia: product.multimedia ,
     };
-
-
     if (cartArray) {
       cart = JSON.parse(cartArray);
       const productExists = cart.find((item) => item.product_id._id === product._id);
-
       if (productExists) {
         const index = cart.findIndex((item) => item.product_id._id === product._id);
         cart[index].quantity = quantity;
@@ -72,7 +92,6 @@ export const ProductCard = ({ product }: Props) => {
   };
 
 
-
   const handleImagePress = (index: number) => {
     if (selectedImageIndex === index) {
       setSelectedImageIndex(-1);
@@ -82,19 +101,59 @@ export const ProductCard = ({ product }: Props) => {
       setIsImageSelected(true);
     }
   };
-     
+  const navigateToFavorites = () => {
+    navigation.navigate('Favorites', { favorites });
+  };
+  const toggleFavorite = async () => {
+    const isFavorite = favorites.some((fav) => fav._id === product._id, product.multimedia);
+    let updatedFavorites = [];
+    if (isFavorite) {
+      updatedFavorites = favorites.filter((fav) => fav._id !== product._id, product.multimedia);
+    } else {
+      updatedFavorites = [...favorites, product];
+    }
+    setFavorites(updatedFavorites);
+    try {
+      await AsyncStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+    } catch (error) {
+      console.log('Error al guardar los favoritos:', error);
+    }
+  };
+  useEffect(() => {
+    const loadFavorites = async () => {
+      try {
+        const favoritesData = await AsyncStorage.getItem('favorites');
+        if (favoritesData) {
+          setFavorites(JSON.parse(favoritesData));
+        }
+      } catch (error) {
+        console.log('Error al cargar los favoritos:', error);
+      }
+    };
+    loadFavorites();
+  }, []);
+
+
   return (
+
+
     <>
      <TouchableOpacity onPress={onOpen} style={styles.container}>
       <Card style={styles.container}>
-        <Image style={styles.productImage} source={{ uri: product.multimedia[0].images['400x400'] }} />
-
+      <Image style={styles.productImage} source={{ uri: product.multimedia[0].images['400x400'] }} />
+     <View style={styles.favoriteContainer}>
+          <TouchableOpacity onPress={toggleFavorite} style={styles.favoriteButton}>
+            <Icon
+              name={favorites.some((fav) => fav._id === product._id) ? 'heart' : 'heart-o'}
+              size={25}
+              color={favorites.some((fav) => fav._id === product._id) ? 'red' : 'gray'}
+            />
+          </TouchableOpacity>
+        </View>
         <Text style={styles.productname}>{product.name}</Text>
-
         <Text style={styles.textgray}>Disponible: {product.quantity}</Text>
         <Text style={styles.productPrice}>${product.price} </Text>
         <View style={styles.quantityContainer}>
-
           <TouchableOpacity onPress={decrementQuantity}>
             <Text style={styles.quantityButton}>-</Text>
           </TouchableOpacity>
@@ -103,17 +162,18 @@ export const ProductCard = ({ product }: Props) => {
             <Text style={styles.quantityButton}>+</Text>
           </TouchableOpacity>
         </View>
-
-         <TouchableOpacity onPress={onOpen} style={styles.buyButton}>
+         <TouchableOpacity style={styles.buyButton} onPress={() => {
+           addToCart(product, quantity, product.price, product.multimedia );
+         }}>
             <Text style={styles.textWhite}>Agregar al carrito </Text>
          </TouchableOpacity>
-
+          <TouchableOpacity style={styles.buyButton} onPress={navigateToFavorites}>
+      <Text>Ver favoritos</Text>
+    </TouchableOpacity>
         </Card>
-
           <Actionsheet isOpen={isOpen} onClose={onClose}>
       <Actionsheet.Content>
       <View style={styles.productItem}>
-        
            {/* <Carousel
             data={product.multimedia}
             renderItem={({ item, index }) => (
@@ -130,7 +190,6 @@ export const ProductCard = ({ product }: Props) => {
             autoplay={true}
             autoplayInterval={2000}
           />   */}
-
         <FlatList
           data={product.multimedia}
           renderItem={({ item, index }) => (
@@ -143,17 +202,14 @@ export const ProductCard = ({ product }: Props) => {
           )}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
-        /> 
-        
-
+          pagingEnabled
+        />
           <View style={styles.productContainer}>
             <Text style={styles.productname}>{product.name}</Text>
             <Text style={styles.productname}> Disponible: {product.quantity} </Text>
             <Card style={styles.cardcontainer}>
               <Text style={styles.Textcard}>{product.description}</Text>
             </Card>
-
-
             <View style={styles.quantityContainer}>
               <TouchableOpacity onPress={decrementQuantity}>
                 <Text style={styles.quantityButton}>-</Text>
@@ -163,15 +219,14 @@ export const ProductCard = ({ product }: Props) => {
                 <Text style={styles.quantityButton}>+</Text>
               </TouchableOpacity>
             </View>
-
          <TouchableOpacity style={styles.buyButton} onPress={() => {
            addToCart(product, quantity, product.price, product.multimedia );
            toast.show({
             render: () => {
               return(
-                <Box bg="emerald.500" px="8" py="5" rounded="sm" mb={5}  zIndex={999}
+                <Box bg="emerald.500" px="8" py="5" rounded="sm" mb={1}  zIndex={999}
                 >
-                  producto Agregado al carrito u
+                  producto Agregado al carrito uwu
                 </Box>
               );
             },
@@ -180,23 +235,15 @@ export const ProductCard = ({ product }: Props) => {
          }}>
              <Text style={styles.textWhite}>Agregar al carrito </Text>
          </TouchableOpacity>
-
-
           </View>
         </View>
-
         </Actionsheet.Content>
     </Actionsheet>
     </TouchableOpacity>
-
     </>
   );
 };
-
-
-
 const styles = StyleSheet.create({
-
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -204,16 +251,34 @@ const styles = StyleSheet.create({
     margin: 5,
     borderRadius: 10,
     marginBottom: 10,
-
-
+  },
+  favoriteButton: {
+    backgroundColor: 'transparent',
+    padding: 2,
+    marginLeft: 100,
+  },
+  favoriteContainer: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    zIndex: 1,
+  },
+  favoriteMarker: {
+    position: 'absolute',
+    top: 30,
+    left: 10,
+    width: 30,
+    height: 20,
+    backgroundColor: 'red',
+    borderRadius: 10,
   },
   textgray: {
     color: 'gray',
+    marginLeft: 15,
   },
   cardcontainer: {
     height: '15%',
   },
-
   productItem: {
     alignItems: 'center',
   },
@@ -223,22 +288,20 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   productname:{
-
     fontSize: 15,
     fontWeight: 'bold',
     color:'black',
     marginVertical: 20,
-
+    marginLeft: 15,
   },
   productPrice: {
     fontSize: 20,
     fontWeight: 'bold',
-    color:'#1e90ff',
-
-
+    color:'#1E90FF',
+    marginLeft: 15,
   },
   buyButton: {
-    backgroundColor: '#ff1493',
+    backgroundColor: '#FF1493',
     paddingVertical: 5,
     alignItems: 'center',
     borderRadius: 25,
@@ -253,7 +316,7 @@ const styles = StyleSheet.create({
     padding: 10,
    marginBottom: 10,
     borderRadius:70,
-    borderColor: '#ff1493'
+    borderColor: '#FF1493'
   },
   IconBarra: {
     flex: 1,
@@ -277,19 +340,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 10,
-    marginBottom: 10,
+    marginBottom: 15,
     borderRadius:70,
-    borderColor: '#ff1493'
+    borderColor: '#FF1493',
+    marginLeft: 30
   },
-
-
   quantityButton: {
     color: 'black',
     fontSize: 20,
     fontWeight: 'bold',
     paddingHorizontal: 15,
-
-
   },
   quantity: {
     color: "gray",
@@ -306,11 +366,7 @@ const styles = StyleSheet.create({
       width: 300,
       backgroundColor: 'rgba(0, 0, 0, 0.5)',
       height: 190,
-
-    
-    
       marginRight: 10
-
     },
     productDescription: {
       fontSize: 16,
@@ -324,17 +380,15 @@ const styles = StyleSheet.create({
         // fontWeight: 'bold',
         color:'gray',
         marginVertical: 10,
-    },  
+    },
     largeCardImage: {
       width: 320,
       height: 320,
       resizeMode: 'contain',
-
     },
     image:{
       resizeMode:'cover',
       height: 500,
       width: Dimensions.get('screen').width,
     }
-
 });
