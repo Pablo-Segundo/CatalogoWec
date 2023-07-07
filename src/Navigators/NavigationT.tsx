@@ -39,6 +39,7 @@ return (
             name="upload"
                              
             options={{
+              unmountOnBlur: true,
               headerShown: false,
               // @ts-ignore
               tabBarIcon: ({ ref }) => <Lottie ref={ref} loop={false} source={require('./assets/lottie/upload.icon.json')} style={styles.icon} />,

@@ -70,18 +70,21 @@ export const TarjetaScreen = () => {
         <Text style={styles.detailsTitle}>Tarjeta de crédito</Text>
         <TextInput
           style={styles.input}
+          placeholderTextColor={'black'}
           placeholder="Número de tarjeta"
           value={cardNumber}
           onChangeText={handleCardNumberChange}
         />
         <TextInput
           style={styles.input}
+          placeholderTextColor={'black'}
           placeholder="Fecha de vencimiento (MM/AA)"
           value={expirationDate}
           onChangeText={handleExpirationDateChange}
         />
         <TextInput
           style={styles.input}
+          placeholderTextColor={'black'}
           placeholder="Código de seguridad"
           value={securityCode}
           onChangeText={handleSecurityCodeChange}
@@ -121,6 +124,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: "bold",
         marginBottom: 10,
+        color: 'black'
       },
       input: {
         height: 40,
@@ -129,6 +133,7 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         paddingHorizontal: 10,
         marginBottom: 10,
+        color: 'black'
       },
       buttonContainer: {
         marginTop: 16,
