@@ -167,9 +167,10 @@ export const ProductCard = ({ product }: Props) => {
       <Text style={styles.addToCartButtonText}>Agregar al carrito</Text>
     </TouchableOpacity>
 
-    {/* <TouchableOpacity style={styles.viewFavoritesButton} onPress={navigateToFavorites}>
+    <TouchableOpacity style={styles.viewFavoritesButton} onPress={navigateToFavorites}>
       <Text style={styles.viewFavoritesButtonText}>Ver favoritos</Text>
-    </TouchableOpacity> */}
+    </TouchableOpacity>
+  
   </Card>
 </TouchableOpacity>
 
@@ -291,8 +292,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-
-
   productPrice : {
     fontSize: 18,
     fontWeight: 'bold',

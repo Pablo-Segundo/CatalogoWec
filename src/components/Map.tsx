@@ -9,6 +9,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDisclose, Button, Actionsheet, Icon, Card  } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import Geocoder from 'react-native-geocoding';
+import { Image } from 'react-native';
+
 
 
 
@@ -76,18 +78,41 @@ export function MapScreen() {
   }, []);
 
 
-  const guardarDatos = async () => {
+  // const guardarDatos = async () => {
 
+  //   try {
+  //     await AsyncStorage.setItem('nombre', nombre);
+  //     await AsyncStorage.setItem('numeroTelefonico', numeroTelefonico);
+  //     await AsyncStorage.setItem('referencias', referencias);
+  //     await AsyncStorage.setItem('selectedAddress', selectedAddress);
+  //     console.log('Datos guardados uwu');
+  //   } catch (error) {
+  //     console.log('Error al guardar los datos unu:', error);
+  //   }
+  // };
+  const guardarDatos = async () => {
     try {
-      await AsyncStorage.setItem('nombre', nombre);
-      await AsyncStorage.setItem('numeroTelefonico', numeroTelefonico);
-      await AsyncStorage.setItem('referencias', referencias);
-      await AsyncStorage.setItem('selectedAddress', selectedAddress);
+      const datosGuardados = await AsyncStorage.getItem('datos');
+      let datosActualizados = [];
+      if (datosGuardados) {
+        datosActualizados = JSON.parse(datosGuardados);
+      }
+      const nuevosDatos = {
+        nombre,
+        numeroTelefonico,
+        referencias,
+        selectedAddress,
+      };
+      datosActualizados.push(nuevosDatos);
+      await AsyncStorage.setItem('datos', JSON.stringify(datosActualizados));
       console.log('Datos guardados uwu');
+      setDatosGuardados(nuevosDatos);
     } catch (error) {
       console.log('Error al guardar los datos unu:', error);
     }
   };
+  
+   
 
   const handleMapPress = async (coordinate) => {
      
@@ -216,13 +241,24 @@ export function MapScreen() {
                   onChangeText={text => setNombre(text)}
                 />
 
-                <Text style={styles.headerText}>Número telefónico:</Text>
-                <TextInput 
+                {/* <Text style={styles.headerText}>Número telefónico:</Text>
+                <TextInput keyboardType="numeric"
                   style={styles.discountCodeInput}
                   placeholder ="Por favor, escriba su número telefónico"
                   value={numeroTelefonico}
                   onChangeText={text => setNumeroTelefonico(text)}
+                /> */}
+              <Text style={styles.headerText}>Número telefónico:</Text>
+                <View style={styles.phoneInputContainer}>
+                <Image source={require('../Navigators/assets/lottie/mexico.png')} style={styles.flagImage} />
+                <TextInput
+                  keyboardType="numeric"
+                  style={styles.phoneInput}
+                  placeholder="Por favor, escriba"
+                  value={numeroTelefonico}
+                  onChangeText={text => setNumeroTelefonico(text)}
                 />
+              </View>
 
                 <Text style={styles.headerText}>Referencias (opcional):</Text>
                 <TextInput
@@ -232,6 +268,7 @@ export function MapScreen() {
                   onChangeText={text => setReferencias(text)}
                   
                 /> 
+
 
               <TouchableOpacity style={styles.buyButton}
                onPress={() => {
@@ -256,9 +293,22 @@ export function MapScreen() {
           </View>
         </ActionSheetProvider>
 
+        <View> 
+          <Card>
         <TouchableOpacity onPress={onOpen} style={styles.buyButton}>
              <Text style={styles.headerWITHE}> Agregue sus datos </Text>
         </TouchableOpacity>
+
+        <TouchableOpacity style={styles.buyButton}
+         onPress={() => {
+        navigation.navigate('Direction');
+         }}
+        >
+           <Text style={styles.headerWITHE}>Direcciones guardads  </Text>
+        </TouchableOpacity> 
+
+        </Card>
+        </View>
 
         
 
@@ -345,5 +395,23 @@ const styles = StyleSheet.create({
   textgray: {
     color: 'gray',
     fontSize: 15,
+  },
+  phoneInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  flagImage: {
+    width: 30,
+    height: 20,
+    marginRight: 10,
+  },
+  phoneInput: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    fontSize: 16,
   },
 });

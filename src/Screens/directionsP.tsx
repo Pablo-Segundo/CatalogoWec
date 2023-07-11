@@ -1,39 +1,50 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, TextInput} from 'react-native';
 import { Button, Card } from "react-native-paper";
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { Modal } from "native-base";
 
 
 export const Direction = () => {
     const navigation = useNavigation();
     const [datosGuardados, setDatosGuardados] = useState(null);
+    const [showModal,setShowModal] = useState(false);
+
+ 
+    
    
 
     useEffect(() => {
       const obtenerDatosGuardados = async () => {
         try {
-          const nombreGuardado = await AsyncStorage.getItem('nombre');
-          const numeroTelefonicoGuardado = await AsyncStorage.getItem('numeroTelefonico');
-          const referenciasGuardadas = await AsyncStorage.getItem('referencias');
-          const direcionesGuardadas = await AsyncStorage.getItem('selectedAddress')
-
-    
-          setDatosGuardados({
-            nombre: nombreGuardado,
-            numeroTelefonico: numeroTelefonicoGuardado,
-            referencias: referenciasGuardadas,
-            selectedAddress: direcionesGuardadas,
-    
-          });
+          const datosGuardados = await AsyncStorage.getItem('datos');
+          if (datosGuardados) {
+            const datosParseados = JSON.parse(datosGuardados);
+            setDatosGuardados(datosParseados);
+          }
         } catch (error) {
           console.log('Error al obtener los datos guardados:', error);
         }
       };
     
       obtenerDatosGuardados();
-    }, [])
-    
+    }, []);
+
+    const handleDelete = (index) => {
+      const updatedData = [...datosGuardados];
+      updatedData.splice(index, 1);
+      setDatosGuardados(updatedData);
+    };
+
+    const handleCardPress = (datos) => {
+      navigation.navigate('Shopping', { nombre: datos.nombre });
+    };
+
+    const handleUpdate = () => {
+      
+    }
   return(
     
     <> 
@@ -51,26 +62,74 @@ export const Direction = () => {
       </View>
 
       
-       <View style={styles.cardC}>
-       <Text style={styles.productname}>Direcciones guardadas   </Text>
-       </View>
-     
+      <ScrollView>
+      {datosGuardados && datosGuardados.map((datos, index) => (
+          <TouchableOpacity key={index} onPress={() => handleCardPress(datos)}>
+  <Card key={index} style={styles.cardcontainer}>
+    <View style={styles.rowContainer}>
+      <Icon name="user" size={20} color="#000" style={styles.icon} />
+      <Text style={styles.productname}>{datos.nombre}</Text>
+    </View>
+    <View style={styles.rowContainer}>
+      <Icon name="map-marker" size={20} color="#000" style={styles.icon} />
+      <Text style={styles.textgray}>Calle: {datos.selectedAddress}</Text>
+    </View>
+    <View style={styles.rowContainer}>
+      <Icon name="phone" size={20} color="#000" style={styles.icon} />
+      <Text style={styles.textgray}>Número telefónico: {datos.numeroTelefonico}</Text>
+    </View>
+    <View style={styles.rowContainer}>
+      <Icon name="info" size={20} color="#000" style={styles.icon} />
+      <Text style={styles.textgray}>Referencia: {datos.referencias}</Text>
+    </View>
+    <View style={styles.buttonContainer}>
+      <TouchableOpacity style={styles.deleteButton} onPress={() => handleDelete(index)}>
+        <Icon name="trash" size={25} color="#fff" />
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.updateButton}  onPress={() => setShowModal(true)}>
+        <Icon name="pencil" size={25} color="#fff" />
+      </TouchableOpacity>
+    </View>
+  </Card>
+  </TouchableOpacity>
+))}
+</ScrollView>
 
-      <TouchableOpacity >
-          <Card style={styles.cardcontainer}> 
-                <View> 
-            {datosGuardados && (
-              <View >
-                <Text style={styles.productname}> {datosGuardados.nombre}</Text>
-                <Text style={styles.textgray}>Calle: {datosGuardados.selectedAddress}</Text> 
-                <Text style={styles.textgray}>Número telefónico: {datosGuardados.numeroTelefonico}</Text>
-                <Text style={styles.textgray}>Refernecia {datosGuardados.referencias} </Text>
-              </View>
-            )}
-          </View>
-            </Card>
-          </TouchableOpacity>
+<Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+      <Modal.Content maxWidth="500px">
+        <Modal.CloseButton />
+        <Modal.Header>Editar informacion</Modal.Header>
+        <Modal.Body>
+        <Text style={styles.headerText2}> Direccion:  </Text>
+            <TextInput
+            style={styles.discountCodeInput} 
+            placeholder="Escriba su calle" 
+            />
+        <Text style={styles.headerText2}> Nombre de quien recibe: </Text>
+         <TextInput
+          style={styles.discountCodeInput} 
+          placeholder="Escriba su nombre" 
+         />
+         
+        <Text style={styles.headerText2}>Número Telefónico: </Text>
+         <TextInput 
+          style={styles.discountCodeInput} 
+          placeholder="Escriba su número telefónico" 
+         />
 
+        <Text style={styles.headerText2}>Referencia</Text>
+        <TextInput 
+          style={styles.discountCodeInput} 
+          placeholder="casa color uwu" 
+        />
+  
+        </Modal.Body>
+        <TouchableOpacity style={styles.buyButton}>
+          <Text> Confirmar datos </Text>
+        </TouchableOpacity>
+
+      </Modal.Content>
+    </Modal>
 
 {/* 
       <TouchableOpacity style={styles.buyButton}>
@@ -89,8 +148,41 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 16,
       },
+      discountCodeInput: {
+        borderColor: 'gray', 
+        borderWidth: 1,
+        borderRadius: 5,
+        padding: 15,
+        marginTop: 10,
+        color: 'black',
+      },
+      buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        marginTop: 10,
+      },
+      deleteButton: {
+        backgroundColor: 'red',
+        padding: 5,
+        borderRadius: 5,
+        marginRight: 10,
+      },
+      updateButton: {
+        backgroundColor: 'blue',
+        padding: 5,
+        borderRadius: 5,
+      },
+
+      icon: {
+        marginRight: 10,
+      },
       cardContainer:{
         height: '40%',
+      },
+      rowContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 5,
       },
       cardC:{
         height: '10%',
@@ -122,6 +214,11 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 16,
         color: '#FFF',
+      },
+      headerText2: {
+        fontWeight: 'bold',
+        fontSize: 16,
+        color: 'black',
       },
       tableRow: {
         flexDirection: 'row',

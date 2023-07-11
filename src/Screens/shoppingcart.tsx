@@ -48,11 +48,12 @@ export const ShoppingScreen = ({ product }: Props) => {
     cartShopping();
     const obtenerDatosGuardados = async () => {
       try {
-        const nombreGuardado = await AsyncStorage.getItem('nombre');
-        setDatosGuardados({
-          nombre: nombreGuardado,
-         
-        });
+        const datosGuardados = await AsyncStorage.getItem('datos');
+        if (datosGuardados) {
+          const datosParseados = JSON.parse(datosGuardados);
+          const ultimoDatoGuardado = datosParseados[datosParseados.length - 1];
+          setDatosGuardados(ultimoDatoGuardado);
+        }
       } catch (error) {
         console.log('Error al obtener los datos guardados:', error);
       }
@@ -130,17 +131,12 @@ export const ShoppingScreen = ({ product }: Props) => {
             <Icon name="shopping-cart" size={30} color="#000" />
           </View>
         </TouchableOpacity> */}
-
-
         <View> 
         <TouchableOpacity  onPress={() => navigation.replace('mapaScreen', {owner:' '})}>
           <Card style={styles.cardcontainer}> 
-          <View> 
+          <View>
             {datosGuardados && (
-              <View >
-                <Text style={styles.textgray}> Enviar a: {datosGuardados.nombre}</Text>
-               
-              </View>
+              <Text style={styles.textgray}>Enviar a: {datosGuardados.nombre}</Text>
             )}
           </View>
             </Card>

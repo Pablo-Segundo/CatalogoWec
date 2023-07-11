@@ -78,6 +78,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 20,
     marginHorizontal: 20,
+    color: 'gray'
   },
   cardcontent: {
     margin: 20,
@@ -98,5 +99,7 @@ const styles = StyleSheet.create({
   productName: {
     fontSize: 16,
     fontWeight: 'bold',
+    alignItems: 'center',
+    color: 'black'
   },
 });
