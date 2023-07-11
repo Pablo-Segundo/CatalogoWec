@@ -5,21 +5,18 @@ import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Card , Button} from 'react-native-paper';
 import { Actionsheet, Box, useDisclose , useToast, Modal } from 'native-base';
-import Carousel from 'react-native-snap-carousel';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
+import { faAlignCenter } from '@fortawesome/free-solid-svg-icons';
 
 interface Props {
   product: Product;
   route: any;
 }
 
-
-
 export const ProductCard = ({ product }: Props) => {
   const navigation = useNavigation();
   const bottomSheet = useRef();
-  const [quantity, setQuantity] = useState(0);
+  const [quantity, setQuantity] = useState(1);
   const toast = useToast();
   const refRBSheet = useRef();
   const { isOpen, onOpen, onClose } = useDisclose();
@@ -34,16 +31,19 @@ export const ProductCard = ({ product }: Props) => {
       setQuantity(quantity - 1);
     }
   };
+
   const incrementQuantity = () => {
     if (quantity < product.quantity) {
       setQuantity(quantity + 1);
     }
   };
+
   const navigateToShoppingScreen = () => {
     navigation.navigate('Shopping', { quantity, ProductName: product.name, price: product.price, multimedia: product.multimedia });
   };
+
   const addToCart = async (product: Product, quantity: number, price: number, multimedia: Multimedia[]) => { 
-    if (quantity === 1) {
+    if (quantity === 0) {
       toast.show({
         render: () => {
           return (
@@ -91,7 +91,6 @@ export const ProductCard = ({ product }: Props) => {
     await AsyncStorage.setItem('cart', JSON.stringify(cart));
   };
 
-
   const handleImagePress = (index: number) => {
     if (selectedImageIndex === index) {
       setSelectedImageIndex(-1);
@@ -101,9 +100,11 @@ export const ProductCard = ({ product }: Props) => {
       setIsImageSelected(true);
     }
   };
+
   const navigateToFavorites = () => {
     navigation.navigate('Favorites', { favorites });
   };
+
   const toggleFavorite = async () => {
     const isFavorite = favorites.some((fav) => fav._id === product._id, product.multimedia);
     let updatedFavorites = [];
@@ -119,6 +120,7 @@ export const ProductCard = ({ product }: Props) => {
       console.log('Error al guardar los favoritos:', error);
     }
   };
+
   useEffect(() => {
     const loadFavorites = async () => {
       try {
@@ -133,67 +135,53 @@ export const ProductCard = ({ product }: Props) => {
     loadFavorites();
   }, []);
 
-
   return (
-
-
     <>
-     <TouchableOpacity onPress={onOpen} style={styles.container}>
-      <Card style={styles.container}>
-      <Image style={styles.productImage} source={{ uri: product.multimedia[0].images['400x400'] }} />
-     <View style={styles.favoriteContainer}>
-          <TouchableOpacity onPress={toggleFavorite} style={styles.favoriteButton}>
-            <Icon
-              name={favorites.some((fav) => fav._id === product._id) ? 'heart' : 'heart-o'}
-              size={25}
-              color={favorites.some((fav) => fav._id === product._id) ? 'red' : 'gray'}
-            />
-          </TouchableOpacity>
-        </View>
-        <Text style={styles.productname}>{product.name}</Text>
-        <Text style={styles.textgray}>Disponible: {product.quantity}</Text>
-        <Text style={styles.productPrice}>${product.price} </Text>
-        <View style={styles.quantityContainer}>
-          <TouchableOpacity onPress={decrementQuantity}>
-            <Text style={styles.quantityButton}>-</Text>
-          </TouchableOpacity>
-          <Text style={styles.quantity}>{quantity}</Text>
-          <TouchableOpacity onPress={incrementQuantity}>
-            <Text style={styles.quantityButton}>+</Text>
-          </TouchableOpacity>
-        </View>
-         <TouchableOpacity style={styles.buyButton} onPress={() => {
-           addToCart(product, quantity, product.price, product.multimedia );
-         }}>
-            <Text style={styles.textWhite}>Agregar al carrito </Text>
-         </TouchableOpacity>
-          <TouchableOpacity style={styles.buyButton} onPress={navigateToFavorites}>
-      <Text>Ver favoritos</Text>
+   <TouchableOpacity onPress={onOpen} style={styles.container}>
+  <Card style={styles.cardContainer}>
+    <Image style={styles.productImage} source={{ uri: product.multimedia[0].images['400x400'] }} />
+    <View style={styles.favoriteContainer}>
+      <TouchableOpacity onPress={toggleFavorite} style={styles.favoriteButton}>
+        <Icon
+          name={favorites.some((fav) => fav._id === product._id) ? 'heart' : 'heart-o'}
+          size={25}
+          color={favorites.some((fav) => fav._id === product._id) ? 'red' : 'gray'}
+        />
+      </TouchableOpacity>
+    </View>
+    <Text style={styles.productName}>{product.name}</Text>
+    <Text style={styles.textGray}>Disponible: {product.quantity}</Text>
+    <Text style={styles.productPrice}>${product.price}</Text>
+    <View style={styles.quantityContainer}>
+      <TouchableOpacity onPress={decrementQuantity} style={styles.quantityButton}>
+        <Text style={styles.quantityButtonText}>-</Text>
+      </TouchableOpacity>
+      <Text style={styles.quantity}>{quantity}</Text>
+      <TouchableOpacity onPress={incrementQuantity} style={styles.quantityButton}>
+        <Text style={styles.quantityButtonText}>+</Text>
+      </TouchableOpacity>
+    </View>
+    <TouchableOpacity style={styles.addToCartButton} onPress={() => {
+      addToCart(product, quantity, product.price, product.multimedia);
+    }}>
+      <Text style={styles.addToCartButtonText}>Agregar al carrito</Text>
     </TouchableOpacity>
-        </Card>
+
+    {/* <TouchableOpacity style={styles.viewFavoritesButton} onPress={navigateToFavorites}>
+      <Text style={styles.viewFavoritesButtonText}>Ver favoritos</Text>
+    </TouchableOpacity> */}
+  </Card>
+</TouchableOpacity>
+
+        
           <Actionsheet isOpen={isOpen} onClose={onClose}>
       <Actionsheet.Content>
-      <View style={styles.productItem}>
-           {/* <Carousel
-            data={product.multimedia}
-            renderItem={({ item, index }) => (
-              <TouchableOpacity onPress={() => handleImagePress(index)}>
-                <Image
-                  style={index === selectedImageIndex ? styles.largeCardImage : styles.cardImage}
-                  source={{ uri: item.images['400x400'] }}
-                />
-              </TouchableOpacity>
-            )}
-            sliderWidth={600}
-            itemWidth={selectedImageIndex === 0 ? 400 : 300}
-            loop={true}
-            autoplay={true}
-            autoplayInterval={2000}
-          />   */}
-        <FlatList
+      <View>
+         
+      <FlatList
           data={product.multimedia}
           renderItem={({ item, index }) => (
-            <TouchableOpacity style={{ width: Dimensions.get('window').width, backgroundColor:'black', height:'100%'}} onPress={() => (index)}>
+            <TouchableOpacity style={{ width: Dimensions.get('window').width, backgroundColor:'black', }} onPress={() => (index)}>
               <Image
                 style={{width: '100%', height:'100%', resizeMode: 'contain'}}
                 source={{ uri: item.images['400x400'] }}
@@ -203,20 +191,21 @@ export const ProductCard = ({ product }: Props) => {
           horizontal={true}
           showsHorizontalScrollIndicator={false}
           pagingEnabled
-        />
+        /> 
           <View style={styles.productContainer}>
-            <Text style={styles.productname}>{product.name}</Text>
-            <Text style={styles.productname}> Disponible: {product.quantity} </Text>
+            <Text style={styles.productCard}>{product.name}</Text>
+          </View>  
+            <Text style={styles.productName}> Disponible: {product.quantity} </Text>
             <Card style={styles.cardcontainer}>
               <Text style={styles.Textcard}>{product.description}</Text>
             </Card>
-            <View style={styles.quantityContainer}>
+            <View style={styles.quantityCard}>
               <TouchableOpacity onPress={decrementQuantity}>
-                <Text style={styles.quantityButton}>-</Text>
+                <Text style={styles.quantityUwu}>-</Text>
               </TouchableOpacity>
               <Text style={styles.quantity}>{quantity}</Text>
               <TouchableOpacity onPress={incrementQuantity}>
-                <Text style={styles.quantityButton}>+</Text>
+                <Text style={styles.quantityUwu}>+</Text>
               </TouchableOpacity>
             </View>
          <TouchableOpacity style={styles.buyButton} onPress={() => {
@@ -235,11 +224,11 @@ export const ProductCard = ({ product }: Props) => {
          }}>
              <Text style={styles.textWhite}>Agregar al carrito </Text>
          </TouchableOpacity>
-          </View>
+          
         </View>
         </Actionsheet.Content>
     </Actionsheet>
-    </TouchableOpacity>
+
     </>
   );
 };
@@ -253,15 +242,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   favoriteButton: {
-    backgroundColor: 'transparent',
-    padding: 2,
-    marginLeft: 100,
+    padding: 5,
+    marginLeft: 20,
   },
   favoriteContainer: {
     position: 'absolute',
-    top: 10,
-    right: 10,
-    zIndex: 1,
+    top: 5,
+    right: 5,
   },
   favoriteMarker: {
     position: 'absolute',
@@ -277,28 +264,40 @@ const styles = StyleSheet.create({
     marginLeft: 15,
   },
   cardcontainer: {
-    height: '15%',
+    height: '20%',
   },
   productItem: {
-    alignItems: 'center',
+   
   },
   productImage: {
     width: 150,
     height: 150,
+    resizeMode: 'cover',
     borderRadius: 10,
   },
-  productname:{
+  productName:{
     fontSize: 15,
     fontWeight: 'bold',
-    color:'black',
-    marginVertical: 20,
-    marginLeft: 15,
+    marginTop: 10,
+    color: 'black',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  productPrice: {
+  productCard:{
     fontSize: 20,
     fontWeight: 'bold',
+    marginTop: 10,
+    color: 'black',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+
+  productPrice : {
+    fontSize: 18,
+    fontWeight: 'bold',
     color:'#1E90FF',
-    marginLeft: 15,
+    marginTop: 5,
   },
   buyButton: {
     backgroundColor: '#FF1493',
@@ -339,23 +338,60 @@ const styles = StyleSheet.create({
   quantityContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 15,
-    borderRadius:70,
-    borderColor: '#FF1493',
-    marginLeft: 30
+    // marginTop: 10,
+    // alignContent:'center',
+    display:'flex',
   },
+  quantityCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    // marginTop: 10,
+    alignContent:'center',
+    display:'flex',
+    marginHorizontal: 50,
+  },
+  quantityUwu: {
+    padding: 20,
+    backgroundColor: '#eee',
+    borderRadius: 5,
+  },
+
   quantityButton: {
-    color: 'black',
-    fontSize: 20,
+    padding: 15,
+    backgroundColor: '#eee',
+    borderRadius: 5,
+  },
+  quantityButtonText: {
+    fontSize: 13,
     fontWeight: 'bold',
-    paddingHorizontal: 15,
+    color: '#555',
   },
   quantity: {
-    color: "gray",
-    fontSize: 16,
+    fontSize: 18,
+    marginHorizontal: 30,
+    color: 'black'
+  },
+  addToCartButton: {
+    backgroundColor: '#ff1493',
+    borderRadius: 5,
+    padding: 10,
+    marginTop: 10,
+  },
+  addToCartButtonText: { //uwu
+    color: '#fff',
     fontWeight: 'bold',
-    marginHorizontal: 10,
+    textAlign: 'center',
+  },
+  viewFavoritesButton: {
+    backgroundColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    marginTop: 10,
+  },
+  viewFavoritesButtonText: {
+    color: '#333',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   textWhite: {
       color: "#FFF",
@@ -373,7 +409,7 @@ const styles = StyleSheet.create({
       marginBottom: 10,
     },
     productContainer: {
-      padding: 20,
+      padding: 10,
     },
     Textcard: {
         fontSize: 17,
@@ -382,13 +418,31 @@ const styles = StyleSheet.create({
         marginVertical: 10,
     },
     largeCardImage: {
-      width: 320,
-      height: 320,
+      width: 300,
+      height: 300,
       resizeMode: 'contain',
     },
     image:{
       resizeMode:'cover',
       height: 500,
       width: Dimensions.get('screen').width,
-    }
+    },
+    cardContainer: {
+      width: '95%',
+      borderRadius: 10,
+      padding: 10,
+      backgroundColor: '#fff',
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 5,
+    },
+    textGray: {
+      color: 'gray',
+      marginTop: 5,
+    },
 });

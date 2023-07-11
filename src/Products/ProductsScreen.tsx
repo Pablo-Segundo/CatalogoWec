@@ -58,7 +58,7 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
           style={styles.IconContainer}
           onPress={() => navigation.navigate('Shopping', {})}>
        <View style={styles.IconCircle}>
-         <Icon name="shopping-cart" size={30} color="#000" />
+         <Icon name="shopping-basket" size={30} color="#000" />
          </View>
         </TouchableOpacity>   
 

@@ -46,7 +46,6 @@ export const Navigation = ()=> {
         name="pestanas" 
         component={PetañaScreen}
         options={{
-          
           headerShown: false,
           
         }}

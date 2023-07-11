@@ -34,7 +34,7 @@ export const ShoppingScreen = ({ product }: Props) => {
     const storedCart = await AsyncStorage.getItem('cart');
     const parsedCart = JSON.parse(storedCart);
     let total = 0;
-    let productCount = 0;
+    let productCount = 0;   
     parsedCart.forEach(item => {
       total += item.quantity * item.product_id.price;
       productCount += item.quantity;
@@ -186,7 +186,7 @@ export const ShoppingScreen = ({ product }: Props) => {
                 </View>
 
                 <TouchableOpacity onPress={() => deleteData(index)}>
-                  <Text style={styles.textelimit}>Eliminar</Text>
+                  <Text style={styles.textelimit}>Eliminar </Text>
               </TouchableOpacity>
                 </View>
               </View>
@@ -204,7 +204,12 @@ export const ShoppingScreen = ({ product }: Props) => {
           <View>
             {/* <TextInput style={styles.discountCodeInput} placeholder="Código de descuento" /> */}
 
-            <Button onPress={() => setShowModal(true)}>Continuar</Button>
+           
+            <TouchableOpacity style={styles.buyButton} onPress={() => setShowModal(true)}>
+        <Text style={styles.headerTextWhite}>Continuar</Text>
+       </TouchableOpacity>
+   
+
 
            <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
       <Modal.Content maxWidth="500px">
@@ -216,7 +221,7 @@ export const ShoppingScreen = ({ product }: Props) => {
               styles.buyButtonText,
               selectedOption === 'Tarjeta' && styles.selectedOption,
             ]}
-            onPress={() => handleOptionSelect('Tarjeta')}
+            onPress={() => handleOptionSelect(' Tarjeta')}
           >
             <FontAwesomeIcon icon={faCreditCard} size={20} color="#000" />
             <Text style={styles.headerText}>Tarjeta</Text>
@@ -235,6 +240,7 @@ export const ShoppingScreen = ({ product }: Props) => {
         <TouchableOpacity onPress={handleContinuar} style={styles.buyButton}>
           <Text style={styles.headerTextWhite}>Continuar</Text>
         </TouchableOpacity>
+
       </Modal.Content>
     </Modal>
           </View>
@@ -323,7 +329,7 @@ export const ShoppingScreen = ({ product }: Props) => {
         paddingVertical: 10,
         alignItems: 'center',
         borderRadius: 25,
-        marginHorizontal: 15,
+        marginHorizontal: 10,
        
       },
       
