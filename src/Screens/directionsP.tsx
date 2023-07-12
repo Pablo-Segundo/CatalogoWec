@@ -11,8 +11,14 @@ export const Direction = () => {
     const navigation = useNavigation();
     const [datosGuardados, setDatosGuardados] = useState(null);
     const [showModal,setShowModal] = useState(false);
+    const [selectedData, setSelectedData] = useState(null);
+    const [updatedSelectedAddress, setUpdatedSelectedAddress] = useState('');
+    const [updatedNombre, setupdateNombre] = useState('');
+    const [updatedNumeroTelefonico, setUpdatedNumeroTelefonico] = useState('');
+    const [updatedReferencias, setUpdatedReferencias] = useState('');
 
- 
+    
+
     
    
 
@@ -34,24 +40,45 @@ export const Direction = () => {
 
     const handleDelete = (index) => {
       const updatedData = [...datosGuardados];
-      updatedData.splice(index, 1);
+      updatedData.splice(index, 0);
       setDatosGuardados(updatedData);
     };
 
+    // const handleCardPress = (datos) => {
+    //   navigation.navigate('Shopping', { nombre: datos.nombre });
+    // };
+
     const handleCardPress = (datos) => {
-      navigation.navigate('Shopping', { nombre: datos.nombre });
+      setSelectedData(datos);
+      setShowModal(true);
     };
 
     const handleUpdate = () => {
-      
-    }
+      const updatedData = [...datosGuardados];
+       if (selectedData) {
+         const index = updatedData.findIndex((data) => data.nombre === selectedData.nombre);
+         if (index !== -1) {
+           updatedData[index] = {
+             ...selectedData,
+             selectedAddress: updatedSelectedAddress,
+             nombre:updatedNombre,
+             numeroTelefonico: updatedNumeroTelefonico,
+             referencias: updatedReferencias,
+           };
+         }
+       }
+       setDatosGuardados(updatedData);
+       setShowModal(false);
+     };
+
+ 
+
   return(
-    
     <> 
-              <View style={styles.header}>
+         <View style={styles.header}>
         <Text style={styles.headerWITHE}>Direcciones del usuario  </Text>
         <View> 
-        <TouchableOpacity  onPress={() => navigation.navigate('upload')}>
+        <TouchableOpacity onPress={() => navigation.navigate('upload')}>
           <Card style={styles.cardcontainer}> 
             <View>
             <Text style={styles.textgray}> Agregar una nueva direccion   </Text>
@@ -84,11 +111,9 @@ export const Direction = () => {
     </View>
     <View style={styles.buttonContainer}>
       <TouchableOpacity style={styles.deleteButton} onPress={() => handleDelete(index)}>
-        <Icon name="trash" size={25} color="#fff" />
+        <Icon name="trash" size={30} color="#fff" />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.updateButton}  onPress={() => setShowModal(true)}>
-        <Icon name="pencil" size={25} color="#fff" />
-      </TouchableOpacity>
+
     </View>
   </Card>
   </TouchableOpacity>
@@ -100,34 +125,47 @@ export const Direction = () => {
         <Modal.CloseButton />
         <Modal.Header>Editar informacion</Modal.Header>
         <Modal.Body>
-        <Text style={styles.headerText2}> Direccion:  </Text>
-            <TextInput
-            style={styles.discountCodeInput} 
-            placeholder="Escriba su calle" 
-            />
-        <Text style={styles.headerText2}> Nombre de quien recibe: </Text>
-         <TextInput
-          style={styles.discountCodeInput} 
-          placeholder="Escriba su nombre" 
-         />
-         
-        <Text style={styles.headerText2}>Número Telefónico: </Text>
-         <TextInput 
-          style={styles.discountCodeInput} 
-          placeholder="Escriba su número telefónico" 
-         />
 
-        <Text style={styles.headerText2}>Referencia</Text>
-        <TextInput 
-          style={styles.discountCodeInput} 
-          placeholder="casa color uwu" 
-        />
+        <View>
+         <TextInput
+            style={styles.discountCodeInput} 
+            placeholder="Escriba su calle"
+            value={selectedData ? selectedData.selectedAddress : ''}
+             // onChangeText={setUpdatedSelectedAddress}
+               onChangeText={(value:string)=>setSelectedData({...selectedData,selectedAddress:value})}
+          />
+          <TextInput
+            style={styles.discountCodeInput}
+            placeholder="Escriba su nombre"
+            value={selectedData ? selectedData.nombre : ''}
+            //onChangeText={setupdateNombre}
+            onChangeText={(value:string)=>setSelectedData({...selectedData,nombre:value})}
+          />
+          <TextInput
+            style={styles.discountCodeInput}
+            placeholder="Escriba su número telefónico"
+            value={selectedData ? selectedData.numeroTelefonico : ''}
+            // onChangeText={setUpdatedNumeroTelefonico}
+            onChangeText={(value:string)=>setSelectedData({...selectedData,numeroTelefonico:value})}
+          />
+
+          <TextInput
+            style={styles.discountCodeInput}
+            placeholder="casa color uwu"
+            value={selectedData ? selectedData.referencias : ''}
+            //  onChangeText={setUpdatedReferencias}
+             onChangeText={(value:string)=>setSelectedData({...selectedData,referencias:value})}
+         />
+         </View>
+ 
   
         </Modal.Body>
-        <TouchableOpacity style={styles.buyButton}>
-          <Text> Confirmar datos </Text>
-        </TouchableOpacity>
+       <TouchableOpacity style={styles.buyButton} onPress={handleUpdate}>
+         <Text>Confirmar Datos </Text>
+       </TouchableOpacity>
 
+
+  
       </Modal.Content>
     </Modal>
 

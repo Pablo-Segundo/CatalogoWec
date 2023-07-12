@@ -33,17 +33,18 @@ export const FavoritesScreen = ({ route, product }: Props) => {
 
 
       <View>
-        <Text style={styles.TextProduc}>Tus Productos Favoritos  </Text>
+       <Text style={styles.TextProduc}>Productos Favoritos </Text>
       </View>
-      <Card style={styles.cardcontent}>
+       <Card style={styles.cardcontent}>
         {favorites.map((product) => (
           <View key={product._id} style={styles.productContainer}>
             <Image style={styles.productImage} source={{ uri: product.multimedia[0].images['400x400'] }} />
             <Text style={styles.productName}>{product.name}</Text>
           </View>
         ))}
-      </Card>
+        </Card>  
     </ScrollView>
+  
   );
 };
 const styles = StyleSheet.create({

@@ -14,6 +14,8 @@ import { Image } from 'react-native';
 
 
 
+
+
 export function MapScreen() {
   const { isOpen, onOpen, onClose} = useDisclose();
   const navigation = useNavigation();
@@ -79,7 +81,6 @@ export function MapScreen() {
 
 
   // const guardarDatos = async () => {
-
   //   try {
   //     await AsyncStorage.setItem('nombre', nombre);
   //     await AsyncStorage.setItem('numeroTelefonico', numeroTelefonico);
@@ -90,6 +91,9 @@ export function MapScreen() {
   //     console.log('Error al guardar los datos unu:', error);
   //   }
   // };
+
+
+  
   const guardarDatos = async () => {
     try {
       const datosGuardados = await AsyncStorage.getItem('datos');
@@ -159,7 +163,7 @@ export function MapScreen() {
       </View>
 
 
-      {/* <View style={styles.header}>
+       {/* <View style={styles.header}>
         <View style={styles.headerinput}>
            <GooglePlacesAutocomplete
             placeholder='Escriba su calle plox uwu '
@@ -172,7 +176,7 @@ export function MapScreen() {
             }}
            />
            </View>
-      </View> */}
+      </View>  */}
 
     <ActionSheetProvider>    
         <View style={styles.container}>
@@ -266,7 +270,6 @@ export function MapScreen() {
                   placeholder="Casa de dos pisos"
                   value={referencias}
                   onChangeText={text => setReferencias(text)}
-                  
                 /> 
 
 
@@ -281,24 +284,20 @@ export function MapScreen() {
 
               
             </View> 
-                   
-            </Actionsheet.Content>
-            
-            </Actionsheet>
-             
-             
   
+            </Actionsheet.Content>
+            </Actionsheet>
+          
               </>
             )}
           </View>
         </ActionSheetProvider>
 
-        <View> 
+         {/* <View> 
           <Card>
         <TouchableOpacity onPress={onOpen} style={styles.buyButton}>
              <Text style={styles.headerWITHE}> Agregue sus datos </Text>
         </TouchableOpacity>
-
         <TouchableOpacity style={styles.buyButton}
          onPress={() => {
         navigation.navigate('Direction');
@@ -306,10 +305,26 @@ export function MapScreen() {
         >
            <Text style={styles.headerWITHE}>Direcciones guardads  </Text>
         </TouchableOpacity> 
-
         </Card>
-        </View>
+        </View>  */}
 
+  
+
+        <View style={styles.buttonContainer}>
+  <TouchableOpacity onPress={onOpen} style={styles.buyButton}>
+  
+    <Text style={styles.buttonText}>Agregue sus datos</Text>
+  </TouchableOpacity>
+
+  <TouchableOpacity
+    style={styles.buyButton}
+    onPress={() => {
+      navigation.navigate('Direction');
+    }}
+  >
+    <Text style={styles.buttonText}>Direcciones guardadas</Text>
+  </TouchableOpacity>
+</View>
         
 
 
@@ -333,12 +348,7 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     flex: 1,
   },
-  buyButton: {
-    backgroundColor: '#ff1493',
-        paddingVertical: 10,
-        alignItems: 'center',
-        borderRadius: 25,
-  },
+
   headerWITHE: {
     fontWeight: 'bold',
     fontSize: 20,
@@ -413,5 +423,22 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     fontSize: 16,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 20,
+  },
+  buyButton: {
+    backgroundColor: '#ff1493',
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    width: '48%',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    textAlign: 'center',
   },
 });
