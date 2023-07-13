@@ -46,6 +46,7 @@ export const ShoppingScreen = ({ product }: Props) => {
 
   useEffect(() => {
     cartShopping();
+
     const obtenerDatosGuardados = async () => {
       try {
         const datosGuardados = await AsyncStorage.getItem('datos');
@@ -97,7 +98,6 @@ export const ShoppingScreen = ({ product }: Props) => {
     const updatedPrice = deletedProduct.quantity * deletedProduct.product_id.price;
 
     updatedCart.splice(index, 1);
-
     AsyncStorage.setItem('cart', JSON.stringify(updatedCart))
       .then(() => {
         setCart(updatedCart);
@@ -118,6 +118,18 @@ export const ShoppingScreen = ({ product }: Props) => {
       });
   };
 
+  const handleDeleteAll = () => {
+    AsyncStorage.removeItem('cart')
+
+    .then(() => {
+      setCart([]);
+      setTotalPrice(0);
+      setTotalProducts(0);
+    })
+    .catch(error => {
+      console.error('Error al borrar el carrito uwu:', error);
+    });
+};
 
 
 
@@ -205,6 +217,9 @@ export const ShoppingScreen = ({ product }: Props) => {
         <Text style={styles.headerTextWhite}>Continuar</Text>
        </TouchableOpacity>
    
+        <TouchableOpacity style={styles.buyButton} onPress={handleDeleteAll}>
+           <Text style={styles.headerTextWhite}>Vaciar carrito  </Text>
+        </TouchableOpacity>
 
 
            <Modal isOpen={showModal} onClose={() => setShowModal(false)}>

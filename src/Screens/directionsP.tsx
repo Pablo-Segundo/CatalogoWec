@@ -38,11 +38,7 @@ export const Direction = () => {
       obtenerDatosGuardados();
     }, []);
 
-    const handleDelete = (index) => {
-      const updatedData = [...datosGuardados];
-      updatedData.splice(index, 0);
-      setDatosGuardados(updatedData);
-    };
+  
 
     // const handleCardPress = (datos) => {
     //   navigation.navigate('Shopping', { nombre: datos.nombre });
@@ -53,23 +49,47 @@ export const Direction = () => {
       setShowModal(true);
     };
 
+
     const handleUpdate = () => {
-      const updatedData = [...datosGuardados];
-       if (selectedData) {
-         const index = updatedData.findIndex((data) => data.nombre === selectedData.nombre);
-         if (index !== -1) {
-           updatedData[index] = {
-             ...selectedData,
-             selectedAddress: updatedSelectedAddress,
-             nombre:updatedNombre,
-             numeroTelefonico: updatedNumeroTelefonico,
-             referencias: updatedReferencias,
-           };
-         }
-       }
-       setDatosGuardados(updatedData);
-       setShowModal(false);
-     };
+      if (selectedData) {
+        const updatedData = datosGuardados.map((data) => {
+          if (data.nombre === selectedData.nombre) {
+            return {
+              ...data,
+              selectedAddress: selectedData.selectedAddress,
+              numeroTelefonico: selectedData.numeroTelefonico,
+              referencias: selectedData.referencias,
+            };
+          }
+          return data;
+        });
+        setDatosGuardados(updatedData);
+      }
+      setShowModal(false);
+    };
+    
+
+    // const handleDelete = (index) => {
+    //   const updatedData = datosGuardados.filter((_, i) => i !== index);
+    //   setDatosGuardados(updatedData);
+    // };
+
+    const handleDelete = (index) => {
+      const deletedProduct = updatedCart[index];
+      const updatedCart = [...selectedData];
+
+      updatedCart.splice(index, 1);
+      AsyncStorage.removeItem('datos', JSON.stringify(deletedProduct))
+
+      .then(() =>{
+        setSelectedData([]);
+      })
+      .catch(error => {
+        console.error('Error al borrar el carrito uwu:', error);
+      });
+  };
+
+    
 
  
 
@@ -110,9 +130,9 @@ export const Direction = () => {
       <Text style={styles.textgray}>Referencia: {datos.referencias}</Text>
     </View>
     <View style={styles.buttonContainer}>
-      <TouchableOpacity style={styles.deleteButton} onPress={() => handleDelete(index)}>
-        <Icon name="trash" size={30} color="#fff" />
-      </TouchableOpacity>
+    <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
+      <Icon name="trash" size={30} color="#fff" />
+    </TouchableOpacity>
 
     </View>
   </Card>
@@ -127,26 +147,27 @@ export const Direction = () => {
         <Modal.Body>
 
         <View>
-         <TextInput
-            style={styles.discountCodeInput} 
+        <TextInput
+            style={styles.discountCodeInput}
             placeholder="Escriba su calle"
             value={selectedData ? selectedData.selectedAddress : ''}
-             // onChangeText={setUpdatedSelectedAddress}
-               onChangeText={(value:string)=>setSelectedData({...selectedData,selectedAddress:value})}
+             onChangeText={(value) => setSelectedData({ ...selectedData, selectedAddress: value })}
           />
           <TextInput
             style={styles.discountCodeInput}
             placeholder="Escriba su nombre"
             value={selectedData ? selectedData.nombre : ''}
             //onChangeText={setupdateNombre}
-            onChangeText={(value:string)=>setSelectedData({...selectedData,nombre:value})}
+            onChangeText={(value)=>setSelectedData({...selectedData,nombre:value})}
+          
           />
           <TextInput
             style={styles.discountCodeInput}
             placeholder="Escriba su número telefónico"
             value={selectedData ? selectedData.numeroTelefonico : ''}
             // onChangeText={setUpdatedNumeroTelefonico}
-            onChangeText={(value:string)=>setSelectedData({...selectedData,numeroTelefonico:value})}
+          onChangeText={(value)=>setSelectedData({...selectedData,numeroTelefonico:value})}
+           
           />
 
           <TextInput
@@ -154,7 +175,8 @@ export const Direction = () => {
             placeholder="casa color uwu"
             value={selectedData ? selectedData.referencias : ''}
             //  onChangeText={setUpdatedReferencias}
-             onChangeText={(value:string)=>setSelectedData({...selectedData,referencias:value})}
+             onChangeText={(value)=>setSelectedData({...selectedData,referencias:value})}
+            
          />
          </View>
  
