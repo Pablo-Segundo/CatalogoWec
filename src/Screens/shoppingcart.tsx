@@ -105,8 +105,9 @@ export const ShoppingScreen = ({ product }: Props) => {
         setTotalProducts(totalProducts - deletedProduct.quantity);
       })
       .catch(error => {});
-      
   };
+
+
   const handleContinuar = () => {      
     {totalProducts}
     AsyncStorage.setItem('cart', JSON.stringify(cart1))

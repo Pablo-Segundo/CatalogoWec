@@ -152,15 +152,15 @@ export function MapScreen() {
     <> 
 
 
-    <View style={styles.header}>
-        <View style={styles.headerinput}>
-          <TextInput
-            style={styles.directionInput}
-            placeholder="Escriba su calle"
-             onChangeText={handleAddressChange}
-          />
-        </View>
-      </View>
+<View style={styles.header}>
+  <View style={styles.headerInput}>
+    <TextInput
+      style={styles.directionInput}
+      placeholder="Escriba su calle"
+      onChangeText={handleAddressChange}
+    />
+  </View>
+</View>
 
 
        {/* <View style={styles.header}>
@@ -273,7 +273,7 @@ export function MapScreen() {
                 /> 
 
 
-              <TouchableOpacity style={styles.buyButton}
+              <TouchableOpacity style={styles.buyButton2}
                onPress={() => {
                 guardarDatos();
                 navigation.navigate('Shopping');
@@ -348,13 +348,32 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     flex: 1,
   },
-
+  directionInput: {
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    fontSize: 16,
+    backgroundColor: 'white',
+    color: 'black',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  
   headerWITHE: {
     fontWeight: 'bold',
     fontSize: 20,
     color: '#fff',
     padding: 2,
   },
+
   cardcontainer: {
     height: '70%',
   },
@@ -370,14 +389,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     color: 'black',
   },
-  directionInput: {
-    borderColor: 'gray', 
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 5,
-    marginTop: 5,
-    color: 'black',
-  },
+ 
 
   header: {
     padding: 15,
@@ -435,6 +447,12 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 24,
     width: '48%',
+  },
+  buyButton2: {
+    backgroundColor: '#ff1493',
+    borderRadius: 8,
+    paddingVertical: 12,
+   
   },
   buttonText: {
     color: 'white',

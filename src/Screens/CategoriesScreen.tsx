@@ -35,7 +35,7 @@ export const CategoriesScreen = () => {
 
 
     return (
-      <View>
+      <View style={{marginBottom: 60}} >
          <Text style={[styles.TextContainer, { fontSize: 20, color: '#FFF' }]}>WAPIZIMA</Text>
 
         <TouchableOpacity

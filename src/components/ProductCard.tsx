@@ -23,7 +23,6 @@ export const ProductCard = ({ product }: Props) => {
   const [showModal, setShowModal] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isImageSelected, setIsImageSelected] = useState(false);
-  const [favorites, setFavorites] = useState<Product[]>([]);
 
 
   const decrementQuantity = () => {
@@ -102,38 +101,43 @@ export const ProductCard = ({ product }: Props) => {
   };
 
   const navigateToFavorites = () => {
-    navigation.navigate('Favorites', { favorites });
+    navigation.navigate('Favorites');
   };
 
-  const toggleFavorite = async () => {
-    const isFavorite = favorites.some((fav) => fav._id === product._id, product.multimedia);
-    let updatedFavorites = [];
-    if (isFavorite) {
-      updatedFavorites = favorites.filter((fav) => fav._id !== product._id, product.multimedia);
-    } else {
-      updatedFavorites = [...favorites, product];
-    }
-    setFavorites(updatedFavorites);
-    try {
-      await AsyncStorage.setItem('favorites', JSON.stringify(updatedFavorites));
-    } catch (error) {
-      console.log('Error al guardar los favoritos:', error);
-    }
-  };
 
-  useEffect(() => {
-    const loadFavorites = async () => {
-      try {
-        const favoritesData = await AsyncStorage.getItem('favorites');
-        if (favoritesData) {
-          setFavorites(JSON.parse(favoritesData));
-        }
-      } catch (error) {
-        console.log('Error al cargar los favoritos:', error);
-      }
+  const toggleFavorite = async (product) => {
+    
+    const favoriteArray = await AsyncStorage.getItem('favorites');
+    
+    let favorite = [];
+    const favoriteItem = {
+      quantity,
+      _id: product._id,
+      name: product.name,
+      price: product.price,
+      multimedia: product.multimedia ,
     };
-    loadFavorites();
-  }, []);
+    
+    if (favoriteArray) {
+      favorite = JSON.parse(favoriteArray);
+      
+      const favoriteExists = favorite.find((item) => item._id === product._id);
+      console.log(favorite, 'favoritos');
+      
+      if (favoriteExists) {
+        const index = favorite.findIndex((item) => item._id === product._id);
+       return console.log(index);
+       
+      } else {
+        favorite.push(favoriteItem);
+      }
+    } else {
+      favorite.push(favoriteItem);
+    }
+    await AsyncStorage.setItem('favorites', JSON.stringify(favorite));
+  };
+
+
 
   return (
     <>
@@ -141,12 +145,16 @@ export const ProductCard = ({ product }: Props) => {
   <Card style={styles.cardContainer}>
     <Image style={styles.productImage} source={{ uri: product.multimedia[0].images['400x400'] }} />
     <View style={styles.favoriteContainer}>
-      <TouchableOpacity onPress={toggleFavorite} style={styles.favoriteButton}>
+      <TouchableOpacity onPress={()=>toggleFavorite(product)} style={styles.favoriteButton}>
         <Icon
-          name={favorites.some((fav) => fav._id === product._id) ? 'heart' : 'heart-o'}
+          name={ 'heart-o'}
           size={25}
-          color={favorites.some((fav) => fav._id === product._id) ? 'red' : 'gray'}
+          color={ 'gray'}
+ 
+          
         />
+
+
       </TouchableOpacity>
     </View>
     <Text style={styles.productName}>{product.name}</Text>

@@ -7,202 +7,151 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { Modal } from "native-base";
 
 
+
 export const Direction = () => {
-    const navigation = useNavigation();
-    const [datosGuardados, setDatosGuardados] = useState(null);
-    const [showModal,setShowModal] = useState(false);
-    const [selectedData, setSelectedData] = useState(null);
-    const [updatedSelectedAddress, setUpdatedSelectedAddress] = useState('');
-    const [updatedNombre, setupdateNombre] = useState('');
-    const [updatedNumeroTelefonico, setUpdatedNumeroTelefonico] = useState('');
-    const [updatedReferencias, setUpdatedReferencias] = useState('');
-
-    
-
-    
-   
-
-    useEffect(() => {
-      const obtenerDatosGuardados = async () => {
-        try {
-          const datosGuardados = await AsyncStorage.getItem('datos');
-          if (datosGuardados) {
-            const datosParseados = JSON.parse(datosGuardados);
-            setDatosGuardados(datosParseados);
-          }
-        } catch (error) {
-          console.log('Error al obtener los datos guardados:', error);
-        }
-      };
-    
-      obtenerDatosGuardados();
-    }, []);
+  const navigation = useNavigation();
+  const [datosGuardados, setDatosGuardados] = useState(null);
+  const [showModal,setShowModal] = useState(false);
+  const [selectedData, setSelectedData] = useState(null);
+  // const [updatedSelectedAddress, setUpdatedSelectedAddress] = useState('');
+  // const [updatedNombre, setUpdatedNombre] = useState('');
+  // const [updatedNumeroTelefonico, setUpdatedNumeroTelefonico] = useState('');
+  // const [updatedReferencias, setUpdatedReferencias] = useState('');
 
   
-
-    // const handleCardPress = (datos) => {
-    //   navigation.navigate('Shopping', { nombre: datos.nombre });
-    // };
-
-    const handleCardPress = (datos) => {
-      setSelectedData(datos);
-      setShowModal(true);
-    };
-
-
-    const handleUpdate = () => {
-      if (selectedData) {
-        const updatedData = datosGuardados.map((data) => {
-          if (data.nombre === selectedData.nombre) {
-            return {
-              ...data,
-              selectedAddress: selectedData.selectedAddress,
-              numeroTelefonico: selectedData.numeroTelefonico,
-              referencias: selectedData.referencias,
-            };
-          }
-          return data;
-        });
-        setDatosGuardados(updatedData);
+  useEffect(() => {
+    const obtenerDatosGuardados = async () => {
+      try {
+        const datosGuardados = await AsyncStorage.getItem('datos');
+        if (datosGuardados) {
+          const datosParseados = JSON.parse(datosGuardados);
+          setDatosGuardados(datosParseados);
+        }
+      } catch (error) {
+        console.log('Error al obtener los datos guardados:', error);
       }
-      setShowModal(false);
     };
-    
+    obtenerDatosGuardados();
+  }, []);
+  const handleCardPress = (datos) => {
+    setSelectedData(datos);
+    setShowModal(true);
+  };
+  const handleUpdate = () => {
+    if (selectedData) {
+      const updatedData = datosGuardados.map((data) => {
+        if (data.nombre === selectedData.nombre) {
+          return {
+            ...data,
+            selectedAddress: selectedData.selectedAddress,
+            numeroTelefonico: selectedData.numeroTelefonico,
+            referencias: selectedData.referencias,
+            nombre: selectedData.nombre,
+          };
+        }
+        return data;
+      });
+      setDatosGuardados(updatedData);
+    }
+    setShowModal(false);
+  };
 
-    // const handleDelete = (index) => {
-    //   const updatedData = datosGuardados.filter((_, i) => i !== index);
-    //   setDatosGuardados(updatedData);
-    // };
-
-    const handleDelete = (index) => {
-      const deletedProduct = updatedCart[index];
-      const updatedCart = [...selectedData];
-
-      updatedCart.splice(index, 1);
-      AsyncStorage.removeItem('datos', JSON.stringify(deletedProduct))
-
-      .then(() =>{
-        setSelectedData([]);
+  const handleDelete = (index) => {
+    const updatedData = [...datosGuardados];
+    updatedData.splice(index, 1);
+    setDatosGuardados(updatedData);
+    AsyncStorage.setItem('datos', JSON.stringify(updatedData))
+      .then(() => {
+        setShowModal(false);
       })
       .catch(error => {
-        console.error('Error al borrar el carrito uwu:', error);
+        console.error('Error al guardar los datos actualizados:', error);
       });
   };
 
-    
-
- 
-
   return(
-    <> 
-         <View style={styles.header}>
+    <>
+      <View style={styles.header}>
         <Text style={styles.headerWITHE}>Direcciones del usuario  </Text>
-        <View> 
-        <TouchableOpacity onPress={() => navigation.navigate('upload')}>
-          <Card style={styles.cardcontainer}> 
-            <View>
-            <Text style={styles.textgray}> Agregar una nueva direccion   </Text>
-            </View> 
+        <View>
+          <TouchableOpacity onPress={() => navigation.navigate('upload')}>
+            <Card style={styles.cardcontainer}>
+              <View>
+                <Text style={styles.textgray}> Agregar una nueva direccion   </Text>
+              </View>
             </Card>
           </TouchableOpacity>
         </View>
       </View>
-
-      
       <ScrollView>
-      {datosGuardados && datosGuardados.map((datos, index) => (
+        {datosGuardados && datosGuardados.map((datos, index) => (
           <TouchableOpacity key={index} onPress={() => handleCardPress(datos)}>
-  <Card key={index} style={styles.cardcontainer}>
-    <View style={styles.rowContainer}>
-      <Icon name="user" size={20} color="#000" style={styles.icon} />
-      <Text style={styles.productname}>{datos.nombre}</Text>
-    </View>
-    <View style={styles.rowContainer}>
-      <Icon name="map-marker" size={20} color="#000" style={styles.icon} />
-      <Text style={styles.textgray}>Calle: {datos.selectedAddress}</Text>
-    </View>
-    <View style={styles.rowContainer}>
-      <Icon name="phone" size={20} color="#000" style={styles.icon} />
-      <Text style={styles.textgray}>Número telefónico: {datos.numeroTelefonico}</Text>
-    </View>
-    <View style={styles.rowContainer}>
-      <Icon name="info" size={20} color="#000" style={styles.icon} />
-      <Text style={styles.textgray}>Referencia: {datos.referencias}</Text>
-    </View>
-    <View style={styles.buttonContainer}>
-    <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
-      <Icon name="trash" size={30} color="#fff" />
-    </TouchableOpacity>
-
-    </View>
-  </Card>
-  </TouchableOpacity>
-))}
-</ScrollView>
-
-<Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-      <Modal.Content maxWidth="500px">
-        <Modal.CloseButton />
-        <Modal.Header>Editar informacion</Modal.Header>
-        <Modal.Body>
-
-        <View>
-        <TextInput
-            style={styles.discountCodeInput}
-            placeholder="Escriba su calle"
-            value={selectedData ? selectedData.selectedAddress : ''}
-             onChangeText={(value) => setSelectedData({ ...selectedData, selectedAddress: value })}
-          />
-          <TextInput
-            style={styles.discountCodeInput}
-            placeholder="Escriba su nombre"
-            value={selectedData ? selectedData.nombre : ''}
-            //onChangeText={setupdateNombre}
-            onChangeText={(value)=>setSelectedData({...selectedData,nombre:value})}
-          
-          />
-          <TextInput
-            style={styles.discountCodeInput}
-            placeholder="Escriba su número telefónico"
-            value={selectedData ? selectedData.numeroTelefonico : ''}
-            // onChangeText={setUpdatedNumeroTelefonico}
-          onChangeText={(value)=>setSelectedData({...selectedData,numeroTelefonico:value})}
-           
-          />
-
-          <TextInput
-            style={styles.discountCodeInput}
-            placeholder="casa color uwu"
-            value={selectedData ? selectedData.referencias : ''}
-            //  onChangeText={setUpdatedReferencias}
-             onChangeText={(value)=>setSelectedData({...selectedData,referencias:value})}
-            
-         />
-         </View>
- 
-  
-        </Modal.Body>
-       <TouchableOpacity style={styles.buyButton} onPress={handleUpdate}>
-         <Text>Confirmar Datos </Text>
-       </TouchableOpacity>
-
-
-  
-      </Modal.Content>
-    </Modal>
-
-{/* 
-      <TouchableOpacity style={styles.buyButton}>
-        <Text style={styles.buyButtonText}>Confirmar Datos </Text>
-    </TouchableOpacity>  */}
-
-   
-      
-     
+            <Card key={index} style={styles.cardcontainer}>
+              <View style={styles.rowContainer}>
+                <Icon name="user" size={20} color="#000" style={styles.icon} />
+                <Text style={styles.productname}>{datos.nombre}</Text>
+              </View>
+              <View style={styles.rowContainer}>
+                <Icon name="map-marker" size={20} color="#000" style={styles.icon} />
+                <Text style={styles.textgray}>Calle: {datos.selectedAddress}</Text>
+              </View>
+              <View style={styles.rowContainer}>
+                <Icon name="phone" size={20} color="#000" style={styles.icon} />
+                <Text style={styles.textgray}>Número telefónico: {datos.numeroTelefonico}</Text>
+              </View>
+              <View style={styles.rowContainer}>
+                <Icon name="info" size={20} color="#000" style={styles.icon} />
+                <Text style={styles.textgray}>Referencia: {datos.referencias}</Text>
+              </View>
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity style={styles.deleteButton} onPress={() => handleDelete(index)}>
+                  <Icon name="trash" size={30} color="#fff" />
+                </TouchableOpacity>
+              </View>
+            </Card>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+      <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+        <Modal.Content maxWidth="500px">
+          <Modal.CloseButton />
+          <Modal.Header>Editar información</Modal.Header>
+          <Modal.Body>
+            <View>
+              <TextInput
+                style={styles.discountCodeInput}
+                placeholder="Escriba su calle"
+                value={selectedData ? selectedData.selectedAddress : ''}
+                onChangeText={(value) => setSelectedData({ ...selectedData, selectedAddress: value })}
+              />
+              <TextInput
+                style={styles.discountCodeInput}
+                placeholder="Escriba su nombre"
+                value={selectedData ? selectedData.nombre : ''}
+                onChangeText={(value) => setSelectedData({ ...selectedData, nombre: value })}
+              />
+              <TextInput
+                style={styles.discountCodeInput}
+                placeholder="Escriba su número telefónico"
+                value={selectedData ? selectedData.numeroTelefonico : ''}
+                onChangeText={(value) => setSelectedData({ ...selectedData, numeroTelefonico: value })}
+              />
+              <TextInput
+                style={styles.discountCodeInput}
+                placeholder="casa color uwu"
+                value={selectedData ? selectedData.referencias : ''}
+                onChangeText={(value) => setSelectedData({ ...selectedData, referencias: value })}
+              />
+            </View>
+            <TouchableOpacity style={styles.buyButton} onPress={handleUpdate}>
+              <Text>Confirmar Datos</Text>
+            </TouchableOpacity>
+          </Modal.Body>
+        </Modal.Content>
+      </Modal>
     </>
-  )
+  );
 }
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
