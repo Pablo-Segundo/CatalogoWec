@@ -6,7 +6,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Card , Button} from 'react-native-paper';
 import { Actionsheet, Box, useDisclose , useToast, Modal } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { faAlignCenter } from '@fortawesome/free-solid-svg-icons';
 
 interface Props {
   product: Product;
@@ -106,9 +105,7 @@ export const ProductCard = ({ product }: Props) => {
 
 
   const toggleFavorite = async (product) => {
-    
     const favoriteArray = await AsyncStorage.getItem('favorites');
-    
     let favorite = [];
     const favoriteItem = {
       quantity,
@@ -137,6 +134,9 @@ export const ProductCard = ({ product }: Props) => {
     await AsyncStorage.setItem('favorites', JSON.stringify(favorite));
   };
 
+  const isInCart = () => {
+    return cart.some(item => item.id === product.id);
+  };
 
 
   return (
@@ -150,16 +150,13 @@ export const ProductCard = ({ product }: Props) => {
           name={ 'heart-o'}
           size={25}
           color={ 'gray'}
- 
-          
         />
-
-
       </TouchableOpacity>
     </View>
     <Text style={styles.productName}>{product.name}</Text>
     <Text style={styles.textGray}>Disponible: {product.quantity}</Text>
     <Text style={styles.productPrice}>${product.price}</Text>
+
     <View style={styles.quantityContainer}>
       <TouchableOpacity onPress={decrementQuantity} style={styles.quantityButton}>
         <Text style={styles.quantityButtonText}>-</Text>
@@ -172,7 +169,7 @@ export const ProductCard = ({ product }: Props) => {
     <TouchableOpacity style={styles.addToCartButton} onPress={() => {
       addToCart(product, quantity, product.price, product.multimedia);
     }}>
-      <Text style={styles.addToCartButtonText}>Agregar al carrito</Text>
+      <Text style={styles.addToCartButtonText}>Agregar al carrito </Text>
     </TouchableOpacity>
 
     <TouchableOpacity style={styles.viewFavoritesButton} onPress={navigateToFavorites}>
@@ -204,7 +201,7 @@ export const ProductCard = ({ product }: Props) => {
           <View style={styles.productContainer}>
             <Text style={styles.productCard}>{product.name}</Text>
           </View>  
-            <Text style={styles.productName}> Disponible: {product.quantity} </Text>
+            <Text style={styles.productName}> Disponible:  {product.quantity} </Text>
             <Card style={styles.cardcontainer}>
               <Text style={styles.Textcard}>{product.description}</Text>
             </Card>
@@ -233,7 +230,7 @@ export const ProductCard = ({ product }: Props) => {
          }}>
              <Text style={styles.textWhite}>Agregar al carrito </Text>
          </TouchableOpacity>
-          
+          <Text>hola  </Text>
         </View>
         </Actionsheet.Content>
     </Actionsheet>
@@ -275,9 +272,7 @@ const styles = StyleSheet.create({
   cardcontainer: {
     height: '20%',
   },
-  productItem: {
-   
-  },
+
   productImage: {
     width: 150,
     height: 150,
@@ -344,18 +339,19 @@ const styles = StyleSheet.create({
   },
   quantityContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    // marginTop: 10,
+    //  marginTop: 10,
     // alignContent:'center',
+    alignItems: 'center',
     display:'flex',
   },
   quantityCard: {
     flexDirection: 'row',
     alignItems: 'center',
     // marginTop: 10,
-    alignContent:'center',
     display:'flex',
-    marginHorizontal: 50,
+    paddingVertical: 5,
+    borderRadius: 25,
+    marginBottom: 15,
   },
   quantityUwu: {
     padding: 20,

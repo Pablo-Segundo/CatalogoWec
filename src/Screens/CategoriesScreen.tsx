@@ -35,7 +35,7 @@ export const CategoriesScreen = () => {
 
 
     return (
-      <View style={{marginBottom: 60}} >
+      <View style={{marginBottom: 40}} >
          <Text style={[styles.TextContainer, { fontSize: 20, color: '#FFF' }]}>WAPIZIMA</Text>
 
         <TouchableOpacity
@@ -45,7 +45,6 @@ export const CategoriesScreen = () => {
          <Icon name="shopping-basket" size={30} color="#000" />
          </View>
         </TouchableOpacity>
-
 
 
         <View style={styles.divider} />
@@ -94,7 +93,7 @@ const styles = StyleSheet.create({
   },
   IconContainer: {
     position: 'absolute',
-    top: 15,
+    top: 5,
     right: 25,
     zIndex: 1,
   },

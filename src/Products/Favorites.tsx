@@ -13,8 +13,6 @@ interface Props {
   product: Product;
   route: any;
 }
-
-
 export const FavoritesScreen = ({ route, product }: Props) => {
   // const { favorites } = route.params;
   const navigation = useNavigation();
@@ -36,10 +34,10 @@ export const FavoritesScreen = ({ route, product }: Props) => {
     loadFavorites();
   }, []);
 
+  const addtoCard = () =>{
 
-  const addToCart = () => {
   }
-
+ 
 
   const handleDelete = (product) => {
     const updatedFavorites = [...favorites];
@@ -70,7 +68,7 @@ export const FavoritesScreen = ({ route, product }: Props) => {
 
       
       <View style={styles.favoritesContainer}>
-        <Text style={styles.favoritesHeaderText}>Productos Favoritos</Text>
+        <Text style={styles.favoritesHeaderText}>Productos favoritos</Text>
         <Card style={styles.cardContainer}>
 
 
@@ -80,42 +78,28 @@ export const FavoritesScreen = ({ route, product }: Props) => {
             renderItem={({ item }) => (
               <View style={styles.productContainer}>
                 <Image style={styles.productImage} source={{ uri: item.multimedia[0].images['400x400'] }} />
-                 <Text numbserOfLines={2} ellipsizeMode="tail" style={styles.productName}>{item.name}</Text>
-           
+
+                 <Text numbserOfLines={4} ellipsizeMode="tail" style={styles.productName}>{item.name}</Text>
+
+                 {/* <Text style={styles.productName}>{item.price} </Text> */}
+               
+            
+                  <View>
+                 {/* <TouchableOpacity style={styles.buyButton}>
+                  <Text style={styles.textWhite}>Agregar al carrito </Text>
+                </TouchableOpacity> */}
+               
+                 </View>
+
                  <TouchableOpacity style={styles.deleteButton} onPress={() => handleDelete(product)}>
                   <Icon name="trash" size={30} color="#fff" />
-                </TouchableOpacity>
-
+                </TouchableOpacity> 
             </View>
 
-          
-           
             )}
           />
         </Card>
-
-        <Card>
-               <TouchableOpacity style={styles.buyButton} onPress={() => {
-                addToCart(product, quantity, product.price, product.multimedia );
-                toast.show({
-                 render: () => {
-                   return(
-                     <Box bg="emerald.500" px="8" py="5" rounded="sm" mb={1}  zIndex={999}
-                     >
-                       producto Agregado al carrito uwu
-                     </Box>
-                   );
-                 },
-                 placement: 'top',
-                });
-              }}>
-                  <Text style={styles.textWhite}>Agregar al carrito </Text>
-              </TouchableOpacity>
-              </Card>
-  
-
       </View>
-   
     </>
   );
 };
@@ -129,6 +113,24 @@ const styles = StyleSheet.create({
     backgroundColor: '#DEBDCE',
     borderBottomLeftRadius: 50,
     borderBottomRightRadius: 50,
+  },
+  quantityUwu: {
+    padding: 20,
+    backgroundColor: '#eee',
+    borderRadius: 5,
+  },
+  quantity: {
+    fontSize: 18,
+    marginHorizontal: 30,
+    color: 'black'
+  },
+
+  quantityContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    // marginTop: 10,
+    // alignContent:'center',
+    display:'flex',
   },
   deleteButton: {
     backgroundColor: 'red',
@@ -186,8 +188,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   productImage: {
-    width: 80,
-    height: 80,
+    width: 100,
+    height: 100,
     borderRadius: 10,
     marginRight: 10,
   },

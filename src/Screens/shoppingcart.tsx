@@ -25,7 +25,6 @@ export const ShoppingScreen = ({ product }: Props) => {
   const [showModal, setShowModal] = useState(false);
   const { isOpen, onOpen, onClose} = useDisclose(); 
   const [datosGuardados, setDatosGuardados] = useState(null);
-  
   const [selectedOption, setSelectedOption] = useState(null);
 
 
@@ -144,6 +143,7 @@ export const ShoppingScreen = ({ product }: Props) => {
             <Icon name="shopping-cart" size={30} color="#000" />
           </View>
         </TouchableOpacity> */}
+
         <View> 
         <TouchableOpacity  onPress={() => navigation.replace('mapaScreen', {owner:' '})}>
           <Card style={styles.cardcontainer}> 
@@ -157,14 +157,14 @@ export const ShoppingScreen = ({ product }: Props) => {
         </View>
       </View>
 
-      <View style={styles.container}>
-        <Text style={styles.headerText}>Productos agregados  ({totalProducts}) </Text>
 
-        {/*<View style={styles.tableHeader}>
-          <Text style={styles.headerText}>Nombre: </Text>
-          <Text style={styles.headerText}> Cantidad:</Text>
-          <Text style={styles.headerText}> Precio: </Text>
-        </View> */}
+      <View style={styles.container}>
+        <View style={styles.tableRow}>
+        <Text style={styles.headerText}>Productos agregados  ({totalProducts}) </Text>
+        <TouchableOpacity style={styles.buyButton2} onPress={handleDeleteAll}>
+           <Text style={styles.headerTextWhite}>Vaciar carrito  </Text>
+        </TouchableOpacity>
+        </View>
 
         <FlatList
           data={cart1}
@@ -203,24 +203,20 @@ export const ShoppingScreen = ({ product }: Props) => {
           )}
         />
 
-
           <Card>
           <View>
             <Text style={styles.headerText}>Productos: ({totalProducts})</Text>
             <Text style={styles.headerText}>Total: ${totalPrice}</Text>
           </View>
 
-          <View>
+          <View> 
             {/* <TextInput style={styles.discountCodeInput} placeholder="Código de descuento" /> */}
-
-           
-            <TouchableOpacity style={styles.buyButton} onPress={() => setShowModal(true)}>
+            
+            <TouchableOpacity style={styles.buyButton2} onPress={() => setShowModal(true)}>
         <Text style={styles.headerTextWhite}>Continuar</Text>
        </TouchableOpacity>
+
    
-        <TouchableOpacity style={styles.buyButton} onPress={handleDeleteAll}>
-           <Text style={styles.headerTextWhite}>Vaciar carrito  </Text>
-        </TouchableOpacity>
 
 
            <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
@@ -289,7 +285,9 @@ export const ShoppingScreen = ({ product }: Props) => {
         fontWeight: 'bold',
         fontSize: 20,
         color: '#FFF',
-        padding: 2,
+        padding: 5,
+
+        
       }, 
       headerWITHE: {
         fontWeight: 'bold',
@@ -324,9 +322,8 @@ export const ShoppingScreen = ({ product }: Props) => {
         fontSize: 14,
         fontWeight: 'bold',
         color:'#1e90ff',
-       
-        
       },
+
       tableRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -342,7 +339,14 @@ export const ShoppingScreen = ({ product }: Props) => {
         alignItems: 'center',
         borderRadius: 25,
         marginHorizontal: 10,
-       
+      },
+
+      buyButton2: {
+        backgroundColor: '#ff1493',
+        paddingVertical: 2,
+        borderRadius: 10,
+        marginHorizontal: 5,
+       justifyContent: 'center'
       },
       
       cardcontent: {
@@ -403,4 +407,8 @@ export const ShoppingScreen = ({ product }: Props) => {
       cardcontainer: {
         padding: 20,
       },
+      cardcenter: {
+        justifyContent: 'center',
+        alignItems: 'center',
+      }
     });

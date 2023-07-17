@@ -74,7 +74,7 @@ export const Direction = () => {
       <View style={styles.header}>
         <Text style={styles.headerWITHE}>Direcciones del usuario  </Text>
         <View>
-          <TouchableOpacity onPress={() => navigation.navigate('upload')}>
+         <TouchableOpacity  onPress={() => navigation.replace('mapaScreen', {owner:' '})}>
             <Card style={styles.cardcontainer}>
               <View>
                 <Text style={styles.textgray}> Agregar una nueva direccion   </Text>
@@ -107,7 +107,15 @@ export const Direction = () => {
                 <TouchableOpacity style={styles.deleteButton} onPress={() => handleDelete(index)}>
                   <Icon name="trash" size={30} color="#fff" />
                 </TouchableOpacity>
+
+                <TouchableOpacity style={styles.updateButton} onPress={() => handleDelete(index)}>
+                  <Icon name="trash" size={30} color="#fff" />
+                </TouchableOpacity>
+                
               </View>
+
+             
+
             </Card>
           </TouchableOpacity>
         ))}

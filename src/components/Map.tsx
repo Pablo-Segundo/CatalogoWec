@@ -16,6 +16,7 @@ import { Image } from 'react-native';
 
 
 
+
 export function MapScreen() {
   const { isOpen, onOpen, onClose} = useDisclose();
   const navigation = useNavigation();
@@ -163,20 +164,8 @@ export function MapScreen() {
 </View>
 
 
-       {/* <View style={styles.header}>
-        <View style={styles.headerinput}>
-           <GooglePlacesAutocomplete
-            placeholder='Escriba su calle plox uwu '
-            onPress={(data, details = null) => {
-              console.log(data.details);
-            }}
-            query={{
-              key:'AIzaSyDFHYFl_pImNIwTzu2YwjL5R8pH-nlWCE4',
-              language: 'es'
-            }}
-           />
-           </View>
-      </View>  */}
+   
+
 
     <ActionSheetProvider>    
         <View style={styles.container}>
