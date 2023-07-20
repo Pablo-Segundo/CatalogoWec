@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { useNavigation } from '@react-navigation/native';
-import API from '../API/API';
+import { useNavigation } from '@react-navigation/native'; import API from '../API/API';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 
@@ -15,6 +14,8 @@ export const CategoriesScreen = () => {
   
   const navigation = useNavigation();
   const [categories, setCategories] = useState();
+  const [isError, setIsError] = useState(false);
+
   const getCategories = async () => {
     try {
   
@@ -30,13 +31,24 @@ export const CategoriesScreen = () => {
     getCategories();
   }, []);
   if (!categories) {
-    return null;
+    return (
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorText}>No hay conexión a internet</Text>
+       <Image source={require('../Navigators/assets/lottie/osuxd.png')} style={styles.errorImage} /> 
+       <TouchableOpacity style={styles.buyButton}>
+        <Text style={styles.buyButtonText}>vuelve a intertarlo  </Text>
+      </TouchableOpacity>
+      </View>
+      
+    );
   } else {
 
+   
+    
 
     return (
       <View style={{marginBottom: 40}} >
-         <Text style={[styles.TextContainer, { fontSize: 20, color: '#FFF' }]}>WAPIZIMA</Text>
+         <Text style={[styles.TextContainer, { fontSize: 25, color: '#FFF', fontWeight: 'bold'  }]}>WAPIZIMA</Text>
 
         <TouchableOpacity
           style={styles.IconContainer}
@@ -79,6 +91,24 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     margin: 10,
   },
+  errorContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+  },
+  errorText: {
+    fontSize: 18,
+    marginBottom: 20,
+    color: 'black'
+  },
+  errorImage: {
+    width: 200,
+    height: 200,
+    resizeMode: 'contain',
+    alignItems: 'center'
+   
+  },
   overlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -93,10 +123,10 @@ const styles = StyleSheet.create({
   },
   IconContainer: {
     position: 'absolute',
-    top: 5,
-    right: 25,
+    top: 10, 
+    right: 12,
     zIndex: 1,
-  },
+   },
   TextContainer: {
     color: 'black',
     position: 'absolute',
@@ -117,5 +147,23 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  buyButton: {
+    backgroundColor: '#FF1493',
+    paddingVertical: 5,
+    alignItems: 'center',
+    borderRadius: 25,
+    marginBottom: 15,
+  },
+  buyButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
+    alignItems: 'center',
+    borderWidth:1,
+    padding: 10,
+   marginBottom: 10,
+    borderRadius:70,
+    borderColor: '#FF1493'
   },
 });

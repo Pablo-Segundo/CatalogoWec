@@ -17,7 +17,7 @@ export const FavoritesScreen = ({ route, product }: Props) => {
   // const { favorites } = route.params;
   const navigation = useNavigation();
   const toast = useToast();
-  const [favorites,setFavorites] = useState();
+  const [favorites,setFavorites] = useState(0);
   const [showModal,setShowModal] = useState(false);
 
   useEffect(() => {
@@ -38,7 +38,6 @@ export const FavoritesScreen = ({ route, product }: Props) => {
 
   }
  
-
   const handleDelete = (product) => {
     const updatedFavorites = [...favorites];
     updatedFavorites.splice(product, 1);
@@ -51,6 +50,8 @@ export const FavoritesScreen = ({ route, product }: Props) => {
         console.log('Error al eliminar el producto:', error);
       });
   };
+
+
   
   return (
     <>
@@ -63,15 +64,15 @@ export const FavoritesScreen = ({ route, product }: Props) => {
           <View style={styles.shoppingCartIcon}>
             <Icon name="shopping-cart" size={30} color="#000" />
           </View>
+          
         </TouchableOpacity>
       </View>
 
-      
-      <View style={styles.favoritesContainer}>
-        <Text style={styles.favoritesHeaderText}>Productos favoritos</Text>
-        <Card style={styles.cardContainer}>
+    
+            <Text style={styles.favoritesHeaderText}>Productos favoritos</Text>
 
-
+            {favorites.length > 0 ? (
+           
         <FlatList
             data={favorites}
             keyExtractor={(item) => item._id}
@@ -80,29 +81,34 @@ export const FavoritesScreen = ({ route, product }: Props) => {
                 <Image style={styles.productImage} source={{ uri: item.multimedia[0].images['400x400'] }} />
 
                  <Text numbserOfLines={4} ellipsizeMode="tail" style={styles.productName}>{item.name}</Text>
-
-                 {/* <Text style={styles.productName}>{item.price} </Text> */}
-               
-            
                   <View>
-                 {/* <TouchableOpacity style={styles.buyButton}>
-                  <Text style={styles.textWhite}>Agregar al carrito </Text>
-                </TouchableOpacity> */}
-               
                  </View>
-
                  <TouchableOpacity style={styles.deleteButton} onPress={() => handleDelete(product)}>
                   <Icon name="trash" size={30} color="#fff" />
                 </TouchableOpacity> 
             </View>
-
             )}
           />
-        </Card>
-      </View>
+            
+              ) : (
+                <View style={styles.centeredContainer}>
+                  <Image
+                    source={require('../Navigators/assets/lottie/osuxd.png')}
+                    style={styles.noDataImage}
+                  />
+                  <Text style={styles.noDataText}>No tienes productos favoritos</Text>
+                  <TouchableOpacity style={styles.buyButton}>
+                    <Text style={styles.textWhite}>Explora y descubre muevos   </Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+         
+  
     </>
   );
 };
+
+
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
@@ -114,6 +120,46 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 50,
     borderBottomRightRadius: 50,
   },
+  centeredContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noDataImage: {
+    width: 100,
+    height: 100,
+    marginBottom: 10,
+  },
+  noDataText: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: 'gray',
+  },
+    emptyCartContainer:{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+      
+      },
+    exploreButton: {
+        flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#F0F0F0',
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+      },
+     emptyCartText: {
+        fontSize: 30,
+        marginBottom: 20,
+        color: 'gray'
+      },
+          exploreButtonText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: 'gray'
+      },
   quantityUwu: {
     padding: 20,
     backgroundColor: '#eee',
@@ -150,7 +196,7 @@ const styles = StyleSheet.create({
   },
   buyButton: {
     backgroundColor: '#FF1493',
-    paddingVertical: 5,
+    paddingVertical: 20,
     alignItems: 'center',
     borderRadius: 25,
     marginBottom: 15,
@@ -173,10 +219,11 @@ const styles = StyleSheet.create({
     margin: 20,
   },
   favoritesHeaderText: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: 'bold',
     marginBottom: 20,
     color: 'gray',
+    padding: 15
   },
   cardContainer: {
     borderRadius: 10,

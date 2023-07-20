@@ -129,14 +129,34 @@ export const ShoppingScreen = ({ product }: Props) => {
     .catch(error => {
       console.error('Error al borrar el carrito uwu:', error);
     });
+  };
+
+ const renderEmptyCart = () => {
+      return (
+        <View style={styles.emptyCartContainer}>
+         
+
+          <Text style={styles.emptyCartText}>Ningún producto agregado</Text>
+
+          <TouchableOpacity
+            style={styles.exploreButton}
+            onPress={() => navigation.navigate('Home')}
+          >
+            <Image source={require('../Navigators/assets/lottie/osuxd.png')} style={styles.exploreImage} />
+
+            <Text style={styles.exploreButtonText}>Explorar y comprar productos</Text>
+          </TouchableOpacity>
+        </View>
+      );
 };
 
 
 
   return (
+   
     <>
       <View style={styles.header}>
-        <Text style={styles.headerWITHE}>Carrito de compras </Text>
+        <Text style={styles.headerWITHE}>Agregue su dirreción </Text>
 
          {/* <TouchableOpacity style={styles.shoppingCartButton} onPress={() => navigation.navigate('Shopping')}>
           <View style={styles.shoppingCartIcon}>
@@ -144,28 +164,42 @@ export const ShoppingScreen = ({ product }: Props) => {
           </View>
         </TouchableOpacity> */}
 
-        <View> 
+        <View > 
         <TouchableOpacity  onPress={() => navigation.replace('mapaScreen', {owner:' '})}>
+          <View style={styles.viewuwu}>
           <Card style={styles.cardcontainer}> 
           <View>
             {datosGuardados && (
-              <Text style={styles.textgray}>Enviar a: {datosGuardados.nombre}</Text>
+            
+              <Text style={styles.textgray}> Enviar a:  {datosGuardados.nombre}  </Text>
+
             )}
           </View>
+         
             </Card>
-          </TouchableOpacity>
+            <Image source={require('../Navigators/assets/lottie/icon/marcador.png')} style={styles.imagemap} />
+          </View>
+          </TouchableOpacity>     
         </View>
+        
       </View>
-
+   
+           
 
       <View style={styles.container}>
-        <View style={styles.tableRow}>
-        <Text style={styles.headerText}>Productos agregados  ({totalProducts}) </Text>
-        <TouchableOpacity style={styles.buyButton2} onPress={handleDeleteAll}>
-           <Text style={styles.headerTextWhite}>Vaciar carrito  </Text>
-        </TouchableOpacity>
-        </View>
-
+        {totalProducts === 0 ? (
+          renderEmptyCart()
+        ) : (
+          <>
+            <View style={styles.tableRow}>
+              <Text style={styles.headerText}>Productos agregados ({totalProducts})</Text>
+              <TouchableOpacity style={styles.buyButton2} onPress={handleDeleteAll}>
+                <Text style={styles.headerTextWhite}>Vaciar carrito</Text>
+              </TouchableOpacity>
+            </View>       
+          </>
+        )}
+    
         <FlatList
           data={cart1}
           renderItem={({ item, index }) => (
@@ -182,6 +216,8 @@ export const ShoppingScreen = ({ product }: Props) => {
                 <View style={styles.rowContainer}>
                 <Text style={styles.rowText}>( {item.quantity} ) X </Text>
                 <Text style={styles.productPrice}>${item.price} </Text>
+             
+           
                   </View> 
 
                 <View style={styles.quantityContainer}>
@@ -205,8 +241,8 @@ export const ShoppingScreen = ({ product }: Props) => {
 
           <Card>
           <View>
-            <Text style={styles.headerText}>Productos: ({totalProducts})</Text>
-            <Text style={styles.headerText}>Total: ${totalPrice}</Text>
+            <Text style={styles.headerText2}>Productos: ({totalProducts})</Text>
+            <Text style={styles.headerText2}>Total: ${totalPrice}</Text>
           </View>
 
           <View> 
@@ -219,41 +255,42 @@ export const ShoppingScreen = ({ product }: Props) => {
    
 
 
-           <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-      <Modal.Content maxWidth="500px">
-        <Modal.CloseButton />
-        <Modal.Header>Método de Pago</Modal.Header>
-        <Modal.Body>
-          <TouchableOpacity
-            style={[
-              styles.buyButtonText,
-              selectedOption === 'Tarjeta' && styles.selectedOption,
-            ]}
-            onPress={() => handleOptionSelect(' Tarjeta')}
-          >
-            <FontAwesomeIcon icon={faCreditCard} size={20} color="#000" />
-            <Text style={styles.headerText}>Tarjeta</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.buyButtonText,
-              selectedOption === 'PagoContraEntrega' && styles.selectedOption,
-            ]}
-            onPress={() => handleOptionSelect('PagoContraEntrega')}
-          >
-            <FontAwesomeIcon icon={faMoneyBill} size={20} color="#000" />
-            <Text style={styles.headerText}>Pago contra entrega</Text>
-          </TouchableOpacity>
-        </Modal.Body>
-        <TouchableOpacity onPress={handleContinuar} style={styles.buyButton}>
-          <Text style={styles.headerTextWhite}>Continuar</Text>
-        </TouchableOpacity>
+       <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+          <Modal.Content maxWidth="500px">
+            <Modal.CloseButton style={styles.modalCloseButton} />
+            <Modal.Header style={styles.modalHeader}>Método de pago</Modal.Header>
+            <Modal.Body style={styles.modalBody}>
+              <TouchableOpacity
+                style={[
+                  styles.paymentOption,
+                  selectedOption === 'Tarjeta' && styles.selectedPaymentOption,
+                ]}
+                onPress={() => handleOptionSelect('Tarjeta')}
+              >
+                <FontAwesomeIcon icon={faCreditCard} size={20} color="#000" />
+                <Text style={styles.paymentOptionText}>Tarjeta</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.paymentOption,
+                  selectedOption === 'PagoContraEntrega' && styles.selectedPaymentOption,
+                ]}
+                onPress={() => handleOptionSelect('PagoContraEntrega')}
+              >
+                <FontAwesomeIcon icon={faMoneyBill} size={20} color="#000" />
+                <Text style={styles.paymentOptionText}>Pago contra entrega</Text>
+              </TouchableOpacity>
+            </Modal.Body>
+            <TouchableOpacity onPress={handleContinuar} style={styles.continueButton}>
+              <Text style={styles.continueButtonText}>Continuar </Text>
+            </TouchableOpacity>
+          </Modal.Content>
+      </Modal>
 
-      </Modal.Content>
-    </Modal>
           </View>
           </Card>
-      </View>
+          </View>
+    
     </>
   );
 };
@@ -266,11 +303,88 @@ export const ShoppingScreen = ({ product }: Props) => {
         borderBottomLeftRadius: 50,
         borderBottomRightRadius: 50,
       },
+
+      emptyCartContainer:{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+      
+      },
+      exploreImage: {
+        width: 30,
+        height: 30,
+        marginRight: 10,
+      },
+      emptyCartText: {
+        fontSize: 30,
+        marginBottom: 20,
+        color: 'gray'
+      },
+      exploreButton: {
+        flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#F0F0F0',
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+      },
+
+      exploreButtonText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: 'gray'
+      },
+
+
+      modalCloseButton: {
+        marginTop: 10,
+        marginRight: 10,
+      },
+      modalHeader: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 10,
+        textAlign: 'center',
+      },
+      modalBody: {
+        padding: 20,
+      },
+      paymentOption: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
+      },
+      selectedPaymentOption: {
+        backgroundColor: '#F0F0F0',
+      },
+      paymentOptionText: {
+        marginLeft: 10,
+        fontSize: 16,
+      },
+      continueButton: {
+        backgroundColor: '#ff1493',
+        borderRadius: 5,
+        padding: 10,
+        alignItems: 'center',
+        marginTop: 20,
+      },
+      continueButtonText: {
+        color: '#fff',
+        fontSize: 18,
+      },
+
       image: {
         width: 100,
         height: 100,
         resizeMode: 'cover',
         margin: 10,
+      },
+      imagemap: {
+        width: 50,
+        height: 50,
+        resizeMode: 'cover',
+        margin: 5,
       },
       textelimit: {
         color: '#1e90ff',
@@ -279,10 +393,17 @@ export const ShoppingScreen = ({ product }: Props) => {
         fontWeight: 'bold',
         fontSize: 16,
         color: 'black',
-        padding: 2,
-      },      
-      headerTextWhite: {
+        padding: 17,
+      },   
+       headerText2: {
         fontWeight: 'bold',
+        fontSize: 16,
+        color: 'black',
+        padding: 5,
+      },   
+         
+      headerTextWhite: {
+        fontWeight : 'bold',
         fontSize: 20,
         color: '#FFF',
         padding: 5,
@@ -291,12 +412,12 @@ export const ShoppingScreen = ({ product }: Props) => {
       }, 
       headerWITHE: {
         fontWeight: 'bold',
-        fontSize: 16,
+        fontSize: 20,
         color: '#fff',
         padding: 2,
       },
       textgray: {
-        color: 'gray',
+        color: 'black',
         fontSize: 18,
       },
       shoppingCartButton: {
@@ -309,7 +430,7 @@ export const ShoppingScreen = ({ product }: Props) => {
       },
       container: {
         flex: 1,
-        padding: 20,
+        padding: 5,
         backgroundColor: '#FFF',
       },
       tableHeader: {
@@ -346,6 +467,7 @@ export const ShoppingScreen = ({ product }: Props) => {
         paddingVertical: 2,
         borderRadius: 10,
         marginHorizontal: 5,
+        marginVertical:15,
        justifyContent: 'center'
       },
       
@@ -405,7 +527,12 @@ export const ShoppingScreen = ({ product }: Props) => {
         flex: 1,
       },
       cardcontainer: {
-        padding: 20,
+        padding: 10,
+        width: '85%'
+      },
+      viewuwu: {
+        flexDirection: 'row',
+       
       },
       cardcenter: {
         justifyContent: 'center',

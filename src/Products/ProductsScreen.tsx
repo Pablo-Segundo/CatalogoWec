@@ -16,51 +16,75 @@ interface Props extends NativeStackScreenProps<any, any> {}
 export const PetañaScreen = ({ route, navigation }: Props) => {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
- 
-  //  const bottomSheet = useRef();
+  const [isError, setIsError] = useState(false);
   
- 
-
   const getProducts = async () => {
     try {
       const { data } = await API.get(`/products/category/${route.params}`);
       setProducts(data.products);
     } catch (error) {
+      setIsError(true);
       console.log(error);
     }
   };
   useEffect(() => {
     const fetchData = async () => {
-      const apiCall = getProducts();
-      const timeout = new Promise((resolve) => setTimeout(resolve, 1000));
-      await Promise.all([apiCall, timeout]);
-      setIsLoading(false);
+      try {
+        const apiCall = getProducts();
+        const timeout = new Promise((resolve) => setTimeout(resolve, 1000));
+        await Promise.all([apiCall, timeout]);
+        setIsLoading(false);
+      } catch (error) {
+        setIsError(true);
+        setIsLoading(false);
+      }
     };
     fetchData();
-   
   }, []);
   if (isLoading) {
     return <LoadingScreen />;
+  }
+  if (isError) {
+    return (
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorText}>No hay conexión a internet</Text>
+       <Image source={require('../Navigators/assets/lottie/osuxd.png')} style={styles.errorImage} /> 
+      </View>
+    );
   }
 
   
  
   return (
-    <View style={{marginBottom: 60}}>
-        <Text style={[styles.TextContainer, { fontSize: 20, color: '#FFF' }]}>WAPIZIMA </Text>
-     {/* <View> 
-   <TouchableOpacity style={styles.buyButton} onPress={navigateToFavorites}>
-      <Text>Ver favoritos</Text>
-    </TouchableOpacity>
-   </View> */}
+    <View style={{marginBottom:60,}}>
+        <Text style={[styles.TextContainer, { fontSize: 25, color: '#FFF', fontWeight: 'bold' }]}>WAPIZIMA </Text>
+       
+      <TouchableOpacity
+              style={styles.IconContainer}
+              onPress={() => navigation.navigate('Shopping', {})}>
+          <View style={styles.IconCircle}>
+            <Icon name="shopping-basket" size={30} color="#000" />
+            {/* <Image source={require('../Navigators/assets/lottie/icon/icon.png')} style={styles.IconCircle} />  */}
+            </View>
+            </TouchableOpacity>
 
-   <TouchableOpacity
-          style={styles.IconContainer}
-          onPress={() => navigation.navigate('Shopping', {})}>
-       <View style={styles.IconCircle}>
-         <Icon name="shopping-basket" size={30} color="#000" />
-         </View>
-        </TouchableOpacity>   
+             <TouchableOpacity style={styles.IconContainer2}
+              onPress={() => navigation.navigate('Favorites',{})}>
+            <View style={styles.IconCircle}>
+            <Icon name="heart" size={30} color= 'black' />
+            </View>
+          </TouchableOpacity>  
+
+
+                
+        
+      
+        {/* <TouchableOpacity style={styles.HeartIconContainer} onPress={() => navigation.navigate('Favorites',{})}>
+        <View style={styles.IconCircle}>
+        <Icon name="heart" size={30} color= 'black' />
+        </View>
+      </TouchableOpacity> */}
+      
 
 
 
@@ -75,7 +99,6 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
   );
  };
 
-
  const styles = StyleSheet.create({
 
         container: {
@@ -83,9 +106,28 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
           justifyContent: 'center',
           alignItems: 'center',
         },
+
+  
+        errorContainer: {
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingHorizontal: 20,
+        },
+        errorText: {
+          fontSize: 18,
+          marginBottom: 20,
+          color: 'black'
+        },
+
         productItem: {
           margin: 10,
           alignItems: 'center',
+        },
+        errorImage: {
+          width: 200,
+          height: 200,
+          resizeMode: 'contain',
         },
         productImage: {
           width: 150,
@@ -124,6 +166,12 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
          right: 10,
          zIndex: 1,
         },
+        IconContainer2: {
+          position: 'absolute',
+          top: 10, 
+          right: 70,
+          zIndex: 1,
+         },
         TextContainer: {
           color: 'black',
           position: 'absolute',
@@ -149,10 +197,16 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
         IconCircle: {
           width: 45,
           height:  45,
-          borderRadius: 25,
+          borderRadius: 30,
           backgroundColor: '#FFF',
           alignItems: 'center',
           justifyContent: 'center',
         },
+
+        HeartIconContainer: {
+        
+          marginRight: 10, 
+        },
+        
     
 });

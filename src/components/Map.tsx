@@ -157,7 +157,8 @@ export function MapScreen() {
   <View style={styles.headerInput}>
     <TextInput
       style={styles.directionInput}
-      placeholder="Escriba su calle"
+      placeholder="Escriba su calle:"
+      placeholderTextColor={'black'}
       onChangeText={handleAddressChange}
     />
   </View>
@@ -220,6 +221,7 @@ export function MapScreen() {
             <TextInput
             style={styles.discountCodeInput} 
             placeholder="Escriba su calle" 
+            placeholder="Escriba su calle:"
             value={selectedAddress} 
             onChangeText={handleAddressChange =>setSelectedAddress(handleAddressChange) }
             />
@@ -230,6 +232,7 @@ export function MapScreen() {
                  <TextInput
                   style={styles.discountCodeInput}
                   placeholder="Por favor, escriba su nombre"
+                  placeholder="Escriba su calle:"
                   value={nombre}
                   onChangeText={text => setNombre(text)}
                 />
@@ -247,6 +250,7 @@ export function MapScreen() {
                 <TextInput
                   keyboardType="numeric"
                   style={styles.phoneInput}
+                  placeholder="Escriba su calle:"
                   placeholder="Por favor, escriba"
                   value={numeroTelefonico}
                   onChangeText={text => setNumeroTelefonico(text)}
@@ -258,6 +262,7 @@ export function MapScreen() {
                   style={styles.discountCodeInput}
                   placeholder="Casa de dos pisos"
                   value={referencias}
+                  placeholder="Escriba su calle:"
                   onChangeText={text => setReferencias(text)}
                 /> 
 

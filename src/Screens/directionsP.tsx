@@ -13,11 +13,7 @@ export const Direction = () => {
   const [datosGuardados, setDatosGuardados] = useState(null);
   const [showModal,setShowModal] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
-  // const [updatedSelectedAddress, setUpdatedSelectedAddress] = useState('');
-  // const [updatedNombre, setUpdatedNombre] = useState('');
-  // const [updatedNumeroTelefonico, setUpdatedNumeroTelefonico] = useState('');
-  // const [updatedReferencias, setUpdatedReferencias] = useState('');
-
+  
   
   useEffect(() => {
     const obtenerDatosGuardados = async () => {
@@ -69,8 +65,36 @@ export const Direction = () => {
       });
   };
 
+   
+ const renderEmptyCart = () => {
+  return (
+    <View style={styles.emptyCartContainer}>
+     
+
+      <Text style={styles.emptyCartText}>No tiene ninguna direccion guardada</Text>
+
+      <TouchableOpacity
+        style={styles.exploreButton}
+        onPress={() => navigation.navigate('Home')}
+      >
+        <Image source={require('../Navigators/assets/lottie/osuxd.png')} style={styles.exploreImage} />
+
+        <Text style={styles.exploreButtonText}>Agregue una direccion</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+
+
   return(
     <>
+     
+
+   
+    
+
+
       <View style={styles.header}>
         <Text style={styles.headerWITHE}>Direcciones del usuario  </Text>
         <View>
@@ -83,8 +107,13 @@ export const Direction = () => {
           </TouchableOpacity>
         </View>
       </View>
+    
+
+
+      {datosGuardados && datosGuardados.length > 0 ? (
+       
       <ScrollView>
-        {datosGuardados && datosGuardados.map((datos, index) => (
+        {datosGuardados.map((datos, index) => (
           <TouchableOpacity key={index} onPress={() => handleCardPress(datos)}>
             <Card key={index} style={styles.cardcontainer}>
               <View style={styles.rowContainer}>
@@ -108,8 +137,8 @@ export const Direction = () => {
                   <Icon name="trash" size={30} color="#fff" />
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.updateButton} onPress={() => handleDelete(index)}>
-                  <Icon name="trash" size={30} color="#fff" />
+                <TouchableOpacity style={styles.updateButton} onPress={() => handleCardPress(datos)}>
+                  <Icon name="pencil" size={30} color="#fff" />
                 </TouchableOpacity>
                 
               </View>
@@ -118,8 +147,18 @@ export const Direction = () => {
 
             </Card>
           </TouchableOpacity>
-        ))}
-      </ScrollView>
+          ))}
+          </ScrollView>
+        ) : (
+          <View style={styles.centeredContainer}>
+            <Image
+              source={require('../Navigators/assets/lottie/osuxd.png')}
+              style={styles.noDataImage}
+            />
+            <Text style={styles.noDataText}>Ninguna dirección guardada</Text>
+          </View>
+        )}
+
       <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
         <Modal.Content maxWidth="500px">
           <Modal.CloseButton />
@@ -165,6 +204,45 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 16,
       },
+      centeredContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      noDataImage: {
+        width: 100,
+        height: 100,
+        marginBottom: 10,
+      },
+      noDataText: {
+        fontSize: 25,
+        fontWeight: 'bold',
+        color: 'gray',
+      },
+      emptyCartContainer:{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+      emptyCartText: {
+        fontSize: 30,
+        marginBottom: 20,
+        color: 'gray'
+      },
+      exploreButton: {
+            flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#F0F0F0',
+        paddingVertical: 20,
+        paddingHorizontal: 20,
+        borderRadius: 5,
+      },
+      exploreButtonText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: 'gray'
+      },
       discountCodeInput: {
         borderColor: 'gray', 
         borderWidth: 1,
@@ -178,6 +256,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         marginTop: 10,
       },
+
       deleteButton: {
         backgroundColor: 'red',
         padding: 5,
@@ -185,7 +264,7 @@ const styles = StyleSheet.create({
         marginRight: 10,
       },
       updateButton: {
-        backgroundColor: 'blue',
+        backgroundColor: '#1E90FF',
         padding: 5,
         borderRadius: 5,
       },
@@ -310,5 +389,9 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         backgroundColor: '#FFF',
       },
-
+      exploreImage: {
+        width: 30,
+        height: 30,
+        marginRight: 10,
+      }
 })

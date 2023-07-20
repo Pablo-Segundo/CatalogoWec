@@ -6,6 +6,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Card , Button} from 'react-native-paper';
 import { Actionsheet, Box, useDisclose , useToast, Modal } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { MdError, MdCheckCircle } from 'react-icons/md';
+import { motion } from 'framer-motion';
 
 interface Props {
   product: Product;
@@ -21,8 +23,7 @@ export const ProductCard = ({ product }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclose();
   const [showModal, setShowModal] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [isImageSelected, setIsImageSelected] = useState(false);
-
+  
 
   const decrementQuantity = () => {
     if (quantity > 0) {
@@ -40,30 +41,37 @@ export const ProductCard = ({ product }: Props) => {
     navigation.navigate('Shopping', { quantity, ProductName: product.name, price: product.price, multimedia: product.multimedia });
   };
 
-  const addToCart = async (product: Product, quantity: number, price: number, multimedia: Multimedia[]) => { 
+  const addToCart = async (product: Product, quantity: number, price: number, multimedia: Multimedia[]) => {
+   
     if (quantity === 0) {
       toast.show({
         render: () => {
           return (
-            <Box bg="red.500" px="8" py="5" rounded="sm" mb={1} zIndex={999}>
+           <Box bg="red.500" px="8" py="5" rounded="sm" mb={1} zIndex={999}>
+              <Text style={styles.textWhite}>
               Agregue al menos un producto al carrito
+              </Text>
             </Box>
           );
         },
         placement: 'top',
       });
-    }else
-    toast.show({
-     render: () => {
-       return(
-         <Box bg="emerald.500" px="8" py="5" rounded="sm" mb={1}  zIndex={999}
-         >
-           producto Agregado al carrito uwu
-         </Box>
-       );
-     },
-     placement: 'top',
-    });
+    } else {
+      toast.show({
+        render: () => {
+          return (
+            <Box bg="emerald.500" px="8" py="5" rounded="sm" mb={1}  zIndex={999}
+             >
+              <Text style={styles.textWhite}> 
+                producto Agregado al carrito 
+              </Text>
+              
+             </Box>
+          );
+        },
+        placement: 'top',
+      });
+    }
     if (!quantity) quantity = 1;
     const cartArray = await AsyncStorage.getItem('cart');
     let cart = [];
@@ -89,20 +97,15 @@ export const ProductCard = ({ product }: Props) => {
     await AsyncStorage.setItem('cart', JSON.stringify(cart));
   };
 
-  const handleImagePress = (index: number) => {
-    if (selectedImageIndex === index) {
-      setSelectedImageIndex(-1);
-      setIsImageSelected(false);
-    } else {
-      setSelectedImageIndex(index);
-      setIsImageSelected(true);
-    }
-  };
 
   const navigateToFavorites = () => {
     navigation.navigate('Favorites');
   };
 
+  const isInFavorites = () => {
+    return favorite.some(item => item._id === product._id);
+  };
+ 
 
   const toggleFavorite = async (product) => {
     const favoriteArray = await AsyncStorage.getItem('favorites');
@@ -137,7 +140,7 @@ export const ProductCard = ({ product }: Props) => {
   const isInCart = () => {
     return cart.some(item => item.id === product.id);
   };
-
+   
 
   return (
     <>
@@ -145,7 +148,7 @@ export const ProductCard = ({ product }: Props) => {
   <Card style={styles.cardContainer}>
     <Image style={styles.productImage} source={{ uri: product.multimedia[0].images['400x400'] }} />
     <View style={styles.favoriteContainer}>
-      <TouchableOpacity onPress={()=>toggleFavorite(product)} style={styles.favoriteButton}>
+    <TouchableOpacity onPress={()=>toggleFavorite(product)} style={styles.favoriteButton}>
         <Icon
           name={ 'heart-o'}
           size={25}
@@ -172,10 +175,10 @@ export const ProductCard = ({ product }: Props) => {
       <Text style={styles.addToCartButtonText}>Agregar al carrito </Text>
     </TouchableOpacity>
 
-    <TouchableOpacity style={styles.viewFavoritesButton} onPress={navigateToFavorites}>
+    {/* <TouchableOpacity style={styles.viewFavoritesButton} onPress={navigateToFavorites}>
       <Text style={styles.viewFavoritesButtonText}>Ver favoritos</Text>
     </TouchableOpacity>
-  
+   */}
   </Card>
 </TouchableOpacity>
 
@@ -201,7 +204,7 @@ export const ProductCard = ({ product }: Props) => {
           <View style={styles.productContainer}>
             <Text style={styles.productCard}>{product.name}</Text>
           </View>  
-            <Text style={styles.productName}> Disponible:  {product.quantity} </Text>
+            <Text style={styles.productName}> Disponoble:  {product.quantity} </Text>
             <Card style={styles.cardcontainer}>
               <Text style={styles.Textcard}>{product.description}</Text>
             </Card>
@@ -221,7 +224,7 @@ export const ProductCard = ({ product }: Props) => {
               return(
                 <Box bg="emerald.500" px="8" py="5" rounded="sm" mb={1}  zIndex={999}
                 >
-                  producto Agregado al carrito uwu
+                  producto Agregado al carrito 
                 </Box>
               );
             },
@@ -246,6 +249,12 @@ const styles = StyleSheet.create({
     margin: 5,
     borderRadius: 10,
     marginBottom: 10,
+  },
+  textWhite: {
+    color: '#f5fff',
+    fontSize: 22,
+    fontWeight: 'bold',
+   
   },
   favoriteButton: {
     padding: 5,
