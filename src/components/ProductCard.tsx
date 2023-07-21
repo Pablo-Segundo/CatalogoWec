@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Card , Button} from 'react-native-paper';
 import { Actionsheet, Box, useDisclose , useToast, Modal } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { Toast } from 'react-native-toast-message/lib/src/Toast';
 import { MdError, MdCheckCircle } from 'react-icons/md';
 import { motion } from 'framer-motion';
 
@@ -14,7 +15,7 @@ interface Props {
   route: any;
 }
 
-export const ProductCard = ({ product }: Props) => {
+export const ProductCard = ({ product,  }: Props) => {
   const navigation = useNavigation();
   const bottomSheet = useRef();
   const [quantity, setQuantity] = useState(1);
@@ -22,8 +23,7 @@ export const ProductCard = ({ product }: Props) => {
   const refRBSheet = useRef();
   const { isOpen, onOpen, onClose } = useDisclose();
   const [showModal, setShowModal] = useState(false);
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  
+  const {isFavorite, setFavorite} = useState(false);
 
   const decrementQuantity = () => {
     if (quantity > 0) {
@@ -42,35 +42,20 @@ export const ProductCard = ({ product }: Props) => {
   };
 
   const addToCart = async (product: Product, quantity: number, price: number, multimedia: Multimedia[]) => {
-   
     if (quantity === 0) {
-      toast.show({
-        render: () => {
-          return (
-           <Box bg="red.500" px="8" py="5" rounded="sm" mb={1} zIndex={999}>
-              <Text style={styles.textWhite}>
-              Agregue al menos un producto al carrito
-              </Text>
-            </Box>
-          );
-        },
-        placement: 'top',
-      });
+      Toast.show({
+        type:'error',
+        text1: 'Error ',
+        text2: 'Agregue un producto ',
+      })
+      
     } else {
-      toast.show({
-        render: () => {
-          return (
-            <Box bg="emerald.500" px="8" py="5" rounded="sm" mb={1}  zIndex={999}
-             >
-              <Text style={styles.textWhite}> 
-                producto Agregado al carrito 
-              </Text>
-              
-             </Box>
-          );
-        },
-        placement: 'top',
-      });
+      Toast.show({
+        type:'success',
+        text1:  'producto agregado ',
+        text2: 'El producto se agrego al carrito de compras '
+      })
+  
     }
     if (!quantity) quantity = 1;
     const cartArray = await AsyncStorage.getItem('cart');
@@ -96,7 +81,6 @@ export const ProductCard = ({ product }: Props) => {
     }
     await AsyncStorage.setItem('cart', JSON.stringify(cart));
   };
-
 
   const navigateToFavorites = () => {
     navigation.navigate('Favorites');
@@ -140,6 +124,8 @@ export const ProductCard = ({ product }: Props) => {
   const isInCart = () => {
     return cart.some(item => item.id === product.id);
   };
+
+  
    
 
   return (
@@ -172,7 +158,7 @@ export const ProductCard = ({ product }: Props) => {
     <TouchableOpacity style={styles.addToCartButton} onPress={() => {
       addToCart(product, quantity, product.price, product.multimedia);
     }}>
-      <Text style={styles.addToCartButtonText}>Agregar al carrito </Text>
+      <Text style={styles.addToCartButtonText}>Agregar al carrito  </Text>
     </TouchableOpacity>
 
     {/* <TouchableOpacity style={styles.viewFavoritesButton} onPress={navigateToFavorites}>
@@ -208,7 +194,7 @@ export const ProductCard = ({ product }: Props) => {
             <Card style={styles.cardcontainer}>
               <Text style={styles.Textcard}>{product.description}</Text>
             </Card>
-            <View style={styles.quantityCard}>
+            <View style={styles.cardContainer}>
               <TouchableOpacity onPress={decrementQuantity}>
                 <Text style={styles.quantityUwu}>-</Text>
               </TouchableOpacity>
@@ -250,6 +236,22 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 10,
   },
+  badgeContainer: {
+    position: 'absolute',
+    top: 5,
+    right: 15,
+    backgroundColor: 'red',
+    borderRadius: 10,
+    minWidth: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1,
+  },
+  badgeText: {
+    color: 'white',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
   textWhite: {
     color: '#f5fff',
     fontSize: 22,
@@ -287,6 +289,7 @@ const styles = StyleSheet.create({
     height: 150,
     resizeMode: 'cover',
     borderRadius: 10,
+    justifyContent: 'center'
   },
   productName:{
     fontSize: 15,
@@ -441,6 +444,8 @@ const styles = StyleSheet.create({
     },
     cardContainer: {
       width: '95%',
+      alignItems: 'center',
+      justifyContent: 'center',
       borderRadius: 10,
       padding: 10,
       backgroundColor: '#fff',

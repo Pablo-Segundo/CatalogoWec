@@ -14,7 +14,6 @@ interface Props {
   route: any;
 }
 export const FavoritesScreen = ({ route, product }: Props) => {
-  // const { favorites } = route.params;
   const navigation = useNavigation();
   const toast = useToast();
   const [favorites,setFavorites] = useState(0);
@@ -57,7 +56,9 @@ export const FavoritesScreen = ({ route, product }: Props) => {
     <>
     
       <View style={styles.container}>
-        <Text style={styles.headerText}>Productos guardados</Text>
+      <TouchableOpacity style={styles.directionrow}  onPress={() => navigation.navigate('pestanas', {})}>
+        <Icon name="arrow-left" size={30} color="#fff" />
+        </TouchableOpacity>
         <TouchableOpacity
           style={styles.shoppingCartButton}
           onPress={() => navigation.navigate('Shopping', {})}>
@@ -79,7 +80,7 @@ export const FavoritesScreen = ({ route, product }: Props) => {
             renderItem={({ item }) => (
               <View style={styles.productContainer}>
                 <Image style={styles.productImage} source={{ uri: item.multimedia[0].images['400x400'] }} />
-
+                  
                  <Text numbserOfLines={4} ellipsizeMode="tail" style={styles.productName}>{item.name}</Text>
                   <View>
                  </View>
@@ -119,6 +120,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#DEBDCE',
     borderBottomLeftRadius: 50,
     borderBottomRightRadius: 50,
+  },
+  directionrow:{
+    paddingHorizontal: 10,
   },
   centeredContainer: {
     flex: 1,

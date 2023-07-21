@@ -8,19 +8,20 @@ import { Card, Button } from 'react-native-paper';
 import { useToast, Modal, useDisclose } from 'native-base';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faCreditCard, faMoneyBill } from '@fortawesome/free-solid-svg-icons';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 interface Props {
   product: Product;
   route: any;
 }
 
-export const ShoppingScreen = ({ product }: Props) => {
+export const ShoppingScreen = ({ product  }: Props) => {
   const route = useRoute();
   const navigation = useNavigation();
   const [quantity, setQuantity] = useState(0);
   const [cart1, setCart] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [totalProducts, setTotalProducts] = useState(0);
+  const [ totalProducts,setTotalProducts] = useState(0);
   const toast = useToast();
   const [showModal, setShowModal] = useState(false);
   const { isOpen, onOpen, onClose} = useDisclose(); 
@@ -156,7 +157,16 @@ export const ShoppingScreen = ({ product }: Props) => {
    
     <>
       <View style={styles.header}>
+
+        <View style={styles.directiorow}>
+        <TouchableOpacity >
+        <Icon name="pencil" size={30} color="#fff" />
+        </TouchableOpacity>
+        <View style={styles.directiorow1}>
         <Text style={styles.headerWITHE}>Agregue su dirreción </Text>
+        </View>
+        
+        </View>
 
          {/* <TouchableOpacity style={styles.shoppingCartButton} onPress={() => navigation.navigate('Shopping')}>
           <View style={styles.shoppingCartIcon}>
@@ -165,6 +175,7 @@ export const ShoppingScreen = ({ product }: Props) => {
         </TouchableOpacity> */}
 
         <View > 
+     
         <TouchableOpacity  onPress={() => navigation.replace('mapaScreen', {owner:' '})}>
           <View style={styles.viewuwu}>
           <Card style={styles.cardcontainer}> 
@@ -193,7 +204,7 @@ export const ShoppingScreen = ({ product }: Props) => {
           <>
             <View style={styles.tableRow}>
               <Text style={styles.headerText}>Productos agregados ({totalProducts})</Text>
-              <TouchableOpacity style={styles.buyButton2} onPress={handleDeleteAll}>
+              <TouchableOpacity style={styles.buyButton3} onPress={handleDeleteAll}>
                 <Text style={styles.headerTextWhite}>Vaciar carrito</Text>
               </TouchableOpacity>
             </View>       
@@ -213,26 +224,37 @@ export const ShoppingScreen = ({ product }: Props) => {
                     <Text style={styles.rowText}>{item.product_id.name}</Text>
                   </View>
 
+              
+
                 <View style={styles.rowContainer}>
                 <Text style={styles.rowText}>( {item.quantity} ) X </Text>
                 <Text style={styles.productPrice}>${item.price} </Text>
-             
-           
                   </View> 
 
+
+    
                 <View style={styles.quantityContainer}>
                   <TouchableOpacity onPress={() => decrementQuantity(index)}>
                     <Text style={styles.quantityButton}>-</Text>
                   </TouchableOpacity>
+
                   <Text style={styles.quantity}>{item.quantity}</Text>
                   <TouchableOpacity onPress={() => incrementQuantity(index)}>
                     <Text style={styles.quantityButton}>+</Text>
                   </TouchableOpacity>
+
+                  <TouchableOpacity style={styles.updateButton} onPress={() => deleteData(index)}>
+                <Icon name="trash" size={30} color="#fff" />
+              </TouchableOpacity>
+                 
                 </View>
 
-                <TouchableOpacity onPress={() => deleteData(index)}>
-                  <Text style={styles.textelimit}>Eliminar </Text>
-              </TouchableOpacity>
+               
+                   
+              
+         
+
+               
                 </View>
               </View>
             </View>
@@ -304,11 +326,25 @@ export const ShoppingScreen = ({ product }: Props) => {
         borderBottomRightRadius: 50,
       },
 
+      directiorow: {
+        flexDirection: 'row',
+      },
+      directiorow1: {
+        flexDirection: 'row',
+        paddingHorizontal: 20,
+      },
+
+
       emptyCartContainer:{
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
       
+      },
+      updateButton: {
+        backgroundColor: '#1E90FF',
+        padding: 5,
+        borderRadius: 5,
       },
       exploreImage: {
         width: 30,
@@ -340,6 +376,7 @@ export const ShoppingScreen = ({ product }: Props) => {
       modalCloseButton: {
         marginTop: 10,
         marginRight: 10,
+        padding: 20,
       },
       modalHeader: {
         fontSize: 20,
@@ -351,9 +388,20 @@ export const ShoppingScreen = ({ product }: Props) => {
         padding: 20,
       },
       paymentOption: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 10,
+        
+        width: '95%',
+        borderRadius: 10,
+        marginTop: 15,
+        padding: 10,
+        backgroundColor: '#fff',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
       },
       selectedPaymentOption: {
         backgroundColor: '#F0F0F0',
@@ -368,10 +416,12 @@ export const ShoppingScreen = ({ product }: Props) => {
         padding: 10,
         alignItems: 'center',
         marginTop: 20,
+        
       },
       continueButtonText: {
         color: '#fff',
         fontSize: 18,
+       
       },
 
       image: {
@@ -406,9 +456,7 @@ export const ShoppingScreen = ({ product }: Props) => {
         fontWeight : 'bold',
         fontSize: 20,
         color: '#FFF',
-        padding: 5,
-
-        
+        padding: 5,      
       }, 
       headerWITHE: {
         fontWeight: 'bold',
@@ -466,9 +514,19 @@ export const ShoppingScreen = ({ product }: Props) => {
         backgroundColor: '#ff1493',
         paddingVertical: 2,
         borderRadius: 10,
-        marginHorizontal: 5,
+        marginHorizontal: 20,
         marginVertical:15,
-       justifyContent: 'center'
+       justifyContent: 'center',
+       alignItems: 'center'
+      },
+      buyButton3: {
+        backgroundColor: '#ff1493',
+        paddingVertical: 2,
+        borderRadius: 10,
+        marginHorizontal: 1,
+        marginVertical:5,
+       justifyContent: 'center',
+       alignItems: 'center'
       },
       
       cardcontent: {

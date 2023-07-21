@@ -9,6 +9,7 @@ import LoadingScreen from '../Screens/loadintgScreen';
 import { Actionsheet, Button, useDisclose } from "native-base";
 import { ProductCard } from '../components/ProductCard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Toast } from 'react-native-toast-message/lib/src/Toast';
 
 
 interface Props extends NativeStackScreenProps<any, any> {}
@@ -17,6 +18,8 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
+
+  const [totalProducts, setTotalProducts] = useState(0);
   
   const getProducts = async () => {
     try {
@@ -34,6 +37,13 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
         const timeout = new Promise((resolve) => setTimeout(resolve, 1000));
         await Promise.all([apiCall, timeout]);
         setIsLoading(false);
+        const storedCart = await AsyncStorage.getItem('cart');
+        const parsedCart = JSON.parse(storedCart);
+        let productCount = 0;
+        parsedCart.forEach(item => {
+          productCount += item.quantity;
+        });
+        setTotalProducts(productCount);
       } catch (error) {
         setIsError(true);
         setIsLoading(false);
@@ -44,26 +54,33 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
   if (isLoading) {
     return <LoadingScreen />;
   }
-  if (isError) {
+  // if (isError) {
+  //   return (
+  //     <View style={styles.errorContainer}>
+  //       <Text style={styles.errorText}>No hay conexión a internet</Text>
+  //      <Image source={require('../Navigators/assets/lottie/osuxd.png')} style={styles.errorImage} /> 
+  //     </View>
+  //   );
+  // }
+
+  const ShoppingCartBadge = ({ count }) => {
     return (
-      <View style={styles.errorContainer}>
-        <Text style={styles.errorText}>No hay conexión a internet</Text>
-       <Image source={require('../Navigators/assets/lottie/osuxd.png')} style={styles.errorImage} /> 
+      <View style={styles.badgeContainer}>
+        <Text style={styles.badgeText}>{count}</Text>
       </View>
     );
-  }
+  };
 
   
- 
   return (
     <View style={{marginBottom:60,}}>
-        <Text style={[styles.TextContainer, { fontSize: 25, color: '#FFF', fontWeight: 'bold' }]}>WAPIZIMA </Text>
-       
+
       <TouchableOpacity
               style={styles.IconContainer}
-              onPress={() => navigation.navigate('Shopping', {})}>
+              onPress={() => navigation.navigate('Shopping', { totalProducts })}>
           <View style={styles.IconCircle}>
-            <Icon name="shopping-basket" size={30} color="#000" />
+            <Icon name="shopping-cart" size={30} color="#000" />
+            {totalProducts > 0 && <ShoppingCartBadge count={totalProducts} />}
             {/* <Image source={require('../Navigators/assets/lottie/icon/icon.png')} style={styles.IconCircle} />  */}
             </View>
             </TouchableOpacity>
@@ -75,9 +92,10 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
             </View>
           </TouchableOpacity>  
 
+          <TouchableOpacity style={styles.directionrow}  onPress={() => navigation.navigate('Home', {})} >
+        <Icon name="arrow-left" size={30} color="#fff" />
+        </TouchableOpacity>
 
-                
-        
       
         {/* <TouchableOpacity style={styles.HeartIconContainer} onPress={() => navigation.navigate('Favorites',{})}>
         <View style={styles.IconCircle}>
@@ -86,7 +104,9 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
       </TouchableOpacity> */}
       
 
-
+      <View style={{zIndex: 9999}}> 
+<Toast/>
+</View>
 
       <View style={{ height: '8%', backgroundColor: '#debdce'}} /> 
       <FlatList
@@ -94,6 +114,7 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
         numColumns={2}
         renderItem={({ item }) => (
           <ProductCard product={item} route={undefined} />
+
       )}/>
       </View>
   );
@@ -105,6 +126,28 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
           flex: 1,
           justifyContent: 'center',
           alignItems: 'center',
+        },
+        directionrow:{
+          paddingHorizontal: 22,
+          position: 'absolute',
+          top: 15, 
+          zIndex: 1,
+        },
+        badgeContainer: {
+          position: 'absolute',
+          top: 5,
+          right: 15,
+          backgroundColor: 'red',
+          borderRadius: 10,
+          minWidth: 20,
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 1,
+        },
+        badgeText: {
+          color: 'white',
+          fontSize: 12,
+          fontWeight: 'bold',
         },
 
   
