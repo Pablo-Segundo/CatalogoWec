@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, FlatList, TextInput, Image } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, FlatList, TextInput, Image,  } from 'react-native';
 import { Product } from '../interfaces/ProductsCategoryInterface';
 import { useNavigation } from '@react-navigation/native';
 import { useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Card, Button } from 'react-native-paper';
-import { useToast, Modal, useDisclose } from 'native-base';
+import { useToast, Modal, useDisclose, Row } from 'native-base';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faCreditCard, faMoneyBill } from '@fortawesome/free-solid-svg-icons';
 import Icon from 'react-native-vector-icons/FontAwesome';
+
 
 interface Props {
   product: Product;
@@ -227,7 +228,7 @@ export const ShoppingScreen = ({ product  }: Props) => {
               
 
                 <View style={styles.rowContainer}>
-                <Text style={styles.rowText}>( {item.quantity} ) X </Text>
+                <Text style={styles.rowText}>( {item.quantity} ) x </Text>
                 <Text style={styles.productPrice}>${item.price} </Text>
                   </View> 
 
@@ -262,7 +263,7 @@ export const ShoppingScreen = ({ product  }: Props) => {
         />
 
           <Card>
-          <View>
+          <View style={{padding: 10, marginLeft: 10}}>
             <Text style={styles.headerText2}>Productos: ({totalProducts})</Text>
             <Text style={styles.headerText2}>Total: ${totalPrice}</Text>
           </View>
@@ -289,7 +290,7 @@ export const ShoppingScreen = ({ product  }: Props) => {
                 ]}
                 onPress={() => handleOptionSelect('Tarjeta')}
               >
-                <FontAwesomeIcon icon={faCreditCard} size={20} color="#000" />
+                <FontAwesomeIcon icon={faCreditCard} size={25} color="#000" />
                 <Text style={styles.paymentOptionText}>Tarjeta</Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -299,7 +300,7 @@ export const ShoppingScreen = ({ product  }: Props) => {
                 ]}
                 onPress={() => handleOptionSelect('PagoContraEntrega')}
               >
-                <FontAwesomeIcon icon={faMoneyBill} size={20} color="#000" />
+                <FontAwesomeIcon icon={faMoneyBill} size={25} color="#000" />
                 <Text style={styles.paymentOptionText}>Pago contra entrega</Text>
               </TouchableOpacity>
             </Modal.Body>
@@ -325,6 +326,9 @@ export const ShoppingScreen = ({ product  }: Props) => {
         borderBottomLeftRadius: 50,
         borderBottomRightRadius: 50,
       },
+      modalBodyWithMargin: {
+        marginBottom: 20,
+      },
 
       directiorow: {
         flexDirection: 'row',
@@ -345,6 +349,7 @@ export const ShoppingScreen = ({ product  }: Props) => {
         backgroundColor: '#1E90FF',
         padding: 5,
         borderRadius: 5,
+        marginLeft: 50
       },
       exploreImage: {
         width: 30,
@@ -374,9 +379,9 @@ export const ShoppingScreen = ({ product  }: Props) => {
 
 
       modalCloseButton: {
-        marginTop: 10,
+        
         marginRight: 10,
-        padding: 20,
+        padding: 10,
       },
       modalHeader: {
         fontSize: 20,
@@ -390,18 +395,21 @@ export const ShoppingScreen = ({ product  }: Props) => {
       paymentOption: {
         
         width: '95%',
-        borderRadius: 10,
+        borderRadius: 15,
+        justifyContent: 'center',
         marginTop: 15,
-        padding: 10,
+        flexDirection: 'row',
+        padding: 25,
         backgroundColor: '#fff',
         shadowColor: '#000',
+        
         shadowOffset: {
           width: 0,
           height: 2,
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-        elevation: 5,
+        elevation: 10,
       },
       selectedPaymentOption: {
         backgroundColor: '#F0F0F0',
@@ -409,6 +417,7 @@ export const ShoppingScreen = ({ product  }: Props) => {
       paymentOptionText: {
         marginLeft: 10,
         fontSize: 16,
+        color: 'black'
       },
       continueButton: {
         backgroundColor: '#ff1493',
@@ -416,6 +425,8 @@ export const ShoppingScreen = ({ product  }: Props) => {
         padding: 10,
         alignItems: 'center',
         marginTop: 20,
+        marginVertical: 15,
+        marginHorizontal: 20,
         
       },
       continueButtonText: {

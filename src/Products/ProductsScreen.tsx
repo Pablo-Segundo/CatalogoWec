@@ -21,6 +21,9 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
 
   const [totalProducts, setTotalProducts] = useState(0);
   
+
+
+  
   const getProducts = async () => {
     try {
       const { data } = await API.get(`/products/category/${route.params}`);

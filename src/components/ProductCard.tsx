@@ -10,6 +10,7 @@ import { Toast } from 'react-native-toast-message/lib/src/Toast';
 import { MdError, MdCheckCircle } from 'react-icons/md';
 import { motion } from 'framer-motion';
 
+
 interface Props {
   product: Product;
   route: any;
@@ -47,13 +48,15 @@ export const ProductCard = ({ product,  }: Props) => {
         type:'error',
         text1: 'Error ',
         text2: 'Agregue un producto ',
+        icon: 'alert-circle', 
       })
       
     } else {
       Toast.show({
         type:'success',
         text1:  'producto agregado ',
-        text2: 'El producto se agrego al carrito de compras '
+        text2: 'El producto se agrego al carrito de compras ',
+        icon: 'check-circle', 
       })
   
     }

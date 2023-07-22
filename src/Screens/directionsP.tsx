@@ -114,7 +114,7 @@ export const Direction = () => {
        
       <ScrollView>
         {datosGuardados.map((datos, index) => (
-          <TouchableOpacity key={index} onPress={() => handleCardPress(datos)}>
+          
             <Card key={index} style={styles.cardcontainer}>
               <View style={styles.rowContainer}>
                 <Icon name="user" size={20} color="#000" style={styles.icon} />
@@ -146,7 +146,7 @@ export const Direction = () => {
              
 
             </Card>
-          </TouchableOpacity>
+        
           ))}
           </ScrollView>
         ) : (
@@ -165,12 +165,20 @@ export const Direction = () => {
           <Modal.Header>Editar información</Modal.Header>
           <Modal.Body>
             <View>
+            <View style={{flexDirection: 'row', marginHorizontal: 15}}>
               <TextInput
                 style={styles.discountCodeInput}
                 placeholder="Escriba su calle"
                 value={selectedData ? selectedData.selectedAddress : ''}
                 onChangeText={(value) => setSelectedData({ ...selectedData, selectedAddress: value })}
               />
+              <TouchableOpacity style={styles.updateButton2}  onPress={() => navigation.navigate('mapaScreen')}>
+                  <Icon name="map-marker" size={30} color="#fff" />
+                </TouchableOpacity>
+
+             </View>
+              
+
               <TextInput
                 style={styles.discountCodeInput}
                 placeholder="Escriba su nombre"
@@ -191,7 +199,7 @@ export const Direction = () => {
               />
             </View>
             <TouchableOpacity style={styles.buyButton} onPress={handleUpdate}>
-              <Text>Confirmar Datos</Text>
+              <Text style={styles.headerWITHE}>Confirmar Datos</Text>
             </TouchableOpacity>
           </Modal.Body>
         </Modal.Content>
@@ -251,6 +259,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         color: 'black',
       },
+      
       buttonContainer: {
         flexDirection: 'row',
         justifyContent: 'flex-end',
@@ -267,6 +276,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#1E90FF',
         padding: 5,
         borderRadius: 5,
+      },
+      updateButton2: {
+        backgroundColor: '#1E90FF',
+        padding: 10,
+        borderRadius: 5,
+        marginVertical: 15
       },
 
       icon: {
@@ -326,11 +341,12 @@ const styles = StyleSheet.create({
         color: 'black'
       },
       buyButton: {
-        backgroundColor: '#D3AFD4',
-        paddingVertical: 12,
-        borderRadius: 4,
-        alignItems: 'center',
-      
+        backgroundColor: '#ff1493',
+        borderRadius: 8,
+        paddingVertical: 10,
+        marginTop: 15,
+        marginHorizontal: 10,
+     
       },
       buyButtonText: {
         color: 'white',
@@ -383,6 +399,7 @@ const styles = StyleSheet.create({
       cardcontainer: {
         padding: 20,
         marginBottom: 15,
+        marginHorizontal: 15,
       },
       shoppingCartIcon: {
         padding: 5,

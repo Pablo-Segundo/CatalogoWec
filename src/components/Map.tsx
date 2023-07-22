@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, View, Dimensions, Platform,  TouchableOpacity, Text, TextInput } from 'react-native';
+import { StyleSheet, View, Dimensions, Platform,  TouchableOpacity, Text, TextInput, KeyboardAvoidingView, ScrollView,  } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import { mapStyle } from '../Styles/mapStyle';
 import Geolocation from 'react-native-geolocation-service';
@@ -208,19 +208,20 @@ export function MapScreen() {
 
  
    
-            <Actionsheet isOpen={isOpen} onClose={onClose} size="100%"   >
+            <Actionsheet  isOpen={isOpen} onClose={onClose} size="100%"   >
            <Actionsheet.Content>
-          
+          <KeyboardAvoidingView  behavior={Platform.OS === 'ios' ? 'padding' : 'height'} >
 
-            <View> 
+            <ScrollView style={{flex:1}} keyboardDismissMode='interactive'> 
          
 
-              <Text style={styles.textgray}> *IMPORTANTE* *recuerde poner los datos de quien va a recibir el paquete*</Text> 
+             <Text style={styles.textgray}> *IMPORTANTE* *recuerde poner los datos de quien va a recibir el paquete*</Text> 
 
+<View style={{marginHorizontal: 10}}>
             <Text style={styles.headerText}> Direccion:  </Text>
             <TextInput
             style={styles.discountCodeInput} 
-            placeholder="Escriba su calle" 
+            placeholderTextColor={'black'}
             placeholder="Escriba su calle:"
             value={selectedAddress} 
             onChangeText={handleAddressChange =>setSelectedAddress(handleAddressChange) }
@@ -232,26 +233,20 @@ export function MapScreen() {
                  <TextInput
                   style={styles.discountCodeInput}
                   placeholder="Por favor, escriba su nombre"
-                  placeholder="Escriba su calle:"
+                  placeholderTextColor={'black'}
                   value={nombre}
                   onChangeText={text => setNombre(text)}
                 />
 
-                {/* <Text style={styles.headerText}>Número telefónico:</Text>
-                <TextInput keyboardType="numeric"
-                  style={styles.discountCodeInput}
-                  placeholder ="Por favor, escriba su número telefónico"
-                  value={numeroTelefonico}
-                  onChangeText={text => setNumeroTelefonico(text)}
-                /> */}
+  
               <Text style={styles.headerText}>Número telefónico:</Text>
                 <View style={styles.phoneInputContainer}>
                 <Image source={require('../Navigators/assets/lottie/mexico.png')} style={styles.flagImage} />
                 <TextInput
                   keyboardType="numeric"
                   style={styles.phoneInput}
-                  placeholder="Escriba su calle:"
-                  placeholder="Por favor, escriba"
+                  placeholder="Escriba su numero:"
+                  placeholderTextColor={'black'}
                   value={numeroTelefonico}
                   onChangeText={text => setNumeroTelefonico(text)}
                 />
@@ -260,12 +255,13 @@ export function MapScreen() {
                 <Text style={styles.headerText}>Referencias (opcional):</Text>
                 <TextInput
                   style={styles.discountCodeInput}
-                  placeholder="Casa de dos pisos"
+                  placeholder="Escriba su referencia: "
                   value={referencias}
-                  placeholder="Escriba su calle:"
+                  placeholderTextColor={'black'}
                   onChangeText={text => setReferencias(text)}
                 /> 
 
+</View>
 
               <TouchableOpacity style={styles.buyButton2}
                onPress={() => {
@@ -277,8 +273,9 @@ export function MapScreen() {
               </TouchableOpacity>
 
               
-            </View> 
-  
+            </ScrollView> 
+
+            </KeyboardAvoidingView>
             </Actionsheet.Content>
             </Actionsheet>
           
@@ -366,6 +363,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#fff',
     padding: 2,
+    justifyContent: 'center'
+
   },
 
   cardcontainer: {
@@ -382,6 +381,7 @@ const styles = StyleSheet.create({
     padding: 15,
     marginTop: 10,
     color: 'black',
+    
   },
  
 
@@ -398,7 +398,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
     color: 'black',
-    padding: 5,
+    padding: 4,
+    marginHorizontal: 5,
   },
   shoppingCartIcon: {
     padding: 5,
@@ -445,8 +446,10 @@ const styles = StyleSheet.create({
   buyButton2: {
     backgroundColor: '#ff1493',
     borderRadius: 8,
-    paddingVertical: 12,
-   
+    paddingVertical: 10,
+    marginTop: 15,
+    marginHorizontal: 10,
+ 
   },
   buttonText: {
     color: 'white',
