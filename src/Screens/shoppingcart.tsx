@@ -16,6 +16,7 @@ interface Props {
   route: any;
 }
 
+
 export const ShoppingScreen = ({ product  }: Props) => {
   const route = useRoute();
   const navigation = useNavigation();
@@ -25,7 +26,7 @@ export const ShoppingScreen = ({ product  }: Props) => {
   const [ totalProducts,setTotalProducts] = useState(0);
   const toast = useToast();
   const [showModal, setShowModal] = useState(false);
-  const { isOpen, onOpen, onClose} = useDisclose(); 
+  const { isOpen, onOpen, onClose} = useDisclose();
   const [datosGuardados, setDatosGuardados] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
 
@@ -35,7 +36,7 @@ export const ShoppingScreen = ({ product  }: Props) => {
     const storedCart = await AsyncStorage.getItem('cart');
     const parsedCart = JSON.parse(storedCart);
     let total = 0;
-    let productCount = 0;   
+    let productCount = 0;
     parsedCart.forEach(item => {
       total += item.quantity * item.product_id.price;
       productCount += item.quantity;
@@ -44,10 +45,8 @@ export const ShoppingScreen = ({ product  }: Props) => {
     setTotalPrice(total);
     setTotalProducts(productCount);
   };
-
   useEffect(() => {
     cartShopping();
-
     const obtenerDatosGuardados = async () => {
       try {
         const datosGuardados = await AsyncStorage.getItem('datos');
@@ -60,9 +59,9 @@ export const ShoppingScreen = ({ product  }: Props) => {
         console.log('Error al obtener los datos guardados:', error);
       }
     };
-  
     obtenerDatosGuardados();
   }, []);
+
 
   const decrementQuantity = (index) => {
     const updatedCart = [...cart1];
@@ -79,6 +78,7 @@ export const ShoppingScreen = ({ product  }: Props) => {
         .catch(error => {});
     }
   };
+
   const incrementQuantity = (index) => {
     const updatedCart = [...cart1];
     const updatedProduct = updatedCart[index];
@@ -97,7 +97,6 @@ export const ShoppingScreen = ({ product  }: Props) => {
     const updatedCart = [...cart1];
     const deletedProduct = updatedCart[index];
     const updatedPrice = deletedProduct.quantity * deletedProduct.product_id.price;
-
     updatedCart.splice(index, 1);
     AsyncStorage.setItem('cart', JSON.stringify(updatedCart))
       .then(() => {
@@ -108,11 +107,10 @@ export const ShoppingScreen = ({ product  }: Props) => {
       .catch(error => {});
   };
 
-
-  const handleContinuar = () => {      
+  const handleContinuar = () => {
     {totalProducts}
     AsyncStorage.setItem('cart', JSON.stringify(cart1))
-      .then(() => {  
+      .then(() => {
         navigation.navigate('tarjetaScreen');
       })
       .catch(error => {
@@ -122,7 +120,6 @@ export const ShoppingScreen = ({ product  }: Props) => {
 
   const handleDeleteAll = () => {
     AsyncStorage.removeItem('cart')
-
     .then(() => {
       setCart([]);
       setTotalPrice(0);
@@ -132,33 +129,25 @@ export const ShoppingScreen = ({ product  }: Props) => {
       console.error('Error al borrar el carrito uwu:', error);
     });
   };
-
  const renderEmptyCart = () => {
+
+
       return (
         <View style={styles.emptyCartContainer}>
-         
-
           <Text style={styles.emptyCartText}>Ningún producto agregado</Text>
-
           <TouchableOpacity
             style={styles.exploreButton}
             onPress={() => navigation.navigate('Home')}
           >
             <Image source={require('../Navigators/assets/lottie/osuxd.png')} style={styles.exploreImage} />
-
             <Text style={styles.exploreButtonText}>Explorar y comprar productos</Text>
           </TouchableOpacity>
         </View>
       );
 };
-
-
-
   return (
-   
     <>
       <View style={styles.header}>
-
         <View style={styles.directiorow}>
         <TouchableOpacity >
         <Icon name="pencil" size={30} color="#fff" />
@@ -166,38 +155,27 @@ export const ShoppingScreen = ({ product  }: Props) => {
         <View style={styles.directiorow1}>
         <Text style={styles.headerWITHE}>Agregue su dirreción </Text>
         </View>
-        
         </View>
-
          {/* <TouchableOpacity style={styles.shoppingCartButton} onPress={() => navigation.navigate('Shopping')}>
           <View style={styles.shoppingCartIcon}>
             <Icon name="shopping-cart" size={30} color="#000" />
           </View>
         </TouchableOpacity> */}
-
-        <View > 
-     
+        <View >
         <TouchableOpacity  onPress={() => navigation.replace('mapaScreen', {owner:' '})}>
           <View style={styles.viewuwu}>
-          <Card style={styles.cardcontainer}> 
+          <Card style={styles.cardcontainer}>
           <View>
             {datosGuardados && (
-            
               <Text style={styles.textgray}> Enviar a:  {datosGuardados.nombre}  </Text>
-
             )}
           </View>
-         
             </Card>
             <Image source={require('../Navigators/assets/lottie/icon/marcador.png')} style={styles.imagemap} />
           </View>
-          </TouchableOpacity>     
+          </TouchableOpacity>
         </View>
-        
       </View>
-   
-           
-
       <View style={styles.container}>
         {totalProducts === 0 ? (
           renderEmptyCart()
@@ -208,10 +186,9 @@ export const ShoppingScreen = ({ product  }: Props) => {
               <TouchableOpacity style={styles.buyButton3} onPress={handleDeleteAll}>
                 <Text style={styles.headerTextWhite}>Vaciar carrito</Text>
               </TouchableOpacity>
-            </View>       
+            </View>
           </>
         )}
-    
         <FlatList
           data={cart1}
           renderItem={({ item, index }) => (
@@ -224,60 +201,37 @@ export const ShoppingScreen = ({ product  }: Props) => {
                   <View style={styles.tableRow}>
                     <Text style={styles.rowText}>{item.product_id.name}</Text>
                   </View>
-
-              
-
                 <View style={styles.rowContainer}>
                 <Text style={styles.rowText}>( {item.quantity} ) x </Text>
                 <Text style={styles.productPrice}>${item.price} </Text>
-                  </View> 
-
-
-    
+                  </View>
                 <View style={styles.quantityContainer}>
                   <TouchableOpacity onPress={() => decrementQuantity(index)}>
                     <Text style={styles.quantityButton}>-</Text>
                   </TouchableOpacity>
-
                   <Text style={styles.quantity}>{item.quantity}</Text>
                   <TouchableOpacity onPress={() => incrementQuantity(index)}>
                     <Text style={styles.quantityButton}>+</Text>
                   </TouchableOpacity>
-
                   <TouchableOpacity style={styles.updateButton} onPress={() => deleteData(index)}>
                 <Icon name="trash" size={30} color="#fff" />
               </TouchableOpacity>
-                 
                 </View>
-
-               
-                   
-              
-         
-
-               
                 </View>
               </View>
             </View>
           )}
         />
-
           <Card>
           <View style={{padding: 10, marginLeft: 10}}>
             <Text style={styles.headerText2}>Productos: ({totalProducts})</Text>
             <Text style={styles.headerText2}>Total: ${totalPrice}</Text>
           </View>
-
-          <View> 
+          <View>
             {/* <TextInput style={styles.discountCodeInput} placeholder="Código de descuento" /> */}
-            
             <TouchableOpacity style={styles.buyButton2} onPress={() => setShowModal(true)}>
         <Text style={styles.headerTextWhite}>Continuar</Text>
        </TouchableOpacity>
-
-   
-
-
        <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
           <Modal.Content maxWidth="500px">
             <Modal.CloseButton style={styles.modalCloseButton} />
@@ -309,14 +263,19 @@ export const ShoppingScreen = ({ product  }: Props) => {
             </TouchableOpacity>
           </Modal.Content>
       </Modal>
-
           </View>
           </Card>
           </View>
-    
     </>
   );
 };
+
+
+
+
+
+
+
 
     const styles = StyleSheet.create({
   

@@ -3,8 +3,8 @@ import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, Dimensions, Fla
 import { Product } from '../interfaces/ProductsCategoryInterface';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Card , Button} from 'react-native-paper';
-import { Actionsheet, Box, useDisclose , useToast, Modal } from 'native-base';
+import { Card } from 'react-native-paper';
+import { Actionsheet, Box, useDisclose, useToast } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
 import { MdError, MdCheckCircle } from 'react-icons/md';
@@ -13,52 +13,58 @@ import { motion } from 'framer-motion';
 
 interface Props {
   product: Product;
-  route: any;
+  updateCartCount: () => void;
+  getCartItems: () => void;
+ 
 }
-
-export const ProductCard = ({ product,  }: Props) => {
+export const ProductCard = ({ product,updateCartCount }: Props) => {
   const navigation = useNavigation();
   const bottomSheet = useRef();
   const [quantity, setQuantity] = useState(1);
   const toast = useToast();
-  const refRBSheet = useRef();
   const { isOpen, onOpen, onClose } = useDisclose();
   const [showModal, setShowModal] = useState(false);
-  const {isFavorite, setFavorite} = useState(false);
 
+  const [favorites, setFavorites] = useState([]);
+
+  
+  const removeFromCart = async (productId: string) => {
+    const cartArray = await AsyncStorage.getItem('cart');
+    let cart = [];
+    if (cartArray) {
+      cart = JSON.parse(cartArray);
+      const newCart = cart.filter((item) => item.product_id._id !== productId);
+      await AsyncStorage.setItem('cart', JSON.stringify(newCart));
+      updateCartCount(); 
+     
+    }
+  };
   const decrementQuantity = () => {
     if (quantity > 0) {
       setQuantity(quantity - 1);
     }
   };
-
   const incrementQuantity = () => {
     if (quantity < product.quantity) {
       setQuantity(quantity + 1);
     }
   };
-
-  const navigateToShoppingScreen = () => {
-    navigation.navigate('Shopping', { quantity, ProductName: product.name, price: product.price, multimedia: product.multimedia });
-  };
-
   const addToCart = async (product: Product, quantity: number, price: number, multimedia: Multimedia[]) => {
     if (quantity === 0) {
-      Toast.show({
-        type:'error',
-        text1: 'Error ',
-        text2: 'Agregue un producto ',
-        icon: 'alert-circle', 
-      })
       
-    } else {
       Toast.show({
-        type:'success',
-        text1:  'producto agregado ',
-        text2: 'El producto se agrego al carrito de compras ',
-        icon: 'check-circle', 
-      })
-  
+        type: 'error',
+        text1: 'Error',
+        text2: 'Agregue al menos un prodcuto',
+        
+      });
+    } else {
+      
+      Toast.show({
+        type: 'success',
+        text1: 'Producto agregado ',
+        text2: 'El producto se ha agregado al carrito de compras',
+      });
     }
     if (!quantity) quantity = 1;
     const cartArray = await AsyncStorage.getItem('cart');
@@ -68,7 +74,7 @@ export const ProductCard = ({ product,  }: Props) => {
       quantity,
       _id: product._id,
       price: product.price,
-      multimedia: product.multimedia ,
+      multimedia: product.multimedia,
     };
     if (cartArray) {
       cart = JSON.parse(cartArray);
@@ -83,16 +89,16 @@ export const ProductCard = ({ product,  }: Props) => {
       cart.push(cartItem);
     }
     await AsyncStorage.setItem('cart', JSON.stringify(cart));
+   
+    updateCartCount();
   };
 
   const navigateToFavorites = () => {
     navigation.navigate('Favorites');
   };
 
-  const isInFavorites = () => {
-    return favorite.some(item => item._id === product._id);
-  };
- 
+
+
 
   const toggleFavorite = async (product) => {
     const favoriteArray = await AsyncStorage.getItem('favorites');
@@ -102,53 +108,46 @@ export const ProductCard = ({ product,  }: Props) => {
       _id: product._id,
       name: product.name,
       price: product.price,
-      multimedia: product.multimedia ,
+      multimedia: product.multimedia,
     };
-    
     if (favoriteArray) {
       favorite = JSON.parse(favoriteArray);
-      
       const favoriteExists = favorite.find((item) => item._id === product._id);
-      console.log(favorite, 'favoritos');
-      
       if (favoriteExists) {
         const index = favorite.findIndex((item) => item._id === product._id);
-       return console.log(index);
-       
+        favorite.splice(index, 1); 
       } else {
         favorite.push(favoriteItem);
       }
     } else {
       favorite.push(favoriteItem);
     }
+    setFavorites(favorite); 
     await AsyncStorage.setItem('favorites', JSON.stringify(favorite));
   };
 
-  const isInCart = () => {
-    return cart.some(item => item.id === product.id);
+  const isInFavorites = () => {
+    return favorites.some((item) => item._id === product._id);
   };
 
   
-   
-
   return (
     <>
    <TouchableOpacity onPress={onOpen} style={styles.container}>
   <Card style={styles.cardContainer}>
     <Image style={styles.productImage} source={{ uri: product.multimedia[0].images['400x400'] }} />
     <View style={styles.favoriteContainer}>
-    <TouchableOpacity onPress={()=>toggleFavorite(product)} style={styles.favoriteButton}>
-        <Icon
-          name={ 'heart-o'}
-          size={25}
-          color={ 'gray'}
-        />
-      </TouchableOpacity>
+    <TouchableOpacity onPress={() => toggleFavorite(product)} style={styles.favoriteButton}>
+              <Icon
+                name={isInFavorites() ? 'heart' : 'heart-o'}
+                size={25}
+                color={isInFavorites() ? 'red' : 'gray'}
+              />
+            </TouchableOpacity>
     </View>
     <Text style={styles.productName}>{product.name}</Text>
     <Text style={styles.textGray}>Disponible: {product.quantity}</Text>
     <Text style={styles.productPrice}>${product.price}</Text>
-
     <View style={styles.quantityContainer}>
       <TouchableOpacity onPress={decrementQuantity} style={styles.quantityButton}>
         <Text style={styles.quantityButtonText}>-</Text>
@@ -161,9 +160,8 @@ export const ProductCard = ({ product,  }: Props) => {
     <TouchableOpacity style={styles.addToCartButton} onPress={() => {
       addToCart(product, quantity, product.price, product.multimedia);
     }}>
-      <Text style={styles.addToCartButtonText}>Agregar al carrito  </Text>
+      <Text style={styles.addToCartButtonText}>Agregar al carrito   </Text>
     </TouchableOpacity>
-
     {/* <TouchableOpacity style={styles.viewFavoritesButton} onPress={navigateToFavorites}>
       <Text style={styles.viewFavoritesButtonText}>Ver favoritos</Text>
     </TouchableOpacity>
@@ -171,11 +169,10 @@ export const ProductCard = ({ product,  }: Props) => {
   </Card>
 </TouchableOpacity>
 
-        
+
           <Actionsheet isOpen={isOpen} onClose={onClose}>
       <Actionsheet.Content>
       <View>
-         
       <FlatList
           data={product.multimedia}
           renderItem={({ item, index }) => (
@@ -189,10 +186,10 @@ export const ProductCard = ({ product,  }: Props) => {
           horizontal={true}
           showsHorizontalScrollIndicator={false}
           pagingEnabled
-        /> 
+        />
           <View style={styles.productContainer}>
             <Text style={styles.productCard}>{product.name}</Text>
-          </View>  
+          </View>
             <Text style={styles.productName}> Disponoble:  {product.quantity} </Text>
             <Card style={styles.cardcontainer}>
               <Text style={styles.Textcard}>{product.description}</Text>
@@ -206,6 +203,7 @@ export const ProductCard = ({ product,  }: Props) => {
                 <Text style={styles.quantityUwu}>+</Text>
               </TouchableOpacity>
             </View>
+
          <TouchableOpacity style={styles.buyButton} onPress={() => {
            addToCart(product, quantity, product.price, product.multimedia );
            toast.show({
@@ -213,7 +211,7 @@ export const ProductCard = ({ product,  }: Props) => {
               return(
                 <Box bg="emerald.500" px="8" py="5" rounded="sm" mb={1}  zIndex={999}
                 >
-                  producto Agregado al carrito 
+                  producto Agregado al carrito
                 </Box>
               );
             },
@@ -226,7 +224,6 @@ export const ProductCard = ({ product,  }: Props) => {
         </View>
         </Actionsheet.Content>
     </Actionsheet>
-
     </>
   );
 };

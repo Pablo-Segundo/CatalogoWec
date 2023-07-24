@@ -3,7 +3,6 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import API from '../API/API';
 import { FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import LoadingScreen from '../Screens/loadintgScreen';
 import { Actionsheet, Button, useDisclose } from "native-base";
@@ -11,19 +10,35 @@ import { ProductCard } from '../components/ProductCard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
 
-
 interface Props extends NativeStackScreenProps<any, any> {}
+
 
 export const PetañaScreen = ({ route, navigation }: Props) => {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
+  const [cart, setCart] = useState([]);
 
-  const [totalProducts, setTotalProducts] = useState(0);
+
   
+  const getCartItems = async () => {
+    const cartArray = await AsyncStorage.getItem('cart');
+    const parsedCart = JSON.parse(cartArray);
+    setCart(parsedCart || []);
+  };
 
+  const removeFromCart = async (productId: string) => {
+    const cartArray = await AsyncStorage.getItem('cart');
+    let cart = [];
+    if (cartArray) {
+      cart = JSON.parse(cartArray);
+      const newCart = cart.filter((item) => item.product_id._id !== productId);
+      await AsyncStorage.setItem('cart', JSON.stringify(newCart));
+      getCartItems(); 
+    }
+  };
 
-  
   const getProducts = async () => {
     try {
       const { data } = await API.get(`/products/category/${route.params}`);
@@ -40,13 +55,7 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
         const timeout = new Promise((resolve) => setTimeout(resolve, 1000));
         await Promise.all([apiCall, timeout]);
         setIsLoading(false);
-        const storedCart = await AsyncStorage.getItem('cart');
-        const parsedCart = JSON.parse(storedCart);
-        let productCount = 0;
-        parsedCart.forEach(item => {
-          productCount += item.quantity;
-        });
-        setTotalProducts(productCount);
+        updateCartCount();
       } catch (error) {
         setIsError(true);
         setIsLoading(false);
@@ -54,18 +63,31 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
     };
     fetchData();
   }, []);
+  if (isError) {
+    return (
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorText}>No hay conexión a internet</Text>
+       <Image source={require('../Navigators/assets/lottie/osuxd.png')} style={styles.errorImage} />
+      </View>
+    );
+  }
+
+
+  const updateCartCount = async () => {
+    const storedCart = await AsyncStorage.getItem('cart');
+    const parsedCart = JSON.parse(storedCart);
+    let productCount = 0;
+    if (parsedCart) {
+      parsedCart.forEach((item) => {
+        productCount += item.quantity;
+      });
+    } 
+    setCartCount(productCount);
+  };
   if (isLoading) {
     return <LoadingScreen />;
   }
-  // if (isError) {
-  //   return (
-  //     <View style={styles.errorContainer}>
-  //       <Text style={styles.errorText}>No hay conexión a internet</Text>
-  //      <Image source={require('../Navigators/assets/lottie/osuxd.png')} style={styles.errorImage} /> 
-  //     </View>
-  //   );
-  // }
-
+  
   const ShoppingCartBadge = ({ count }) => {
     return (
       <View style={styles.badgeContainer}>
@@ -73,56 +95,44 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
       </View>
     );
   };
-
-  
   return (
     <View style={{marginBottom:60,}}>
 
       <TouchableOpacity
-              style={styles.IconContainer}
-              onPress={() => navigation.navigate('Shopping', { totalProducts })}>
-          <View style={styles.IconCircle}>
-            <Icon name="shopping-cart" size={30} color="#000" />
-            {totalProducts > 0 && <ShoppingCartBadge count={totalProducts} />}
-            {/* <Image source={require('../Navigators/assets/lottie/icon/icon.png')} style={styles.IconCircle} />  */}
-            </View>
-            </TouchableOpacity>
-
-             <TouchableOpacity style={styles.IconContainer2}
-              onPress={() => navigation.navigate('Favorites',{})}>
-            <View style={styles.IconCircle}>
-            <Icon name="heart" size={30} color= 'black' />
-            </View>
-          </TouchableOpacity>  
-
-          <TouchableOpacity style={styles.directionrow}  onPress={() => navigation.navigate('Home', {})} >
-        <Icon name="arrow-left" size={30} color="#fff" />
-        </TouchableOpacity>
-
-      
-        {/* <TouchableOpacity style={styles.HeartIconContainer} onPress={() => navigation.navigate('Favorites',{})}>
+        style={styles.IconContainer}
+        onPress={() => navigation.navigate('Shopping', { totalProducts: cartCount })}>
         <View style={styles.IconCircle}>
-        <Icon name="heart" size={30} color= 'black' />
+          <Icon name="shopping-cart" size={30} color="#000" />
+          {cartCount > 0 && <ShoppingCartBadge count={cartCount} />}
         </View>
-      </TouchableOpacity> */}
-      
+      </TouchableOpacity>
 
-      <View style={{zIndex: 9999}}> 
-<Toast/>
-</View>
-
-      <View style={{ height: '8%', backgroundColor: '#debdce'}} /> 
+      <TouchableOpacity
+        style={styles.IconContainer2}
+        onPress={() => navigation.navigate('Favorites', {})}>
+        <View style={styles.IconCircle}>
+          <Icon name="heart" size={30} color="black" />
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.directionrow}
+        onPress={() => navigation.navigate('Home', {})}>
+        <Icon name="arrow-left" size={30} color="#fff" />
+      </TouchableOpacity>
+      <View style={{zIndex: 9999}}>
+        <Toast />
+      </View>
+      <View style={{ height: '8%', backgroundColor: '#DEBDCE'}} />
       <FlatList
         data={products}
         numColumns={2}
         renderItem={({ item }) => (
-          <ProductCard product={item} route={undefined} />
-
-      )}/>
-      </View>
+          <ProductCard product={item} updateCartCount={updateCartCount} />
+        )}
+      />
+       </View>
   );
  };
-
  const styles = StyleSheet.create({
 
         container: {

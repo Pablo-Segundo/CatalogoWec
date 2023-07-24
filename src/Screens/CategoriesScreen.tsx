@@ -3,24 +3,23 @@ import { View, Text, Image, StyleSheet, TouchableOpacity, FlatList } from 'react
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native'; import API from '../API/API';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-
-
+import LoadingScreen from './loadintgScreen';
+import { ProductCard } from '../components/ProductCard';
 
 interface Props extends NativeStackScreenProps<any, any> {}
 
-export const CategoriesScreen = () => {
+export const CategoriesScreen = ({route, navigation} : Props)  => {
 
   // console.log('hola dime que hace ');
   
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
   const [categories, setCategories] = useState();
   const [isError, setIsError] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   const getCategories = async () => {
     try {
-  
-
-
       const { data } = await API.get('/categories');
       setCategories(data.categories);
     } catch (error) {
@@ -43,6 +42,29 @@ export const CategoriesScreen = () => {
     );
   } else {
 
+
+    const ShoppingCartBadge = ({ count }) => {
+      return (
+        <View style={styles.badgeContainer}>
+          <Text style={styles.badgeText}>{count}</Text>
+        </View>
+      );
+    };
+
+    const updateCartCount = async () => {
+      const storedCart = await AsyncStorage.getItem('cart');
+      const parsedCart = JSON.parse(storedCart);
+      let productCount = 0;
+      if (parsedCart) {
+        parsedCart.forEach((item) => {
+          productCount += item.quantity;
+        });
+      }
+      setCartCount(productCount);
+    };
+  
+
+
    
     
 
@@ -50,19 +72,24 @@ export const CategoriesScreen = () => {
       <View style={{marginBottom: 40}} >
          <Text style={[styles.TextContainer, { fontSize: 25, color: '#FFF', fontWeight: 'bold'  }]}>WAPIZIMA</Text>
 
-        <TouchableOpacity
-          style={styles.IconContainer}
-          onPress={() => navigation.navigate('Shopping', {})}>
-       <View style={styles.IconCircle}>
-         {/* <Icon name="shopping-basket" size={30} color="#000" /> */}
-         </View>
-        </TouchableOpacity>
+
+       <TouchableOpacity
+        style={styles.IconContainer}
+        onPress={() => navigation.navigate('Shopping', { totalProducts: cartCount })}>
+        <View style={styles.IconCircle}>
+          <Icon name="shopping-cart" size={30} color="#000" />
+          {cartCount > 0 && <ShoppingCartBadge count={cartCount} />}
+        </View>
+      </TouchableOpacity>
+
+
 
 
         <View style={styles.divider} />
         <FlatList
           data={categories}
           renderItem={({ item }) => (
+        
             <TouchableOpacity onPress={() => navigation.navigate('pestanas', item._id )}>
               <View style={styles.container}>
                 <Image style={styles.image} source={{ uri: item.imagesMobile['400x400'] }} />
@@ -72,7 +99,7 @@ export const CategoriesScreen = () => {
               </View>
             </TouchableOpacity>
           )}
-          //  keyExtractor={(item) => item._id.toString()}
+        
         />
       </View>
     );
@@ -165,5 +192,21 @@ const styles = StyleSheet.create({
    marginBottom: 10,
     borderRadius:70,
     borderColor: '#FF1493'
+  },
+  badgeContainer: {
+    position: 'absolute',
+    top: 5,
+    right: 15,
+    backgroundColor: 'red',
+    borderRadius: 10,
+    minWidth: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1,
+  },
+  badgeText: {
+    color: 'white',
+    fontSize: 12,
+    fontWeight: 'bold',
   },
 });
