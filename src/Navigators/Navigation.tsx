@@ -25,6 +25,8 @@ export const Navigation = ()=> {
         component={ShoppingScreen}
         options={{ headerStyle: { backgroundColor: '#D3AFD4', },
           headerShown: false,
+
+        
         }}
          />
         <Stack.Screen

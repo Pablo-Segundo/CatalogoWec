@@ -15,19 +15,19 @@ interface Props {
   product: Product;
   updateCartCount: () => void;
   getCartItems: () => void;
- 
 }
-export const ProductCard = ({ product,updateCartCount }: Props) => {
+
+
+export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) => {
   const navigation = useNavigation();
   const bottomSheet = useRef();
   const [quantity, setQuantity] = useState(1);
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclose();
   const [showModal, setShowModal] = useState(false);
-
   const [favorites, setFavorites] = useState([]);
 
-  
+
   const removeFromCart = async (productId: string) => {
     const cartArray = await AsyncStorage.getItem('cart');
     let cart = [];
@@ -36,9 +36,11 @@ export const ProductCard = ({ product,updateCartCount }: Props) => {
       const newCart = cart.filter((item) => item.product_id._id !== productId);
       await AsyncStorage.setItem('cart', JSON.stringify(newCart));
       updateCartCount(); 
-     
+      getCartItems(); 
     }
   };
+
+
   const decrementQuantity = () => {
     if (quantity > 0) {
       setQuantity(quantity - 1);
@@ -46,23 +48,22 @@ export const ProductCard = ({ product,updateCartCount }: Props) => {
   };
   const incrementQuantity = () => {
     if (quantity < product.quantity) {
-      setQuantity(quantity + 1);
+      setQuantity(quantity + 1); 
     }
   };
   const addToCart = async (product: Product, quantity: number, price: number, multimedia: Multimedia[]) => {
     if (quantity === 0) {
-      
+     
       Toast.show({
         type: 'error',
         text1: 'Error',
-        text2: 'Agregue al menos un prodcuto',
-        
+        text2: 'Agregue un producto',
       });
     } else {
-      
+    
       Toast.show({
         type: 'success',
-        text1: 'Producto agregado ',
+        text1: 'Producto agregado',
         text2: 'El producto se ha agregado al carrito de compras',
       });
     }
@@ -89,16 +90,9 @@ export const ProductCard = ({ product,updateCartCount }: Props) => {
       cart.push(cartItem);
     }
     await AsyncStorage.setItem('cart', JSON.stringify(cart));
-   
+  
     updateCartCount();
   };
-
-  const navigateToFavorites = () => {
-    navigation.navigate('Favorites');
-  };
-
-
-
 
   const toggleFavorite = async (product) => {
     const favoriteArray = await AsyncStorage.getItem('favorites');
@@ -126,9 +120,12 @@ export const ProductCard = ({ product,updateCartCount }: Props) => {
     await AsyncStorage.setItem('favorites', JSON.stringify(favorite));
   };
 
+
   const isInFavorites = () => {
     return favorites.some((item) => item._id === product._id);
+  
   };
+
 
   
   return (
@@ -160,12 +157,12 @@ export const ProductCard = ({ product,updateCartCount }: Props) => {
     <TouchableOpacity style={styles.addToCartButton} onPress={() => {
       addToCart(product, quantity, product.price, product.multimedia);
     }}>
-      <Text style={styles.addToCartButtonText}>Agregar al carrito   </Text>
+      <Text style={styles.addToCartButtonText}>Agregar al carrito  </Text>
     </TouchableOpacity>
-    {/* <TouchableOpacity style={styles.viewFavoritesButton} onPress={navigateToFavorites}>
+    {/* <TouchableOpacity style={styles.viewFavoritesButton}>
       <Text style={styles.viewFavoritesButtonText}>Ver favoritos</Text>
-    </TouchableOpacity>
-   */}
+    </TouchableOpacity> */}
+
   </Card>
 </TouchableOpacity>
 
@@ -176,7 +173,7 @@ export const ProductCard = ({ product,updateCartCount }: Props) => {
       <FlatList
           data={product.multimedia}
           renderItem={({ item, index }) => (
-            <TouchableOpacity style={{ width: Dimensions.get('window').width, backgroundColor:'black', }} onPress={() => (index)}>
+            <TouchableOpacity style={{ width: Dimensions.get('window').width, }} onPress={() => (index)}>
               <Image
                 style={{width: '100%', height:'100%', resizeMode: 'contain'}}
                 source={{ uri: item.images['400x400'] }}
@@ -191,9 +188,11 @@ export const ProductCard = ({ product,updateCartCount }: Props) => {
             <Text style={styles.productCard}>{product.name}</Text>
           </View>
             <Text style={styles.productName}> Disponoble:  {product.quantity} </Text>
+
             <Card style={styles.cardcontainer}>
               <Text style={styles.Textcard}>{product.description}</Text>
             </Card>
+
             <View style={styles.cardContainer}>
               <TouchableOpacity onPress={decrementQuantity}>
                 <Text style={styles.quantityUwu}>-</Text>
@@ -203,24 +202,12 @@ export const ProductCard = ({ product,updateCartCount }: Props) => {
                 <Text style={styles.quantityUwu}>+</Text>
               </TouchableOpacity>
             </View>
-
          <TouchableOpacity style={styles.buyButton} onPress={() => {
            addToCart(product, quantity, product.price, product.multimedia );
-           toast.show({
-            render: () => {
-              return(
-                <Box bg="emerald.500" px="8" py="5" rounded="sm" mb={1}  zIndex={999}
-                >
-                  producto Agregado al carrito
-                </Box>
-              );
-            },
-            placement: 'top',
-           });
+         
          }}>
              <Text style={styles.textWhite}>Agregar al carrito </Text>
          </TouchableOpacity>
-          <Text>hola  </Text>
         </View>
         </Actionsheet.Content>
     </Actionsheet>
@@ -315,9 +302,9 @@ const styles = StyleSheet.create({
   },
   buyButton: {
     backgroundColor: '#FF1493',
-    paddingVertical: 5,
+    paddingVertical: 10,
     alignItems: 'center',
-    borderRadius: 25,
+    borderRadius: 5,
     marginBottom: 15,
   },
   buyButtonText: {
@@ -369,6 +356,7 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#eee',
     borderRadius: 5,
+    color: 'black'
   },
 
   quantityButton: {
@@ -443,9 +431,10 @@ const styles = StyleSheet.create({
       width: Dimensions.get('screen').width,
     },
     cardContainer: {
-      width: '95%',
+      width: '100%',
       alignItems: 'center',
       justifyContent: 'center',
+      flexDirection: 'row',
       borderRadius: 10,
       padding: 10,
       backgroundColor: '#fff',

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList, TextInput, Image,  } from 'react-native';
 import { Product } from '../interfaces/ProductsCategoryInterface';
 import { useNavigation } from '@react-navigation/native';
@@ -9,6 +9,7 @@ import { useToast, Modal, useDisclose, Row } from 'native-base';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faCreditCard, faMoneyBill } from '@fortawesome/free-solid-svg-icons';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {Toast}  from 'react-native-toast-message/lib/src/Toast';
 
 
 interface Props {
@@ -26,9 +27,13 @@ export const ShoppingScreen = ({ product  }: Props) => {
   const [ totalProducts,setTotalProducts] = useState(0);
   const toast = useToast();
   const [showModal, setShowModal] = useState(false);
+  const [showModal2, setShowModal2] = useState(false);
   const { isOpen, onOpen, onClose} = useDisclose();
   const [datosGuardados, setDatosGuardados] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
+  //const [fetchLatestData, setFetchLatestData] = useState(null);
+
+
 
 
 
@@ -44,23 +49,19 @@ export const ShoppingScreen = ({ product  }: Props) => {
     setCart(parsedCart);
     setTotalPrice(total);
     setTotalProducts(productCount);
+  
   };
+
   useEffect(() => {
+    fetchLatestData();
     cartShopping();
-    const obtenerDatosGuardados = async () => {
-      try {
-        const datosGuardados = await AsyncStorage.getItem('datos');
-        if (datosGuardados) {
-          const datosParseados = JSON.parse(datosGuardados);
-          const ultimoDatoGuardado = datosParseados[datosParseados.length - 1];
-          setDatosGuardados(ultimoDatoGuardado);
-        }
-      } catch (error) {
-        console.log('Error al obtener los datos guardados:', error);
-      }
+
+    const unsubscribe = navigation.addListener('focus', fetchLatestData);
+    return () => {
+      unsubscribe();
     };
-    obtenerDatosGuardados();
-  }, []);
+  }, [fetchLatestData]);
+
 
 
   const decrementQuantity = (index) => {
@@ -82,16 +83,26 @@ export const ShoppingScreen = ({ product  }: Props) => {
   const incrementQuantity = (index) => {
     const updatedCart = [...cart1];
     const updatedProduct = updatedCart[index];
-    updatedProduct.quantity += 1;
-    const updatedPrice = updatedProduct.product_id.price;;
-    AsyncStorage.setItem('cart', JSON.stringify(updatedCart))
-      .then(() => {
-        setCart(updatedCart);
-        setTotalPrice(totalPrice + updatedPrice);
-        setTotalProducts(totalProducts + 1);
-      })
-      .catch(error => {});
+    const updatedPrice = updatedProduct.product_id.price;
+    if (updatedProduct.quantity < updatedProduct.product_id.quantity) {
+      updatedProduct.quantity += 1;
+      AsyncStorage.setItem('cart', JSON.stringify(updatedCart))
+        .then(() => {
+          setCart(updatedCart);
+          setTotalPrice(totalPrice + updatedPrice);
+          setTotalProducts(totalProducts + 1);
+        })
+        .catch(error => {});
+    } else {
+      Toast.show({
+        type: 'error',
+        text1: 'Producto agotado',
+        text2: 'No hay suficiente cantidad disponible',
+      });
+    }
   };
+ 
+
 
   const deleteData = (index) => {
     const updatedCart = [...cart1];
@@ -108,15 +119,17 @@ export const ShoppingScreen = ({ product  }: Props) => {
   };
 
   const handleContinuar = () => {
-    {totalProducts}
-    AsyncStorage.setItem('cart', JSON.stringify(cart1))
-      .then(() => {
-        navigation.navigate('tarjetaScreen');
-      })
-      .catch(error => {
-        console.error('Error al guardar en AsyncStorage:', error);
+    if (totalProducts === 0 || !datosGuardados) {
+      Toast.show({
+        type: 'error',
+        text1: 'Datos incompletos',
+        text2: 'Agregue productos y complete la dirección antes de continuar',
       });
+    } else {
+      setShowModal(true); 
+    }
   };
+
 
   const handleDeleteAll = () => {
     AsyncStorage.removeItem('cart')
@@ -126,12 +139,11 @@ export const ShoppingScreen = ({ product  }: Props) => {
       setTotalProducts(0);
     })
     .catch(error => {
-      console.error('Error al borrar el carrito uwu:', error);
+      console.error('Error al borrar el carrito :', error);
     });
   };
+
  const renderEmptyCart = () => {
-
-
       return (
         <View style={styles.emptyCartContainer}>
           <Text style={styles.emptyCartText}>Ningún producto agregado</Text>
@@ -145,8 +157,27 @@ export const ShoppingScreen = ({ product  }: Props) => {
         </View>
       );
 };
+
+const obtenerDatosGuardados = async () => {
+  try {
+    const datosGuardados = await AsyncStorage.getItem('datos');
+    if (datosGuardados) {
+      const datosParseados = JSON.parse(datosGuardados);
+      const ultimoDatoGuardado = datosParseados[datosParseados.length - 1];
+      setDatosGuardados(ultimoDatoGuardado);
+    }
+  } catch (error) {
+    console.log('Error al obtener los datos guardados:', error);
+  }
+};
+const fetchLatestData = useCallback(() => {
+  obtenerDatosGuardados();
+}, []); 
+
+
   return (
     <>
+   
       <View style={styles.header}>
         <View style={styles.directiorow}>
         <TouchableOpacity >
@@ -162,18 +193,19 @@ export const ShoppingScreen = ({ product  }: Props) => {
           </View>
         </TouchableOpacity> */}
         <View >
-        <TouchableOpacity  onPress={() => navigation.replace('mapaScreen', {owner:' '})}>
-          <View style={styles.viewuwu}>
+        <TouchableOpacity onPress={() => navigation.replace('mapaScreen', { owner: ' ' })}>
+        <View style={styles.viewuwu}>
           <Card style={styles.cardcontainer}>
-          <View>
-            {datosGuardados && (
-              <Text style={styles.textgray}> Enviar a:  {datosGuardados.nombre}  </Text>
-            )}
-          </View>
-            </Card>
-            <Image source={require('../Navigators/assets/lottie/icon/marcador.png')} style={styles.imagemap} />
-          </View>
-          </TouchableOpacity>
+            <View>
+              {datosGuardados && <Text style={styles.textgray}>Enviar a: {datosGuardados.nombre}</Text>}
+            </View>
+          </Card>
+          <Image
+            source={require('../Navigators/assets/lottie/icon/marcador.png')}
+            style={styles.imagemap}
+          />
+        </View>
+      </TouchableOpacity>
         </View>
       </View>
       <View style={styles.container}>
@@ -210,8 +242,13 @@ export const ShoppingScreen = ({ product  }: Props) => {
                     <Text style={styles.quantityButton}>-</Text>
                   </TouchableOpacity>
                   <Text style={styles.quantity}>{item.quantity}</Text>
-                  <TouchableOpacity onPress={() => incrementQuantity(index)}>
-                    <Text style={styles.quantityButton}>+</Text>
+                  <TouchableOpacity
+                      onPress={() => incrementQuantity(index)}
+                      disabled={item.quantity >= item.product_id.quantity}
+                        >
+                      <Text style={[styles.quantityButton, item.quantity >= item.product_id.quantity && { opacity: 0.1 }]}>
+                        +
+                      </Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={styles.updateButton} onPress={() => deleteData(index)}>
                 <Icon name="trash" size={30} color="#fff" />
@@ -223,15 +260,46 @@ export const ShoppingScreen = ({ product  }: Props) => {
           )}
         />
           <Card>
-          <View style={{padding: 10, marginLeft: 10}}>
+          <View style={{padding: 10, marginLeft: 5}}>
             <Text style={styles.headerText2}>Productos: ({totalProducts})</Text>
             <Text style={styles.headerText2}>Total: ${totalPrice}</Text>
+            <TouchableOpacity>
+
+
+            <Text style={styles.textgray}
+           onPress={() => setShowModal2(true)}
+            > Agregar un codigo de descuento  </Text>
+            </TouchableOpacity>
+
+            <Modal isOpen={showModal2} onClose={() => setShowModal2(false)}>
+          <Modal.Content maxWidth="500px">
+            <Modal.CloseButton style={styles.modalCloseButton} />
+            <Modal.Header style={styles.modalHeader}>Agregue un codigo de descuento </Modal.Header>
+            <Modal.Body style={styles.modalBody}>
+
+            <TextInput
+              style={styles.directionInput}
+              placeholder="codigo:"
+              placeholderTextColor={'gray'}
+              
+            />
+          
+            </Modal.Body>
+            <TouchableOpacity onPress={handleContinuar} style={styles.continueButton}>
+              <Text style={styles.continueButtonText}>aplicar  </Text>
+            </TouchableOpacity>
+          </Modal.Content>
+      </Modal>
+
+
+         
+
           </View>
           <View>
-            {/* <TextInput style={styles.discountCodeInput} placeholder="Código de descuento" /> */}
-            <TouchableOpacity style={styles.buyButton2} onPress={() => setShowModal(true)}>
+          <TouchableOpacity onPress={handleContinuar} style={styles.buyButton2}>
         <Text style={styles.headerTextWhite}>Continuar</Text>
-       </TouchableOpacity>
+      </TouchableOpacity>
+
        <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
           <Modal.Content maxWidth="500px">
             <Modal.CloseButton style={styles.modalCloseButton} />
@@ -259,8 +327,8 @@ export const ShoppingScreen = ({ product  }: Props) => {
               </TouchableOpacity>
             </Modal.Body>
             <TouchableOpacity onPress={handleContinuar} style={styles.continueButton}>
-              <Text style={styles.continueButtonText}>Continuar </Text>
-            </TouchableOpacity>
+            <Text style={styles.continueButtonText}>Continuar</Text>
+          </TouchableOpacity>
           </Modal.Content>
       </Modal>
           </View>
@@ -270,23 +338,36 @@ export const ShoppingScreen = ({ product  }: Props) => {
   );
 };
 
-
-
-
-
-
-
-
     const styles = StyleSheet.create({
   
       header: {
-        padding: 30,
+        padding: 20,
         backgroundColor: '#debdce',
         borderBottomLeftRadius: 50,
         borderBottomRightRadius: 50,
       },
       modalBodyWithMargin: {
         marginBottom: 20,
+      },
+      directionInput: {
+        borderWidth: 1,
+        borderColor: 'gray',
+        borderRadius: 8,
+        
+        marginHorizontal: 5,
+        paddingVertical: 10,
+        paddingHorizontal: 16,
+        fontSize: 16,
+        backgroundColor: 'white',
+        color: 'black',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
       },
 
       directiorow: {
@@ -352,13 +433,13 @@ export const ShoppingScreen = ({ product  }: Props) => {
         padding: 20,
       },
       paymentOption: {
-        
-        width: '95%',
+      
+        width: '100%',
         borderRadius: 15,
         justifyContent: 'center',
-        marginTop: 15,
+        marginTop: 20,
         flexDirection: 'row',
-        padding: 25,
+        padding: 30,
         backgroundColor: '#fff',
         shadowColor: '#000',
         
@@ -405,6 +486,7 @@ export const ShoppingScreen = ({ product  }: Props) => {
         height: 50,
         resizeMode: 'cover',
         margin: 5,
+        
       },
       textelimit: {
         color: '#1e90ff',
@@ -435,7 +517,7 @@ export const ShoppingScreen = ({ product  }: Props) => {
         padding: 2,
       },
       textgray: {
-        color: 'black',
+        color: 'gray',
         fontSize: 18,
       },
       shoppingCartButton: {
@@ -536,12 +618,8 @@ export const ShoppingScreen = ({ product  }: Props) => {
         marginHorizontal: 10,
       },
       discountCodeInput: {
-        borderWidth: 10,
-        borderColor: 'gray',
+     borderTopColor: 'gray',
         borderRadius: 5,
-        padding: 10,
-        marginTop: 10,
-        color: 'gray'
       },
       rowContainer: {
         flexDirection: 'row',

@@ -79,6 +79,9 @@ export const FavoritesScreen = ({ route, product }: Props) => {
             keyExtractor={(item) => item._id}
             renderItem={({ item }) => (
               <View style={styles.productContainer}>
+               
+
+                
                 <Image style={styles.productImage} source={{ uri: item.multimedia[0].images['400x400'] }} />
                   
                  <Text numbserOfLines={4} ellipsizeMode="tail" style={styles.productName}>{item.name}</Text>
@@ -87,21 +90,23 @@ export const FavoritesScreen = ({ route, product }: Props) => {
                  <TouchableOpacity style={styles.deleteButton} onPress={() => handleDelete(product)}>
                   <Icon name="trash" size={30} color="#fff" />
                 </TouchableOpacity> 
+
+               
             </View>
             )}
           />
             
               ) : (
-                <View style={styles.centeredContainer}>
-                  <Image
-                    source={require('../Navigators/assets/lottie/osuxd.png')}
-                    style={styles.noDataImage}
-                  />
-                  <Text style={styles.noDataText}>No tienes productos favoritos</Text>
-                  <TouchableOpacity style={styles.buyButton}>
-                    <Text style={styles.textWhite}>Explora y descubre muevos   </Text>
-                  </TouchableOpacity>
-                </View>
+                <View style={styles.emptyCartContainer}>
+          <Text style={styles.emptyCartText}>Ningún producto en favoritos </Text>
+          <TouchableOpacity
+            style={styles.exploreButton}
+            onPress={() => navigation.navigate('Home')}
+          >
+            <Image source={require('../Navigators/assets/lottie/osuxd.png')} style={styles.exploreImage} />
+            <Text style={styles.exploreButtonText}>Marca tus productos favoritos </Text>
+          </TouchableOpacity>
+        </View>
               )}
          
   
@@ -120,6 +125,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#DEBDCE',
     borderBottomLeftRadius: 50,
     borderBottomRightRadius: 50,
+  },
+  exploreImage: {
+    width: 30,
+    height: 30,
+    marginRight: 10,
   },
   directionrow:{
     paddingHorizontal: 10,
@@ -145,7 +155,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
       
       },
-    exploreButton: {
+      exploreButton: {
         flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -154,7 +164,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 5,
       },
-     emptyCartText: {
+      emptyCartText: {
         fontSize: 30,
         marginBottom: 20,
         color: 'gray'
@@ -237,6 +247,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
+    backgroundColor: '#dcdcdc',
+    marginHorizontal: 10,
+        
   },
   productImage: {
     width: 100,

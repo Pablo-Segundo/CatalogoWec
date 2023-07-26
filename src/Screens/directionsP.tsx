@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Modal } from "native-base";
+import {Toast}  from 'react-native-toast-message/lib/src/Toast';
 
 
 
@@ -13,6 +14,9 @@ export const Direction = () => {
   const [datosGuardados, setDatosGuardados] = useState(null);
   const [showModal,setShowModal] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
+  const [selectedAddress, setSelectedAddress] = useState(null);
+  const [updatedName, setUpdatedName] = useState('');
+  const [updatedAddressData,setUpdatedAddressData] = useState('');
   
   
   useEffect(() => {
@@ -29,28 +33,39 @@ export const Direction = () => {
     };
     obtenerDatosGuardados();
   }, []);
-  const handleCardPress = (datos) => {
-    setSelectedData(datos);
-    setShowModal(true);
-  };
+
+  
   const handleUpdate = () => {
-    if (selectedData) {
+    if (selectedAddress && updatedAddressData) {
       const updatedData = datosGuardados.map((data) => {
-        if (data.nombre === selectedData.nombre) {
+        if (data.nombre === selectedAddress.nombre) {
+          Toast.show({
+            type: 'success',
+            text1: 'Datos Actualizados ',
+            text2: 'Sus datos se han actualizado ',
+          });
           return {
             ...data,
-            selectedAddress: selectedData.selectedAddress,
-            numeroTelefonico: selectedData.numeroTelefonico,
-            referencias: selectedData.referencias,
-            nombre: selectedData.nombre,
+            nombre: updatedAddressData.nombre,
+            selectedAddress: updatedAddressData.selectedAddress,
+            numeroTelefonico: updatedAddressData.numeroTelefonico,
+            referencias: updatedAddressData.referencias,
           };
         }
         return data;
+       
       });
-      setDatosGuardados(updatedData);
+      AsyncStorage.setItem('datos', JSON.stringify(updatedData))
+        .then(() => {
+          setDatosGuardados(updatedData);
+          setShowModal(false);
+        })
+        .catch(error => {
+          console.error('Error al guardar los datos actualizados:', error);
+        });
     }
-    setShowModal(false);
   };
+
 
   const handleDelete = (index) => {
     const updatedData = [...datosGuardados];
@@ -66,25 +81,36 @@ export const Direction = () => {
   };
 
    
- const renderEmptyCart = () => {
-  return (
-    <View style={styles.emptyCartContainer}>
+//  const renderEmptyCart = () => {
+//   return (
+//     <View style={styles.emptyCartContainer}>
      
 
-      <Text style={styles.emptyCartText}>No tiene ninguna direccion guardada</Text>
+//       <Text style={styles.emptyCartText}>No tiene ninguna direccion guardada</Text>
 
-      <TouchableOpacity
-        style={styles.exploreButton}
-        onPress={() => navigation.navigate('Home')}
-      >
-        <Image source={require('../Navigators/assets/lottie/osuxd.png')} style={styles.exploreImage} />
+//       <TouchableOpacity
+//         style={styles.exploreButton}
+//         onPress={() => navigation.navigate('Home')}
+//       >
+         
+//         <Image source={require('../Navigators/assets/lottie/osuxd.png')} style={styles.exploreImage} />
 
-        <Text style={styles.exploreButtonText}>Agregue una direccion</Text>
-      </TouchableOpacity>
-    </View>
-  );
+//         <Text style={styles.exploreButtonText}>Agregue una direccion</Text>
+//       </TouchableOpacity>
+//     </View>
+//   );
+// };
+
+const handleCardPress = (datos) => {
+  setSelectedAddress(datos);
+  setUpdatedAddressData({
+    nombre: datos.nombre,
+    selectedAddress: datos.selectedAddress,
+    numeroTelefonico: datos.numeroTelefonico,
+    referencias: datos.referencias,
+  });
+  setShowModal(true);
 };
-
 
 
   return(
@@ -107,14 +133,27 @@ export const Direction = () => {
           </TouchableOpacity>
         </View>
       </View>
+     
+     
+      
     
 
 
       {datosGuardados && datosGuardados.length > 0 ? (
        
+
+      
       <ScrollView>
+
+       <View style={styles.rowContainer2}>
+      <Text style={styles.titlegray}> Seleccione o agregue una nueva dirección </Text>
+      </View>
+       
         {datosGuardados.map((datos, index) => (
           
+
+             
+             
             <Card key={index} style={styles.cardcontainer}>
               <View style={styles.rowContainer}>
                 <Icon name="user" size={20} color="#000" style={styles.icon} />
@@ -138,72 +177,92 @@ export const Direction = () => {
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.updateButton} onPress={() => handleCardPress(datos)}>
-                  <Icon name="pencil" size={30} color="#fff" />
-                </TouchableOpacity>
-                
+                <Icon name="pencil" size={30} color="#fff" />
+              </TouchableOpacity>
+          
               </View>
-
-             
-
             </Card>
-        
           ))}
           </ScrollView>
         ) : (
           <View style={styles.centeredContainer}>
-            <Image
+            <Icon name="map" size={70} color="black" />
+            {/* <Image
               source={require('../Navigators/assets/lottie/osuxd.png')}
               style={styles.noDataImage}
-            />
+            /> */}
             <Text style={styles.noDataText}>Ninguna dirección guardada</Text>
           </View>
         )}
 
+
       <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-        <Modal.Content maxWidth="500px">
+        <Modal.Content>
           <Modal.CloseButton />
-          <Modal.Header>Editar información</Modal.Header>
+          <Modal.Header>Actualizar Dirección</Modal.Header>
           <Modal.Body>
-            <View>
-            <View style={{flexDirection: 'row', marginHorizontal: 15}}>
-              <TextInput
-                style={styles.discountCodeInput}
-                placeholder="Escriba su calle"
-                value={selectedData ? selectedData.selectedAddress : ''}
-                onChangeText={(value) => setSelectedData({ ...selectedData, selectedAddress: value })}
-              />
-              <TouchableOpacity style={styles.updateButton2}  onPress={() => navigation.navigate('mapaScreen')}>
-                  <Icon name="map-marker" size={30} color="#fff" />
-                </TouchableOpacity>
-
-             </View>
-              
-
-              <TextInput
-                style={styles.discountCodeInput}
-                placeholder="Escriba su nombre"
-                value={selectedData ? selectedData.nombre : ''}
-                onChangeText={(value) => setSelectedData({ ...selectedData, nombre: value })}
-              />
-              <TextInput
-                style={styles.discountCodeInput}
-                placeholder="Escriba su número telefónico"
-                value={selectedData ? selectedData.numeroTelefonico : ''}
-                onChangeText={(value) => setSelectedData({ ...selectedData, numeroTelefonico: value })}
-              />
-              <TextInput
-                style={styles.discountCodeInput}
-                placeholder="casa color uwu"
-                value={selectedData ? selectedData.referencias : ''}
-                onChangeText={(value) => setSelectedData({ ...selectedData, referencias: value })}
-              />
-            </View>
-            <TouchableOpacity style={styles.buyButton} onPress={handleUpdate}>
-              <Text style={styles.headerWITHE}>Confirmar Datos</Text>
-            </TouchableOpacity>
+            <TextInput
+              style={styles.input}
+              value={updatedAddressData?.nombre}
+           
+              onChangeText={(text) =>
+                setUpdatedAddressData((prevState) => ({
+                  ...prevState,
+                  nombre: text,
+                }))
+              }
+              placeholder="Nombre"
+            />
+            <TextInput
+              style={styles.input}
+              value={updatedAddressData?.selectedAddress}
+              placeholderTextColor={'black'}
+              onChangeText={(text) =>
+                setUpdatedAddressData((prevState) => ({
+                  ...prevState,
+                  selectedAddress: text,
+                }))
+              }
+              placeholder="Calle"
+            />
+            <TextInput
+              style={styles.input}
+              keyboardType="numeric"
+              value={updatedAddressData?.numeroTelefonico}
+              placeholderTextColor={'black'}
+              onChangeText={(text) =>
+                setUpdatedAddressData((prevState) => ({
+                  ...prevState,
+                  numeroTelefonico: text,
+                }))
+              }
+              placeholder="Número telefónico"
+            />
+           
+            <TextInput
+              style={styles.input}
+              value={updatedAddressData?.referencias}
+              onChangeText={(text) =>
+                setUpdatedAddressData((prevState) => ({
+                  ...prevState,
+                  referencias: text,
+                }))
+              }
+              placeholder="Referencia"
+            />
           </Modal.Body>
+          <Modal.Footer>
+             <TouchableOpacity onPress={handleUpdate} style={styles.buyButton}>
+              <Text style={styles.headerWITHE}> Actualizar Datos</Text>
+             </TouchableOpacity>
+
+            {/* <Button onPress={handleUpdate} style={styles.buyButton}>Actualizar Datos</Button> */}
+          </Modal.Footer>
         </Modal.Content>
       </Modal>
+
+
+
     </>
   );
 }
@@ -211,6 +270,10 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
+      },
+      input: {
+        color: 'black',
+        flexDirection: 'row'
       },
       centeredContainer: {
         flex: 1,
@@ -286,6 +349,7 @@ const styles = StyleSheet.create({
 
       icon: {
         marginRight: 10,
+        flexDirection: 'row'
       },
       cardContainer:{
         height: '40%',
@@ -294,6 +358,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 5,
+      },
+      rowContainer2: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 30,
+        marginVertical: 10,
+        marginHorizontal: 20
       },
       cardC:{
         height: '10%',
@@ -307,6 +378,11 @@ const styles = StyleSheet.create({
       textgray: {
         color: 'gray',
         fontSize: 15 ,
+      },
+      titlegray: {
+        color: 'gray',
+        fontSize: 20 ,
+        
       },
       textMap:{
         fontSize: 18,
@@ -345,7 +421,8 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         paddingVertical: 10,
         marginTop: 15,
-        marginHorizontal: 10,
+        alignItems: 'center',
+       
      
       },
       buyButtonText: {

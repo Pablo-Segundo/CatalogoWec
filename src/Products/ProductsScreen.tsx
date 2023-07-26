@@ -120,14 +120,18 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
         <Icon name="arrow-left" size={30} color="#fff" />
       </TouchableOpacity>
       <View style={{zIndex: 9999}}>
-        <Toast />
+
+        
+        {/* <Toast /> */}
       </View>
-      <View style={{ height: '8%', backgroundColor: '#DEBDCE'}} />
+      <View style={{ height: '9%', backgroundColor: '#DEBDCE', }} />
       <FlatList
         data={products}
         numColumns={2}
         renderItem={({ item }) => (
-          <ProductCard product={item} updateCartCount={updateCartCount} />
+          <ProductCard product={item} updateCartCount={updateCartCount} getCartItems={function (): void {
+            throw new Error('Function not implemented.');
+          } } />
         )}
       />
        </View>

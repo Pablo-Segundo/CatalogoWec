@@ -6,10 +6,12 @@ import Geolocation from 'react-native-geolocation-service';
 import { request, PERMISSIONS } from 'react-native-permissions';
 import { ActionSheetProvider, useActionSheet } from '@expo/react-native-action-sheet';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useDisclose, Button, Actionsheet, Icon, Card  } from 'native-base';
+import { useDisclose, Button, Actionsheet,  Card  } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import Geocoder from 'react-native-geocoding';
 import { Image } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 
 
 
@@ -153,15 +155,25 @@ export function MapScreen() {
     <> 
 
 
+
+
 <View style={styles.header}>
-  <View style={styles.headerInput}>
+
+     <TouchableOpacity
+        style={styles.directionrow}
+        onPress={() => navigation.navigate('Shopping', {})}>
+        <Icon name="arrow-left" size={30} color="#fff" />
+      </TouchableOpacity> 
+ 
+    
     <TextInput
       style={styles.directionInput}
       placeholder="Escriba su calle:"
       placeholderTextColor={'black'}
       onChangeText={handleAddressChange}
     />
-  </View>
+ 
+
 </View>
 
 
@@ -331,6 +343,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  directionrow:{
+    paddingHorizontal: 15,
+    position: 'absolute',
+    top: 23, 
+    zIndex: 1,
+  },
   mapStyle: {
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
@@ -343,6 +361,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'gray',
     borderRadius: 8,
+    marginLeft: 40,
+    marginHorizontal: 5,
     paddingVertical: 10,
     paddingHorizontal: 16,
     fontSize: 16,

@@ -6,6 +6,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import LoadingScreen from './loadintgScreen';
 import { ProductCard } from '../components/ProductCard';
 
+
 interface Props extends NativeStackScreenProps<any, any> {}
 
 export const CategoriesScreen = ({route, navigation} : Props)  => {
@@ -29,6 +30,8 @@ export const CategoriesScreen = ({route, navigation} : Props)  => {
   useEffect(() => {
     getCategories();
   }, []);
+  
+
   if (!categories) {
     return (
       <View style={styles.errorContainer}>
@@ -62,6 +65,8 @@ export const CategoriesScreen = ({route, navigation} : Props)  => {
       }
       setCartCount(productCount);
     };
+   
+  
   
 
 
