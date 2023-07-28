@@ -31,7 +31,7 @@ export const ShoppingScreen = ({ product  }: Props) => {
   const { isOpen, onOpen, onClose} = useDisclose();
   const [datosGuardados, setDatosGuardados] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
-  //const [fetchLatestData, setFetchLatestData] = useState(null);
+
 
 
 
@@ -175,6 +175,41 @@ const fetchLatestData = useCallback(() => {
 }, []); 
 
 
+
+
+const filterdatos = async () => {
+  try {
+    const storedCart = await AsyncStorage.getItem('cart');
+    if (storedCart) {
+      const cart = JSON.parse(storedCart);
+
+      
+      const regularProductsCart = cart.filter(
+        (item) =>
+          item.product_id.category !== '62b0d1135911da2ebfdc92c3' && item.product_id.discount === 0
+      
+      );
+      
+      const discountProductsCart = cart.filter(
+        (item) => item.product_id.discount > 0
+      );
+     
+    
+      const wapizimaCanvasCart = cart.filter(
+        (item) => item.product_id.category === '62b0d1135911da2ebfdc92c3'
+      );
+
+     
+      console.log('Productos normales :', regularProductsCart);
+      console.log('Productos con descuento:', discountProductsCart);
+      console.log('Wapizima Canvas :', wapizimaCanvasCart);
+    }
+  } catch (error) {
+    console.log('Error al filtrar datos :', error);
+  }
+}
+
+ 
   return (
     <>
    
@@ -300,6 +335,10 @@ const fetchLatestData = useCallback(() => {
         <Text style={styles.headerTextWhite}>Continuar</Text>
       </TouchableOpacity>
 
+      <TouchableOpacity onPress={filterdatos} style={styles.buyButton2}>
+        <Text style={styles.headerTextWhite}>tesssst</Text>
+      </TouchableOpacity>
+
        <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
           <Modal.Content maxWidth="500px">
             <Modal.CloseButton style={styles.modalCloseButton} />
@@ -310,7 +349,7 @@ const fetchLatestData = useCallback(() => {
                   styles.paymentOption,
                   selectedOption === 'Tarjeta' && styles.selectedPaymentOption,
                 ]}
-                onPress={() => handleOptionSelect('Tarjeta')}
+                onPress={() => navigation.navigate('tarjetaScreen')}
               >
                 <FontAwesomeIcon icon={faCreditCard} size={25} color="#000" />
                 <Text style={styles.paymentOptionText}>Tarjeta</Text>
@@ -326,7 +365,8 @@ const fetchLatestData = useCallback(() => {
                 <Text style={styles.paymentOptionText}>Pago contra entrega</Text>
               </TouchableOpacity>
             </Modal.Body>
-            <TouchableOpacity onPress={handleContinuar} style={styles.continueButton}>
+
+            <TouchableOpacity   onPress={() => navigation.navigate('tarjetaScreen')} style={styles.continueButton}>
             <Text style={styles.continueButtonText}>Continuar</Text>
           </TouchableOpacity>
           </Modal.Content>

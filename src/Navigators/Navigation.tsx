@@ -8,6 +8,9 @@ import { MapScreen } from '../components/Map';
 import { Direction } from '../Screens/directionsP';
 import { TarjetaScreen } from '../Screens/Tarjeta';
 import { FavoritesScreen } from '../Products/Favorites';
+import { CategoriesScreen } from '../Screens/CategoriesScreen';
+
+
 const Stack = createNativeStackNavigator()
 export const Navigation = ()=> {
   return (
@@ -25,8 +28,6 @@ export const Navigation = ()=> {
         component={ShoppingScreen}
         options={{ headerStyle: { backgroundColor: '#D3AFD4', },
           headerShown: false,
-
-        
         }}
          />
         <Stack.Screen
@@ -71,6 +72,13 @@ export const Navigation = ()=> {
           headerShown: false,
         }}
          />
+
+     
+
+
+
+         
+
         </Stack.Navigator>
   )
 }

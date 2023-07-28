@@ -28,17 +28,17 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
   const [favorites, setFavorites] = useState([]);
 
 
-  const removeFromCart = async (productId: string) => {
-    const cartArray = await AsyncStorage.getItem('cart');
-    let cart = [];
-    if (cartArray) {
-      cart = JSON.parse(cartArray);
-      const newCart = cart.filter((item) => item.product_id._id !== productId);
-      await AsyncStorage.setItem('cart', JSON.stringify(newCart));
-      updateCartCount(); 
-      getCartItems(); 
-    }
-  };
+  // const removeFromCart = async (productId: string) => {
+  //   const cartArray = await AsyncStorage.getItem('cart');
+  //   let cart = [];
+  //   if (cartArray) {
+  //     cart = JSON.parse(cartArray);
+  //     const newCart = cart.filter((item) => item.product_id._id !== productId);
+  //     await AsyncStorage.setItem('cart', JSON.stringify(newCart));
+  //     updateCartCount(); 
+  //     getCartItems(); 
+  //   }
+  // };
 
 
   const decrementQuantity = () => {
@@ -94,9 +94,8 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
     updateCartCount();
   };
 
+
   const toggleFavorite = async (product) => {
-    const favoriteArray = await AsyncStorage.getItem('favorites');
-    let favorite = [];
     const favoriteItem = {
       quantity,
       _id: product._id,
@@ -104,20 +103,26 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
       price: product.price,
       multimedia: product.multimedia,
     };
-    if (favoriteArray) {
-      favorite = JSON.parse(favoriteArray);
-      const favoriteExists = favorite.find((item) => item._id === product._id);
-      if (favoriteExists) {
-        const index = favorite.findIndex((item) => item._id === product._id);
-        favorite.splice(index, 1); 
+    try {
+      const favoriteArray = await AsyncStorage.getItem('favorites');
+      let favorite = [];
+      if (favoriteArray) {
+        favorite = JSON.parse(favoriteArray);
+        const favoriteExists = favorite.find((item) => item._id === product._id);
+        if (favoriteExists) {
+          const index = favorite.findIndex((item) => item._id === product._id);
+          favorite.splice(index, 1);
+        } else {
+          favorite.push(favoriteItem);
+        }
       } else {
         favorite.push(favoriteItem);
       }
-    } else {
-      favorite.push(favoriteItem);
+      setFavorites(favorite);
+      await AsyncStorage.setItem('favorites', JSON.stringify(favorite));
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
     }
-    setFavorites(favorite); 
-    await AsyncStorage.setItem('favorites', JSON.stringify(favorite));
   };
 
 
@@ -125,7 +130,20 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
     return favorites.some((item) => item._id === product._id);
   
   };
-
+  useEffect(() => {
+    const loadFavorites = async () => {
+      try {
+        const favoriteArray = await AsyncStorage.getItem('favorites');
+        if (favoriteArray) {
+          const favorite = JSON.parse(favoriteArray);
+          setFavorites(favorite);
+        }
+      } catch (error) {
+        console.error('Error loading favorites:', error);
+      }
+    };
+    loadFavorites();
+  }, []);
 
   
   return (
@@ -306,6 +324,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 5,
     marginBottom: 15,
+    
+
   },
   buyButtonText: {
     color: 'white',

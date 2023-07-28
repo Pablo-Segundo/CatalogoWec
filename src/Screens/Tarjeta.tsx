@@ -4,6 +4,10 @@ import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Card } from "react-native-paper";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+// import { PaymentSheet,PaymentSheetProvider, usePaymentSheet } from '@stripe/stripe-react-native';
+
+
+
 
 export const TarjetaScreen = () => {
     const navigation = useNavigation();
@@ -13,6 +17,8 @@ export const TarjetaScreen = () => {
     const [cardNumber, setCardNumber] = useState("");
     const [expirationDate, setExpirationDate] = useState("");
     const [securityCode, setSecurityCode] = useState("");
+
+    const [paymentSheetEnabled, setPaymentSheetEnabled] = useState(false);
 
 
 
@@ -32,7 +38,9 @@ export const TarjetaScreen = () => {
 
       useEffect(() => {
     cartShopping();
+      // Stripe.setOptionsAsync({ publishableKey: 'codigo xd' });
   }, []);
+
 
   const handleCardNumberChange = (text) => {
     setCardNumber(text);
@@ -43,8 +51,26 @@ export const TarjetaScreen = () => {
   const handleSecurityCodeChange = (text) => {
     setSecurityCode(text);
   };
-  const handleContinue = () => {
-  } 
+
+
+  const handleContinue = async () => {
+    try {
+     
+      const cardDetails = {
+        card: {
+          number: cardNumber,
+          expMonth: expirationDate.split('/')[0],
+          expYear: expirationDate.split('/')[1],
+          cvc: securityCode,
+        },
+      };
+      // const paymentMethod = await stripe.createPaymentMethodAsync(cardDetails);
+      setPaymentSheetEnabled(true);
+    } catch (error) {
+      console.error('Error creating payment method:', error);
+     
+    }
+  };
 
 
    return(
@@ -52,13 +78,13 @@ export const TarjetaScreen = () => {
     <View style={styles.header}>
     <Text style={styles.headerWITHE}>Pago con tarjeta   </Text>
 
-    <TouchableOpacity
+    {/* <TouchableOpacity
           style={styles.IconContainer}
           onPress={() => navigation.navigate('Shopping', {})}>
        <View style={styles.IconCircle}>
          <Icon name="shopping-cart" size={30} color="#000" />
          </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
   </View>
 
 <Card style={styles.cardcontainer}>
@@ -92,9 +118,18 @@ export const TarjetaScreen = () => {
        
 </Card>
 
-    <TouchableOpacity style={styles.buyButton} onPress={handleContinue}>
+<TouchableOpacity style={styles.buyButton} onPress={handleContinue}>
         <Text style={styles.buyButtonText}>Continuar</Text>
       </TouchableOpacity>
+
+      {paymentSheetEnabled && (
+        <PaymentSheetProvider
+        
+          publishableKey="YOUR_PUBLISHABLE_KEY"
+        >
+          <PaymentSheet {...paymentSheetOptions} />
+        </PaymentSheetProvider>
+      )}
 
     
 </>

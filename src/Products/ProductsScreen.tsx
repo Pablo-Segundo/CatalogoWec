@@ -114,6 +114,7 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
           <Icon name="heart" size={30} color="black" />
         </View>
       </TouchableOpacity>
+      
       <TouchableOpacity
         style={styles.directionrow}
         onPress={() => navigation.navigate('Home', {})}>

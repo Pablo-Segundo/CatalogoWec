@@ -11,6 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 import Geocoder from 'react-native-geocoding';
 import { Image } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 
 
