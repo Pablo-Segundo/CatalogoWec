@@ -12,6 +12,7 @@ import Geocoder from 'react-native-geocoding';
 import { Image } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { usePermissions } from '../hook/usePermission';
 
 
 
@@ -33,31 +34,15 @@ export function MapScreen() {
   const [datosGuardados, setDatosGuardados] = useState(null);
 
 
-  const requestLocationPermission = async () => {
-    try {
-      let permission;
-      if (Platform.OS === 'android') {
-        permission = PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION;
-      } else if (Platform.OS === 'ios') {
-        permission = PERMISSIONS.IOS.LOCATION_WHEN_IN_USE;
-      }
-      const granted = await request(permission);
-      if (granted === 'granted') {
-        getCurrentLocation();
-      } else {
-        console.log('Permission denied');
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
+  const { askLocationPermission } = usePermissions();
 
   const getCurrentLocation = () => {
     Geocoder.init('AIzaSyDFHYFl_pImNIwTzu2YwjL5R8pH-nlWCE4');   
     Geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
+        console.log(position);
+        
         setCurrentLocation({ latitude, longitude });
       },
       (error) => {
@@ -68,7 +53,8 @@ export function MapScreen() {
   };
 
   useEffect(() => {
-    requestLocationPermission();
+    askLocationPermission();
+    getCurrentLocation();
     const obtenerDatosGuardados = async () => {
       try {
         const nombreGuardado = await AsyncStorage.getItem('nombre');
@@ -186,7 +172,8 @@ export function MapScreen() {
           {currentLocation && (
             <>
     <MapView
-        provider={PROVIDER_GOOGLE}
+        provider={ Platform.OS == "android" ?   PROVIDER_GOOGLE:MapView.PROVIDER_GOOGLE}
+        
         style={styles.mapStyle}
         region={{
           latitude: currentLocation?.latitude || 0,
@@ -194,7 +181,7 @@ export function MapScreen() {
           latitudeDelta: 0.003,
           longitudeDelta: 0.003,
         }}
-        mapType="standard"
+        mapType={"standard"}
         onPress={e => handleMapPress(e.nativeEvent.coordinate)}
       >
         {currentLocation && ( 

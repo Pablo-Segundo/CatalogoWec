@@ -22,12 +22,16 @@ if linkage != nil
 end
 
 target 'CatalogoWeb' do
+  permissions_path = '../node_modules/react-native-permissions/ios'
+    pod 'Permission-LocationAccuracy', :path => "#{permissions_path}/LocationAccuracy"
+    pod 'Permission-LocationAlways', :path => "#{permissions_path}/LocationAlways"
+    pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse"
   config = use_native_modules!
 
   # Flags change depending on the env values.
   flags = get_default_flags()
-
   use_react_native!(
+    
     :path => config[:reactNativePath],
     # Hermes is now enabled by default. Disable by setting this flag to false.
     # Upcoming versions of React Native may rely on get_default_flags(), but
@@ -46,6 +50,8 @@ target 'CatalogoWeb' do
   target 'CatalogoWebTests' do
     inherit! :complete
     # Pods for testing
+
+    
   end
 
   post_install do |installer|

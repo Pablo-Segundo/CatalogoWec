@@ -9,10 +9,15 @@ import { Direction } from '../Screens/directionsP';
 import { TarjetaScreen } from '../Screens/Tarjeta';
 import { FavoritesScreen } from '../Products/Favorites';
 import { CategoriesScreen } from '../Screens/CategoriesScreen';
+import { useEffect } from 'react';
+import { usePermissions } from '../hook/usePermission';
+
 
 
 const Stack = createNativeStackNavigator()
 export const Navigation = ()=> {
+  
+  
   return (
     <Stack.Navigator>
         <Stack.Screen
@@ -84,3 +89,4 @@ export const Navigation = ()=> {
 }
  const styles = StyleSheet.create({
  })
+
