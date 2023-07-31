@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, Dimensions, FlatList } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, Dimensions, FlatList, Modal } from 'react-native';
 import { Product } from '../interfaces/ProductsCategoryInterface';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -27,6 +27,9 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
   const [showModal, setShowModal] = useState(false);
   const [favorites, setFavorites] = useState([]);
 
+
+  const carouselRef = useRef(null); 
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   // const removeFromCart = async (productId: string) => {
   //   const cartArray = await AsyncStorage.getItem('cart');
@@ -145,6 +148,25 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
     loadFavorites();
   }, []);
 
+  const openImageModal = (index) => {
+    setSelectedImageIndex(index);
+    setShowModal(true);
+  };
+
+  
+  const closeImageModal = () => {
+    setShowModal(false);
+  };
+
+  const renderItem = ({ item, index }) => (
+    <TouchableOpacity onPress={() => openImageModal(index)}>
+      <Image
+        style={styles.carouselImage}
+        source={{ uri: item.images['400x400'] }}
+      />
+    </TouchableOpacity>
+  );
+
   
   return (
     <>
@@ -185,23 +207,19 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
 </TouchableOpacity>
 
 
-          <Actionsheet isOpen={isOpen} onClose={onClose}>
-      <Actionsheet.Content>
-      <View>
-      <FlatList
-          data={product.multimedia}
-          renderItem={({ item, index }) => (
-            <TouchableOpacity style={{ width: Dimensions.get('window').width, }} onPress={() => (index)}>
-              <Image
-                style={{width: '100%', height:'100%', resizeMode: 'contain'}}
-                source={{ uri: item.images['400x400'] }}
-              />
-            </TouchableOpacity>
-          )}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          pagingEnabled
-        />
+<Actionsheet isOpen={isOpen} onClose={onClose}>
+        <Actionsheet.Content>
+        <FlatList
+            data={product.multimedia}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index.toString()}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            pagingEnabled
+            snapToInterval={Dimensions.get('window').width} 
+            decelerationRate={0.9} 
+          />
+
           <View style={styles.productContainer}>
             <Text style={styles.productCard}>{product.name}</Text>
           </View>
@@ -226,9 +244,13 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
          }}>
              <Text style={styles.textWhite}>Agregar al carrito </Text>
          </TouchableOpacity>
-        </View>
+         <Modal visible={showModal} transparent={true}>
+            <TouchableOpacity style={styles.modalContainer} onPress={closeImageModal}>
+              <Image style={styles.modalImage} source={{ uri: product.multimedia[selectedImageIndex]?.images['400x400'] }} />
+            </TouchableOpacity>
+          </Modal>
         </Actionsheet.Content>
-    </Actionsheet>
+      </Actionsheet>
     </>
   );
 };
@@ -261,7 +283,6 @@ const styles = StyleSheet.create({
     color: '#f5fff',
     fontSize: 22,
     fontWeight: 'bold',
-   
   },
   favoriteButton: {
     padding: 5,
@@ -288,15 +309,14 @@ const styles = StyleSheet.create({
   cardcontainer: {
     height: '20%',
   },
-
   productImage: {
     width: 150,
     height: 150,
     resizeMode: 'cover',
     borderRadius: 10,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
-  productName:{
+  productName: {
     fontSize: 15,
     fontWeight: 'bold',
     marginTop: 10,
@@ -304,7 +324,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  productCard:{
+  productCard: {
     fontSize: 20,
     fontWeight: 'bold',
     marginTop: 10,
@@ -312,10 +332,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  productPrice : {
+  productPrice: {
     fontSize: 18,
     fontWeight: 'bold',
-    color:'#1E90FF',
+    color: '#1E90FF',
     marginTop: 5,
   },
   buyButton: {
@@ -324,19 +344,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 5,
     marginBottom: 15,
-    
-
   },
   buyButtonText: {
     color: 'white',
     fontWeight: 'bold',
     fontSize: 16,
     alignItems: 'center',
-    borderWidth:1,
+    borderWidth: 1,
     padding: 10,
-   marginBottom: 10,
-    borderRadius:70,
-    borderColor: '#FF1493'
+    marginBottom: 10,
+    borderRadius: 70,
+    borderColor: '#FF1493',
   },
   IconBarra: {
     flex: 1,
@@ -344,10 +362,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   IconContainer: {
-   position: 'absolute',
-   top: 10,
-   right: 10,
-   zIndex: 1,
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    zIndex: 1,
   },
   TextContainer: {
     color: 'black',
@@ -358,16 +376,13 @@ const styles = StyleSheet.create({
   },
   quantityContainer: {
     flexDirection: 'row',
-    //  marginTop: 10,
-    // alignContent:'center',
     alignItems: 'center',
-    display:'flex',
+    display: 'flex',
   },
   quantityCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    // marginTop: 10,
-    display:'flex',
+    display: 'flex',
     paddingVertical: 5,
     borderRadius: 25,
     marginBottom: 15,
@@ -376,9 +391,8 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#eee',
     borderRadius: 5,
-    color: 'black'
+    color: 'black',
   },
-
   quantityButton: {
     padding: 15,
     backgroundColor: '#eee',
@@ -392,7 +406,7 @@ const styles = StyleSheet.create({
   quantity: {
     fontSize: 18,
     marginHorizontal: 30,
-    color: 'black'
+    color: 'black',
   },
   addToCartButton: {
     backgroundColor: '#ff1493',
@@ -400,7 +414,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginTop: 10,
   },
-  addToCartButtonText: { //uwu
+  addToCartButtonText: {
     color: '#fff',
     fontWeight: 'bold',
     textAlign: 'center',
@@ -417,58 +431,80 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   textWhite: {
-      color: "#FFF",
-      fontSize: 15,
-      fontWeight: "bold",
+    color: "#FFF",
+    fontSize: 15,
+    fontWeight: "bold",
+  },
+  cardImage: {
+    width: 300,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    height: 190,
+    marginRight: 10
+  },
+  productDescription: {
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  productContainer: {
+    padding: 10,
+  },
+  Textcard: {
+    fontSize: 17,
+    color: 'gray',
+    marginVertical: 10,
+  },
+  largeCardImage: {
+    width: 300,
+    height: 300,
+    resizeMode: 'contain',
+  },
+  image: {
+    resizeMode: 'cover',
+    height: 500,
+    width: Dimensions.get('screen').width,
+  },
+  cardContainer: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    borderRadius: 10,
+    padding: 10,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
     },
-    cardImage: {
-      width: 300,
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      height: 190,
-      marginRight: 10
-    },
-    productDescription: {
-      fontSize: 16,
-      marginBottom: 10,
-    },
-    productContainer: {
-      padding: 10,
-    },
-    Textcard: {
-        fontSize: 17,
-        // fontWeight: 'bold',
-        color:'gray',
-        marginVertical: 10,
-    },
-    largeCardImage: {
-      width: 300,
-      height: 300,
-      resizeMode: 'contain',
-    },
-    image:{
-      resizeMode:'cover',
-      height: 500,
-      width: Dimensions.get('screen').width,
-    },
-    cardContainer: {
-      width: '100%',
-      alignItems: 'center',
-      justifyContent: 'center',
-      flexDirection: 'row',
-      borderRadius: 10,
-      padding: 10,
-      backgroundColor: '#fff',
-      shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-      elevation: 5,
-    },
-    textGray: {
-      color: 'gray',
-      marginTop: 5,
-    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  textGray: {
+    color: 'gray',
+    marginTop: 5,
+  },
+  
+  carouselContainer: {
+    flexGrow: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+  },
+  carouselImage: {
+    width: Dimensions.get('window').width, 
+    height: 200, 
+    resizeMode: 'contain', 
+  },
+  
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+  },
+  modalImage: {
+    width: Dimensions.get('window').width - 40, 
+    height: Dimensions.get('window').height - 80, 
+    resizeMode: 'contain',
+  },
 });

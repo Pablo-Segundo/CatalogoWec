@@ -33,6 +33,11 @@ export function MapScreen() {
   const [isMarkerDraggable, setIsMarkerDraggable] = useState(false);
   const [datosGuardados, setDatosGuardados] = useState(null);
 
+  const [errorNombre, setErrorNombre] = useState(false);
+  const [errorTelefono, setErrorTelefono] = useState(false);
+  const [errorDireccion, setErrorDireccion] = useState(false);
+  const [errorTelefonoMessage, setErrorTelefonoMessage] = useState('');
+
 
   const { askLocationPermission } = usePermissions();
 
@@ -137,6 +142,33 @@ export function MapScreen() {
     setSelectedLocation(e.nativeEvent.coordinate);
   };
 
+  const isValidPhoneNumber = (phone) => {
+   
+    const regex = /^\d{10}$/;
+    return regex.test(phone);
+  };
+
+  const handleSaveData = () => {
+    // Validar que los campos no estén vacíos
+    if (!nombre || !numeroTelefonico || !selectedAddress) {
+      setErrorNombre(!nombre);
+      setErrorTelefono(!numeroTelefonico);
+      setErrorDireccion(!selectedAddress);
+      setErrorTelefonoMessage('Por favor, complete todos los campos.');
+      return;
+    }
+
+    // Validar el número de teléfono
+    if (!isValidPhoneNumber(numeroTelefonico)) {
+      setErrorTelefono(true);
+      setErrorTelefonoMessage('El número de teléfono debe tener 10 dígitos.');
+      return;
+    }
+
+    // Guardar los datos
+    guardarDatos();
+    navigation.navigate('Shopping');
+  };
 
   return (
     <> 
@@ -145,23 +177,17 @@ export function MapScreen() {
 
 
 <View style={styles.header}>
+        <TouchableOpacity style={styles.directionrow} onPress={() => navigation.navigate('Shopping', {})}>
+          <Icon name="arrow-left" size={30} color="#fff" />
+        </TouchableOpacity>
 
-     <TouchableOpacity
-        style={styles.directionrow}
-        onPress={() => navigation.navigate('Shopping', {})}>
-        <Icon name="arrow-left" size={30} color="#fff" />
-      </TouchableOpacity> 
- 
-    
-    <TextInput
-      style={styles.directionInput}
-      placeholder="Escriba su calle:"
-      placeholderTextColor={'black'}
-      onChangeText={handleAddressChange}
-    />
- 
-
-</View>
+        <TextInput
+          style={styles.directionInput}
+          placeholder="Escriba su calle:"
+          placeholderTextColor={'black'}
+          onChangeText={handleAddressChange}
+        />
+      </View>
 
 
    
@@ -172,9 +198,8 @@ export function MapScreen() {
           {currentLocation && (
             <>
     <MapView
-        provider={ Platform.OS == "android" ?   PROVIDER_GOOGLE:MapView.PROVIDER_GOOGLE}
-        
-        style={styles.mapStyle}
+        provider={Platform.OS == "android" ? PROVIDER_GOOGLE : MapView.PROVIDER_GOOGLE}
+        style={{ flex: 1, position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
         region={{
           latitude: currentLocation?.latitude || 0,
           longitude: currentLocation?.longitude || 0,
@@ -182,35 +207,35 @@ export function MapScreen() {
           longitudeDelta: 0.003,
         }}
         mapType={"standard"}
-        onPress={e => handleMapPress(e.nativeEvent.coordinate)}
+        onPress={(e) => handleMapPress(e.nativeEvent.coordinate)}
       >
-        {currentLocation && ( 
+        {currentLocation && (
           <Marker
-                coordinate={{ latitude: currentLocation.latitude, longitude: currentLocation.longitude }}
-                title=" Tu ubicación Actual"
-                description="Ubicacion aproximada  "  
-                draggable    
-              />
+            coordinate={{ latitude: currentLocation.latitude, longitude: currentLocation.longitude }}
+            title=" Tu ubicación Actual"
+            description="Ubicacion aproximada  "
+            draggable
+          />
         )}
-         {selectedLocation && (
-                  <Marker
-                    coordinate={{
-                      latitude: selectedLocation.latitude,
-                      longitude: selectedLocation.longitude,
-                    }}
-                    title="Nueva ubicación"
-                    description="Ubicación seleccionada"
-                    draggable={isMarkerDraggable}
-                    onDragEnd={handleMarkerDrag}
-                  />
-                )}
+        {selectedLocation && (
+          <Marker
+            coordinate={{
+              latitude: selectedLocation.latitude,
+              longitude: selectedLocation.longitude,
+            }}
+            title="Nueva ubicación"
+            description="Ubicación seleccionada"
+            draggable={isMarkerDraggable}
+            onDragEnd={handleMarkerDrag}
+          />
+        )}
       </MapView>
 
  
    
             <Actionsheet  isOpen={isOpen} onClose={onClose} size="100%"   >
            <Actionsheet.Content>
-          <KeyboardAvoidingView  behavior={Platform.OS === 'ios' ? 'padding' : 'height'} >
+          <KeyboardAvoidingView  behavior={Platform.OS === 'android' ? 'padding' : 'height'} >
 
             <ScrollView style={{flex:1}} keyboardDismissMode='interactive'> 
          
@@ -220,36 +245,54 @@ export function MapScreen() {
 <View style={{marginHorizontal: 10}}>
             <Text style={styles.headerText}> Direccion:  </Text>
             <TextInput
-            style={styles.discountCodeInput} 
-            placeholderTextColor={'black'}
-            placeholder="Escriba su calle:"
-            value={selectedAddress} 
-            onChangeText={handleAddressChange =>setSelectedAddress(handleAddressChange) }
-            />
+        style={[styles.discountCodeInput, errorDireccion && styles.errorInput]}
+        placeholder="Escriba su calle:"
+        value={selectedAddress}
+        placeholderTextColor={'black'}
+        onChangeText={(text) => {
+          setErrorDireccion(false);
+          setSelectedAddress(text);
+        }}
+      />
+      {errorDireccion && (
+        <Text style={styles.errorMessage}>Este campo es obligatorio.</Text>
+      )}
 
 
 
             <Text style={styles.headerText}>Nombre de quien recibe:</Text> 
-                 <TextInput
-                  style={styles.discountCodeInput}
-                  placeholder="Por favor, escriba su nombre"
-                  placeholderTextColor={'black'}
-                  value={nombre}
-                  onChangeText={text => setNombre(text)}
-                />
+            <TextInput
+        style={[styles.discountCodeInput, errorNombre && styles.errorInput]}
+        placeholder="Por favor, escriba su nombre"
+        placeholderTextColor={'black'}
+        value={nombre}
+        onChangeText={(text) => {
+          setErrorNombre(false);
+          setNombre(text);
+        }}
+      />
+      {errorNombre && (
+        <Text style={styles.errorMessage}>Este campo es obligatorio.</Text>
+      )}
 
   
               <Text style={styles.headerText}>Número telefónico:</Text>
                 <View style={styles.phoneInputContainer}>
                 <Image source={require('../Navigators/assets/lottie/mexico.png')} style={styles.flagImage} />
                 <TextInput
-                  keyboardType="numeric"
-                  style={styles.phoneInput}
-                  placeholder="Escriba su numero:"
-                  placeholderTextColor={'black'}
-                  value={numeroTelefonico}
-                  onChangeText={text => setNumeroTelefonico(text)}
-                />
+        style={[styles.phoneInput, errorTelefono && styles.errorInput]}
+        keyboardType="numeric"
+        placeholder="Escriba su numero:"
+        placeholderTextColor={'black'}
+        value={numeroTelefonico}
+        onChangeText={(text) => {
+          setErrorTelefono(false);
+          setNumeroTelefonico(text);
+        }}
+      />
+      {errorTelefono && (
+        <Text style={styles.errorMessage}>{errorTelefonoMessage}</Text>
+      )}
               </View>
 
                 <Text style={styles.headerText}>Referencias (opcional):</Text>
@@ -263,14 +306,9 @@ export function MapScreen() {
 
 </View>
 
-              <TouchableOpacity style={styles.buyButton2}
-               onPress={() => {
-                guardarDatos();
-                navigation.navigate('Shopping');
-              }}
-              >
-               <Text style={styles.headerWITHE}> Guardar Datos </Text>
-              </TouchableOpacity>
+<TouchableOpacity style={styles.buyButton2} onPress={handleSaveData}>
+        <Text style={styles.headerWITHE}> Guardar Datos </Text>
+      </TouchableOpacity>
 
               
             </ScrollView> 
@@ -301,21 +339,20 @@ export function MapScreen() {
 
   
 
-        <View style={styles.buttonContainer}>
-  <TouchableOpacity onPress={onOpen} style={styles.buyButton}>
-  
-    <Text style={styles.buttonText}>Agregue sus datos</Text>
-  </TouchableOpacity>
+<View style={styles.buttonContainer}>
+        <TouchableOpacity onPress={onOpen} style={styles.buyButton}>
+          <Text style={styles.buttonText}>Agregue sus datos</Text>
+        </TouchableOpacity>
 
-  <TouchableOpacity
-    style={styles.buyButton}
-    onPress={() => {
-      navigation.navigate('Direction');
-    }}
-  >
-    <Text style={styles.buttonText}>Direcciones guardadas</Text>
-  </TouchableOpacity>
-</View>
+        <TouchableOpacity
+          style={styles.buyButton}
+          onPress={() => {
+            navigation.navigate('Direction');
+          }}
+        >
+          <Text style={styles.buttonText}>Direcciones guardadas</Text>
+        </TouchableOpacity>
+      </View>
         
 
 
@@ -336,6 +373,15 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 23, 
     zIndex: 1,
+  },
+  errorInput: {
+    borderColor: 'red',
+    borderWidth: 1,
+  },
+  errorMessage: {
+    color: 'red',
+    fontSize: 12,
+    marginBottom: 5,
   },
   mapStyle: {
     width: Dimensions.get('window').width,
