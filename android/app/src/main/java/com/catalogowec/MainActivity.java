@@ -1,4 +1,4 @@
-package com.catalogoweb;
+package com.catalogowec;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
