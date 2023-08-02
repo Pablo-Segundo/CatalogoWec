@@ -24,6 +24,7 @@
     "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/native": "^6.1.7",
     "@react-navigation/native-stack": "^6.9.12",
+    "@stripe/stripe-react-native": "^0.29.0",
     "@types/node-geocoder": "^4.2.1",
     "@types/react-native-snap-carousel": "^3.8.5",
     "axios": "^1.4.0",

@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, Dimensions, FlatList, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
+import { Card } from "react-native-paper";
 
 
 
@@ -12,9 +13,9 @@ export const PedidosScreen = () => {
     return(
         <>
         <View style={styles.container}>
-        <TouchableOpacity style={styles.directionrow}  onPress={() => navigation.navigate('home', {})}>
+         <TouchableOpacity style={styles.directionrow}  onPress={() => navigation.navigate('home', {})}>
          <Text style={styles.textWhite}>Mis compras</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> 
 
           {/* <TouchableOpacity
             style={styles.directionrow}
@@ -33,9 +34,14 @@ export const PedidosScreen = () => {
 
         <View style={styles.containertext}>
             <Text style={styles.textblack}> Tus compras  </Text>
-
-
        </View>
+
+       <Card>
+         <Text>No. de pedido </Text>
+        
+       </Card>
+
+       
 
 
 

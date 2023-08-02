@@ -26,10 +26,11 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
   const { isOpen, onOpen, onClose } = useDisclose();
   const [showModal, setShowModal] = useState(false);
   const [favorites, setFavorites] = useState([]);
-
-
   const carouselRef = useRef(null); 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+
+
+  const [disabled, setDisabled] = useState(false);
 
   // const removeFromCart = async (productId: string) => {
   //   const cartArray = await AsyncStorage.getItem('cart');
@@ -45,31 +46,33 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
 
 
   const decrementQuantity = () => {
-    if (quantity > 0) {
+    if (quantity > 1) {
       setQuantity(quantity - 1);
+    } else {
+      setDisabled(true); 
     }
   };
   const incrementQuantity = () => {
     if (quantity < product.quantity) {
-      setQuantity(quantity + 1); 
+      setQuantity(quantity + 1);
+      setDisabled(false);
     }
   };
+  
   const addToCart = async (product: Product, quantity: number, price: number, multimedia: Multimedia[]) => {
     if (quantity === 0) {
-     
       Toast.show({
         type: 'error',
         text1: 'Error',
         text2: 'Agregue un producto',
       });
-    } else {
-    
-      Toast.show({
-        type: 'success',
-        text1: 'Producto agregado',
-        text2: 'El producto se ha agregado al carrito de compras',
-      });
+      return; 
     }
+    Toast.show({
+      type: 'success',
+      text1: 'Producto agregado',
+      text2: 'El producto se ha agregado al carrito de compras',
+    });
     if (!quantity) quantity = 1;
     const cartArray = await AsyncStorage.getItem('cart');
     let cart = [];
@@ -167,11 +170,15 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
     </TouchableOpacity>
   );
 
+  const handleContinuar =() => {
+
+  }
+
   
   return (
     <>
-   <TouchableOpacity onPress={onOpen} style={styles.container}>
-  <Card style={styles.cardContainer}>
+  <TouchableOpacity onPress={onOpen} style={[styles.container, disabled && styles.disabledContainer]}>
+        <Card style={[styles.cardContainer, disabled && styles.disabledCardContainer]}>
     <Image style={styles.productImage} source={{ uri: product.multimedia[0].images['400x400'] }} />
     <View style={styles.favoriteContainer}>
     <TouchableOpacity onPress={() => toggleFavorite(product)} style={styles.favoriteButton}>
@@ -197,8 +204,9 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
     <TouchableOpacity style={styles.addToCartButton} onPress={() => {
       addToCart(product, quantity, product.price, product.multimedia);
     }}>
-      <Text style={styles.addToCartButtonText}>Agregar al carrito  </Text>
+      <Text style={styles.addToCartButtonText}>Agregar al carrito   </Text>
     </TouchableOpacity>
+    
     {/* <TouchableOpacity style={styles.viewFavoritesButton}>
       <Text style={styles.viewFavoritesButtonText}>Ver favoritos</Text>
     </TouchableOpacity> */}
@@ -223,9 +231,8 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
           <View style={styles.productContainer}>
             <Text style={styles.productCard}>{product.name}</Text>
           </View>
-            <Text style={styles.productName}> Disponoble:  {product.quantity} </Text>
-
             <Card style={styles.cardcontainer}>
+            <Text style={styles.productName}> Disponible:  {product.quantity} </Text>
               <Text style={styles.Textcard}>{product.description}</Text>
             </Card>
 
@@ -237,13 +244,20 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
               <TouchableOpacity onPress={incrementQuantity}>
                 <Text style={styles.quantityUwu}>+</Text>
               </TouchableOpacity>
+
             </View>
-         <TouchableOpacity style={styles.buyButton} onPress={() => {
+
+               <View>
+
+            <TouchableOpacity style={styles.buyButton} onPress={() => {
            addToCart(product, quantity, product.price, product.multimedia );
-         
          }}>
              <Text style={styles.textWhite}>Agregar al carrito </Text>
          </TouchableOpacity>
+         </View>
+
+         
+      
          <Modal visible={showModal} transparent={true}>
             <TouchableOpacity style={styles.modalContainer} onPress={closeImageModal}>
               <Image style={styles.modalImage} source={{ uri: product.multimedia[selectedImageIndex]?.images['400x400'] }} />
@@ -262,6 +276,12 @@ const styles = StyleSheet.create({
     margin: 5,
     borderRadius: 10,
     marginBottom: 10,
+  },
+  disabledCardContainer:{
+     backgroundColor: 'gray'
+  },
+  disabledContainer: {
+     backgroundColor: 'black'
   },
   badgeContainer: {
     position: 'absolute',
@@ -340,10 +360,11 @@ const styles = StyleSheet.create({
   },
   buyButton: {
     backgroundColor: '#FF1493',
-    paddingVertical: 10,
-    alignItems: 'center',
+    paddingVertical: 30,
     borderRadius: 5,
-    marginBottom: 15,
+    marginBottom: 20,
+    
+  
   },
   buyButtonText: {
     color: 'white',
@@ -397,6 +418,8 @@ const styles = StyleSheet.create({
     padding: 15,
     backgroundColor: '#eee',
     borderRadius: 5,
+    marginHorizontal: 5
+  
   },
   quantityButtonText: {
     fontSize: 13,
@@ -469,7 +492,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
     borderRadius: 10,
-    padding: 10,
+    padding: 20,
     backgroundColor: '#fff',
     shadowColor: '#000',
     shadowOffset: {

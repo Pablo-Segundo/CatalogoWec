@@ -15,10 +15,13 @@ interface Props extends NativeStackScreenProps<any, any> {}
 
 export const PetañaScreen = ({ route, navigation }: Props) => {
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   const [cart, setCart] = useState([]);
+
+ 
 
 
   
@@ -48,6 +51,16 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
       console.log(error);
     }
   };
+
+  const getCategories = async () => {
+    try {
+      const { data } = await API.get('/categories');
+      setCategories(data.categories);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -62,6 +75,7 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
       }
     };
     fetchData();
+    getCategories();
   }, []);
   if (isError) {
     return (
@@ -96,6 +110,8 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
     );
   };
   return (
+
+    <>
     <View style={{marginBottom:60,}}>
 
       <TouchableOpacity
@@ -135,7 +151,10 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
           } } />
         )}
       />
+
        </View>
+
+       </>
   );
  };
  const styles = StyleSheet.create({
@@ -144,6 +163,13 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
           flex: 1,
           justifyContent: 'center',
           alignItems: 'center',
+        },
+        image: {
+          width: 400,
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          height: 170,
+          resizeMode: 'cover',
+          margin: 10,
         },
         directionrow:{
           paddingHorizontal: 22,

@@ -7975,11 +7975,6 @@ react-native-snap-carousel@^3.9.1:
     prop-types "^15.6.1"
     react-addons-shallow-compare "15.6.2"
 
-react-native-stripe-sdk@^0.0.0:
-  version "0.0.0"
-  resolved "https://registry.npmjs.org/react-native-stripe-sdk/-/react-native-stripe-sdk-0.0.0.tgz"
-  integrity sha512-72Uezzi3vSBodu74bcl26XIoNVQ0cMG/qrRILdsXU6IvopxGzNXlwDz/a9MncpdP2at3AzjmziB1s3BsghmyAA==
-
 react-native-svg@*, "react-native-svg@>= 11.x", react-native-svg@12.1.1:
   version "12.1.1"
   resolved "https://registry.npmjs.org/react-native-svg/-/react-native-svg-12.1.1.tgz"

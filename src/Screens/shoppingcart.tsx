@@ -32,6 +32,8 @@ export const ShoppingScreen = ({ product  }: Props) => {
   const [datosGuardados, setDatosGuardados] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
 
+  const [selectedPaymentOption, setSelectedPaymentOption] = useState<'Tarjeta' | 'PagoContraEntrega' | null>(null);
+
 
 
 
@@ -118,6 +120,12 @@ export const ShoppingScreen = ({ product  }: Props) => {
       .catch(error => {});
   };
 
+
+  const handleOptionSelect = (option: 'Tarjeta' | 'PagoContraEntrega') => {
+    setSelectedPaymentOption(option);
+  };
+  
+
   const handleContinuar = () => {
     if (totalProducts === 0 || !datosGuardados) {
       Toast.show({
@@ -125,8 +133,21 @@ export const ShoppingScreen = ({ product  }: Props) => {
         text1: 'Datos incompletos',
         text2: 'Agregue productos y complete la dirección antes de continuar',
       });
+    } else if (!selectedPaymentOption) {
+      Toast.show({
+        type: 'error',
+        text1: 'Seleccione una opción de pago',
+        text2: 'Por favor, elija una opción de pago antes de continuar',
+      });
     } else {
-      setShowModal(true); 
+      navigation.navigate('tarjetaScreen', {
+        filteredProducts: cart1,
+        totalPrice: totalPrice,
+        selectedPaymentOption: selectedPaymentOption,
+        // discountProductsCart: discountProductsCart
+        filterdatos:  filterdatos,
+      
+      });
     }
   };
 
@@ -176,7 +197,6 @@ const fetchLatestData = useCallback(() => {
 
 
 
-
 const filterdatos = async () => {
   try {
     const storedCart = await AsyncStorage.getItem('cart');
@@ -192,6 +212,7 @@ const filterdatos = async () => {
       
       const discountProductsCart = cart.filter(
         (item) => item.product_id.discount > 0
+
       );
      
     
@@ -219,7 +240,7 @@ const filterdatos = async () => {
         <Icon name="pencil" size={30} color="#fff" />
         </TouchableOpacity>
         <View style={styles.directiorow1}>
-        <Text style={styles.headerWITHE}>Agregue su dirreción </Text>
+        <Text style={styles.headerWITHE}>Agregue su dirección </Text>
         </View>
         </View>
          {/* <TouchableOpacity style={styles.shoppingCartButton} onPress={() => navigation.navigate('Shopping')}>
@@ -231,8 +252,8 @@ const filterdatos = async () => {
         <TouchableOpacity onPress={() => navigation.replace('mapaScreen', { owner: ' ' })}>
         <View style={styles.viewuwu}>
           <Card style={styles.cardcontainer}>
-            <View>
-              {datosGuardados && <Text style={styles.textgray}>Enviar a: {datosGuardados.nombre}</Text>}
+            <View> 
+              {datosGuardados && <Text style={styles.textgray}>Enviar a: {datosGuardados.nombre} , {datosGuardados.selectedAddress}  </Text>}
             </View>
           </Card>
           <Image
@@ -303,7 +324,7 @@ const filterdatos = async () => {
 
             <Text style={styles.textgray}
            onPress={() => setShowModal2(true)}
-            > Agregar un codigo de descuento  </Text>
+            > Agregar codigo de descueto   </Text>
             </TouchableOpacity>
 
             <Modal isOpen={showModal2} onClose={() => setShowModal2(false)}>
@@ -328,46 +349,49 @@ const filterdatos = async () => {
 
 
          
-
           </View>
           <View>
-          <TouchableOpacity onPress={handleContinuar} style={styles.buyButton2}>
+          <TouchableOpacity    onPress={() => setShowModal(true)}   style={styles.buyButton2}>
         <Text style={styles.headerTextWhite}>Continuar</Text>
       </TouchableOpacity>
+      
+      
 
-      <TouchableOpacity onPress={filterdatos} style={styles.buyButton2}>
+      {/* <TouchableOpacity onPress={filterdatos} style={styles.buyButton2}>
         <Text style={styles.headerTextWhite}>tesssst</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
+
+
 
        <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
           <Modal.Content maxWidth="500px">
             <Modal.CloseButton style={styles.modalCloseButton} />
             <Modal.Header style={styles.modalHeader}>Método de pago</Modal.Header>
             <Modal.Body style={styles.modalBody}>
-              <TouchableOpacity
-                style={[
-                  styles.paymentOption,
-                  selectedOption === 'Tarjeta' && styles.selectedPaymentOption,
-                ]}
-                onPress={() => navigation.navigate('tarjetaScreen')}
-              >
-                <FontAwesomeIcon icon={faCreditCard} size={25} color="#000" />
-                <Text style={styles.paymentOptionText}>Tarjeta</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[
-                  styles.paymentOption,
-                  selectedOption === 'PagoContraEntrega' && styles.selectedPaymentOption,
-                ]}
-                onPress={() => handleOptionSelect('PagoContraEntrega')}
-              >
-                <FontAwesomeIcon icon={faMoneyBill} size={25} color="#000" />
-                <Text style={styles.paymentOptionText}>Pago contra entrega</Text>
-              </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.paymentOption,
+                selectedPaymentOption === 'Tarjeta' && styles.selectedPaymentOption,
+              ]}
+              onPress={() => handleOptionSelect('Tarjeta')}
+            >
+              <FontAwesomeIcon icon={faCreditCard} size={25} color="#000" />
+              <Text style={styles.paymentOptionText}>Tarjeta</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.paymentOption,
+                selectedPaymentOption === 'PagoContraEntrega' && styles.selectedPaymentOption,
+              ]}
+              onPress={() => handleOptionSelect('PagoContraEntrega')}
+            >
+              <FontAwesomeIcon icon={faMoneyBill} size={25} color="#000" />
+              <Text style={styles.paymentOptionText}>Pago Contra entrega </Text>
+            </TouchableOpacity>
             </Modal.Body>
 
-            <TouchableOpacity   onPress={() => navigation.navigate('tarjetaScreen')} style={styles.continueButton}>
-            <Text style={styles.continueButtonText}>Continuar</Text>
+            <TouchableOpacity onPress={handleContinuar}   style={styles.continueButton}>
+            <Text style={styles.continueButtonText}> Continuar  </Text>
           </TouchableOpacity>
           </Modal.Content>
       </Modal>
@@ -512,6 +536,7 @@ const filterdatos = async () => {
       continueButtonText: {
         color: '#fff',
         fontSize: 18,
+        fontWeight: 'bold',
        
       },
 
@@ -674,7 +699,9 @@ const filterdatos = async () => {
       },
       cardcontainer: {
         padding: 10,
-        width: '85%'
+        width: '85%',
+       maxHeight: 65
+        
       },
       viewuwu: {
         flexDirection: 'row',

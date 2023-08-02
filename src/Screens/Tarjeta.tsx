@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { Card } from "react-native-paper";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // import { PaymentSheet,PaymentSheetProvider, usePaymentSheet } from '@stripe/stripe-react-native';
+import { useRoute } from '@react-navigation/native';
 
 
 
@@ -13,12 +14,16 @@ export const TarjetaScreen = () => {
     const navigation = useNavigation();
     const [totalProducts, setTotalProducts] = useState(0);
     const [cart1, setCart] = useState(0);
-    const [totalPrice, setTotalPrice] = useState(0);
+    const [ setTotalPrice] = useState(0);
     const [cardNumber, setCardNumber] = useState("");
     const [expirationDate, setExpirationDate] = useState("");
     const [securityCode, setSecurityCode] = useState("");
 
-    const [paymentSheetEnabled, setPaymentSheetEnabled] = useState(false);
+    const [publishableKey, setPublishableKey] = useState('');
+    
+
+    const route = useRoute();
+    const { filteredProducts, totalPrice, selectedPaymentOption, discountProductsCart,filterdatos } = route.params;
 
 
 
@@ -38,6 +43,7 @@ export const TarjetaScreen = () => {
 
       useEffect(() => {
     cartShopping();
+    fetchPublishableKey();
       // Stripe.setOptionsAsync({ publishableKey: 'codigo xd' });
   }, []);
 
@@ -50,6 +56,13 @@ export const TarjetaScreen = () => {
   };
   const handleSecurityCodeChange = (text) => {
     setSecurityCode(text);
+  };
+
+
+
+  const fetchPublishableKey = async () => {
+    const key = await fetchKey();
+    setPublishableKey(key);
   };
 
 
@@ -76,7 +89,7 @@ export const TarjetaScreen = () => {
    return(
     <>
     <View style={styles.header}>
-    <Text style={styles.headerWITHE}>Pago con tarjeta   </Text>
+    <Text style={styles.headerWITHE}>Pago con Tarjeta    </Text>
 
     {/* <TouchableOpacity
           style={styles.IconContainer}
@@ -92,8 +105,26 @@ export const TarjetaScreen = () => {
 <Text style={styles.headerText}>$ {totalPrice} </Text>
 </Card>
  
-<Card style={styles.detailsContainer}>
+
+  <View> 
+    <Text style={styles.rowText}> Productos filtrados prueba  </Text>
+    <View>
+        {filteredProducts.map((product, index) => (
+          <Text style={styles.rowText} key={index}>{product.product_id.name} - ${product.price}</Text>
+        ))}
+      </View>
+
+      <Text style={styles.rowText}>Precio total: ${totalPrice}</Text>
+      <Text style={styles.rowText}>Metodo de pago: {selectedPaymentOption}</Text>
+      <Text style={styles.rowText}> Datos filtrados : {filterdatos}</Text>
+      
+  </View>
+
+
+
+{/* <Card style={styles.detailsContainer}>
         <Text style={styles.detailsTitle}>Tarjeta de crédito</Text>
+        
         <TextInput
           style={styles.input}
           placeholderTextColor={'black'}
@@ -115,22 +146,12 @@ export const TarjetaScreen = () => {
           value={securityCode}
           onChangeText={handleSecurityCodeChange}
         />
-       
-</Card>
+  </Card> */}
+     
 
 <TouchableOpacity style={styles.buyButton} onPress={handleContinue}>
         <Text style={styles.buyButtonText}>Continuar</Text>
       </TouchableOpacity>
-
-      {paymentSheetEnabled && (
-        <PaymentSheetProvider
-        
-          publishableKey="YOUR_PUBLISHABLE_KEY"
-        >
-          <PaymentSheet {...paymentSheetOptions} />
-        </PaymentSheetProvider>
-      )}
-
     
 </>
 
@@ -151,15 +172,16 @@ const styles = StyleSheet.create({
       },
       detailsContainer: {
         backgroundColor: "#F5F5F5",
-        padding: 15,
-        margin: 15,
+        padding: 10,
+        margin: 10,
         borderRadius: 8,
       },
       detailsTitle: {
         fontSize: 18,
         fontWeight: "bold",
         marginBottom: 10,
-        color: 'black'
+        color: 'black',
+        marginVertical: -30
       },
       input: {
         height: 40,
@@ -248,10 +270,10 @@ const styles = StyleSheet.create({
 
     buyButton: {
       backgroundColor: '#ff1493',
-      paddingVertical: 5,
       alignItems: 'center',
-      borderRadius: 20,
-      marginTop: 50
+      borderRadius: 10,
+      marginTop: 50,
+      marginHorizontal: 20
     },
     
     cardcontent: {
@@ -313,9 +335,9 @@ const styles = StyleSheet.create({
 
     },
     cardcontainer: {
-      padding: 75,
+      padding: 30,
       marginTop: 5,
-      borderRadius: 35,
+      borderRadius: 20,
       
     },
     IconCircle: {

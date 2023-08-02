@@ -75,7 +75,7 @@ export const CategoriesScreen = ({route, navigation} : Props)  => {
 
     return (
       <View style={{marginBottom: 40}} >
-         <Text style={[styles.TextContainer, { fontSize: 25, color: '#FFF', fontWeight: 'bold'  }]}>WAPIZIMA</Text>
+         <Text style={[styles.TextContainer, { fontSize: 25, color: '#FFF', fontWeight: 'bold', marginVertical:-10 }]}>WAPIZIMA</Text>
 
 
        <TouchableOpacity
@@ -99,7 +99,7 @@ export const CategoriesScreen = ({route, navigation} : Props)  => {
               <View style={styles.container}>
                 <Image style={styles.image} source={{ uri: item.imagesMobile['400x400'] }} />
                 <View style={styles.overlay}>
-                  <Text style={styles.text}>{item.name}</Text>
+                  <Text style={styles.text}>-{item.name}-</Text>
                 </View>
               </View>
             </TouchableOpacity>
