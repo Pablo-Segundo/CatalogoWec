@@ -31,16 +31,16 @@ export const Navigation = ()=> {
            <Stack.Screen
         name="Shopping"
         component={ShoppingScreen}
-        options={{ headerStyle: { backgroundColor: '#D3AFD4', },
+        options={{ headerStyle: { backgroundColor: '#D3AFD4'},
           headerShown: false,
         }}
          />
         <Stack.Screen
         name="pestanas"
         component={PetañaScreen}
-        options={{
-          headerShown: false,
-        }}
+        options={{ headerStyle: { backgroundColor: '#D3AFD4',textColor:'white' },
+        headerShown: false ,
+      }}
         />
         <Stack.Screen
         name="appprueba "

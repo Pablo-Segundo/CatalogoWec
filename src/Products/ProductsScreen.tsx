@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import API from '../API/API';
 import { FlatList } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import LoadingScreen from '../Screens/loadintgScreen';
 import { Actionsheet, Button, useDisclose } from "native-base";
@@ -118,7 +118,7 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
         style={styles.IconContainer}
         onPress={() => navigation.navigate('Shopping', { totalProducts: cartCount })}>
         <View style={styles.IconCircle}>
-          <Icon name="shopping-cart" size={30} color="#000" />
+          <Icon name="cart-outline" size={35} color="#000" />
           {cartCount > 0 && <ShoppingCartBadge count={cartCount} />}
         </View>
       </TouchableOpacity>
@@ -127,7 +127,7 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
         style={styles.IconContainer2}
         onPress={() => navigation.navigate('Favorites', {})}>
         <View style={styles.IconCircle}>
-          <Icon name="heart" size={30} color="black" />
+          <Icon name="heart-outline" size={35} color="black" />
         </View>
       </TouchableOpacity>
       

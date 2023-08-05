@@ -6,7 +6,7 @@ import Geolocation from 'react-native-geolocation-service';
 import { request, PERMISSIONS } from 'react-native-permissions';
 import { ActionSheetProvider, useActionSheet } from '@expo/react-native-action-sheet';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useDisclose, Button, Actionsheet,  Card  } from 'native-base';
+import { useDisclose, Button, Actionsheet, Modal } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import Geocoder from 'react-native-geocoding';
 import { Image } from 'react-native';
@@ -37,9 +37,11 @@ export function MapScreen() {
   const [errorTelefono, setErrorTelefono] = useState(false);
   const [errorDireccion, setErrorDireccion] = useState(false);
   const [errorTelefonoMessage, setErrorTelefonoMessage] = useState('');
-
-
   const { askLocationPermission } = usePermissions();
+
+  const [showModal, setShowModal] = useState(false); 
+
+
 
   const getCurrentLocation = () => {
     Geocoder.init('AIzaSyDFHYFl_pImNIwTzu2YwjL5R8pH-nlWCE4');   
@@ -176,7 +178,7 @@ export function MapScreen() {
 
 
 
-<View style={styles.header}>
+    <View style={styles.header}>
         <TouchableOpacity style={styles.directionrow} onPress={() => navigation.navigate('Shopping', {})}>
           <Icon name="arrow-left" size={30} color="#fff" />
         </TouchableOpacity>
@@ -188,10 +190,6 @@ export function MapScreen() {
           onChangeText={handleAddressChange}
         />
       </View>
-
-
-   
-
 
     <ActionSheetProvider>    
         <View style={styles.container}>
@@ -231,35 +229,30 @@ export function MapScreen() {
         )}
       </MapView>
 
- 
-   
+           
             <Actionsheet  isOpen={isOpen} onClose={onClose} size="100%"   >
            <Actionsheet.Content>
           <KeyboardAvoidingView  behavior={Platform.OS === 'android' ? 'padding' : 'height'} >
 
             <ScrollView style={{flex:1}} keyboardDismissMode='interactive'> 
-         
 
              <Text style={styles.textgray}> *IMPORTANTE* *recuerde poner los datos de quien va a recibir el paquete*</Text> 
 
-<View style={{marginHorizontal: 10}}>
+       <View style={{marginHorizontal: 10}}>
             <Text style={styles.headerText}> Direccion:  </Text>
-            <TextInput
-        style={[styles.discountCodeInput, errorDireccion && styles.errorInput]}
-        placeholder="Escriba su calle:"
-        value={selectedAddress}
-        placeholderTextColor={'black'}
-        onChangeText={(text) => {
-          setErrorDireccion(false);
-          setSelectedAddress(text);
-        }}
-      />
-      {errorDireccion && (
-        <Text style={styles.errorMessage}>Este campo es obligatorio.</Text>
-      )}
-
-
-
+                <TextInput
+            style={[styles.discountCodeInput, errorDireccion && styles.errorInput]}
+            placeholder="Escriba su calle:"
+            value={selectedAddress}
+            placeholderTextColor={'black'}
+            onChangeText={(text) => {
+              setErrorDireccion(false);
+              setSelectedAddress(text);
+            }}
+          />
+          {errorDireccion && (
+            <Text style={styles.errorMessage}>Este campo es obligatorio.</Text>
+          )}
             <Text style={styles.headerText}>Nombre de quien recibe:</Text> 
             <TextInput
         style={[styles.discountCodeInput, errorNombre && styles.errorInput]}
@@ -274,25 +267,23 @@ export function MapScreen() {
       {errorNombre && (
         <Text style={styles.errorMessage}>Este campo es obligatorio.</Text>
       )}
-
-  
               <Text style={styles.headerText}>Número telefónico:</Text>
                 <View style={styles.phoneInputContainer}>
                 <Image source={require('../Navigators/assets/lottie/mexico.png')} style={styles.flagImage} />
-                <TextInput
-        style={[styles.phoneInput, errorTelefono && styles.errorInput]}
-        keyboardType="numeric"
-        placeholder="Escriba su numero:"
-        placeholderTextColor={'black'}
-        value={numeroTelefonico}
-        onChangeText={(text) => {
-          setErrorTelefono(false);
-          setNumeroTelefonico(text);
-        }}
-      />
-      {errorTelefono && (
-        <Text style={styles.errorMessage}>{errorTelefonoMessage}</Text>
-      )}
+                            <TextInput
+                    style={[styles.phoneInput, errorTelefono && styles.errorInput]}
+                    keyboardType="numeric"
+                    placeholder="Escriba su numero:"
+                    placeholderTextColor={'black'}
+                    value={numeroTelefonico}
+                    onChangeText={(text) => {
+                      setErrorTelefono(false);
+                      setNumeroTelefonico(text);
+                    }}
+                  />
+                  {errorTelefono && (
+                    <Text style={styles.errorMessage}>{errorTelefonoMessage}</Text>
+                  )}
               </View>
 
                 <Text style={styles.headerText}>Referencias (opcional):</Text>
@@ -303,16 +294,11 @@ export function MapScreen() {
                   placeholderTextColor={'black'}
                   onChangeText={text => setReferencias(text)}
                 /> 
-
 </View>
-
 <TouchableOpacity style={styles.buyButton2} onPress={handleSaveData}>
         <Text style={styles.headerWITHE}> Guardar Datos </Text>
-      </TouchableOpacity>
-
-              
+      </TouchableOpacity> 
             </ScrollView> 
-
             </KeyboardAvoidingView>
             </Actionsheet.Content>
             </Actionsheet>
@@ -321,6 +307,93 @@ export function MapScreen() {
             )}
           </View>
         </ActionSheetProvider>
+
+
+        {/* <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+          <Modal.Content  maxWidth="500px" >
+              <Modal.Header>
+                <Modal.Body>
+                <ScrollView style={{flex:1}} keyboardDismissMode='interactive'> 
+                <KeyboardAvoidingView  behavior={Platform.OS === 'android' ? 'padding' : 'height'} >
+
+                <Text style={styles.textgray}> *IMPORTANTE* *recuerde poner los datos de quien va a recibir el paquete*</Text> 
+
+<View style={{marginHorizontal: 10}}>
+     <Text style={styles.headerText}> Direccion:  </Text>
+         <TextInput
+     style={[styles.discountCodeInput, errorDireccion && styles.errorInput]}
+     placeholder="Escriba su calle:"
+     value={selectedAddress}
+     placeholderTextColor={'black'}
+     onChangeText={(text) => {
+       setErrorDireccion(false);
+       setSelectedAddress(text);
+     }}
+   />
+   {errorDireccion && (
+     <Text style={styles.errorMessage}>Este campo es obligatorio.</Text>
+   )}
+
+
+
+     <Text style={styles.headerText}>Nombre de quien recibe:</Text> 
+     <TextInput
+ style={[styles.discountCodeInput, errorNombre && styles.errorInput]}
+ placeholder="Por favor, escriba su nombre"
+ placeholderTextColor={'black'}
+ value={nombre}
+ onChangeText={(text) => {
+   setErrorNombre(false);
+   setNombre(text);
+ }}
+/>
+{errorNombre && (
+ <Text style={styles.errorMessage}>Este campo es obligatorio.</Text>
+)}
+
+
+       <Text style={styles.headerText}>Número telefónico:</Text>
+         <View style={styles.phoneInputContainer}>
+         <Image source={require('../Navigators/assets/lottie/mexico.png')} style={styles.flagImage} />
+                     <TextInput
+             style={[styles.phoneInput, errorTelefono && styles.errorInput]}
+             keyboardType="numeric"
+             placeholder="Escriba su numero:"
+             placeholderTextColor={'black'}
+             value={numeroTelefonico}
+             onChangeText={(text) => {
+               setErrorTelefono(false);
+               setNumeroTelefonico(text);
+             }}
+           />
+           {errorTelefono && (
+             <Text style={styles.errorMessage}>{errorTelefonoMessage}</Text>
+           )}
+       </View>
+
+         <Text style={styles.headerText}>Referencias (opcional):</Text>
+         <TextInput
+           style={styles.discountCodeInput}
+           placeholder="Escriba su referencia: "
+           value={referencias}
+           placeholderTextColor={'black'}
+           onChangeText={text => setReferencias(text)}
+         /> 
+
+</View>
+
+<TouchableOpacity style={styles.buyButton2} onPress={handleSaveData}>
+ <Text style={styles.headerWITHE}> Guardar Datos </Text>
+</TouchableOpacity>
+   </KeyboardAvoidingView>
+   </ScrollView>
+
+
+                </Modal.Body>
+              </Modal.Header>
+             </Modal.Content>
+          </Modal> */}
+
 
          {/* <View> 
           <Card>
@@ -340,7 +413,7 @@ export function MapScreen() {
   
 
 <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={onOpen} style={styles.buyButton}>
+<TouchableOpacity onPress={onOpen} style={styles.buyButton}>
           <Text style={styles.buttonText}>Agregue sus datos</Text>
         </TouchableOpacity>
 

@@ -7,9 +7,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Card, Button } from 'react-native-paper';
 import { useToast, Modal, useDisclose, Row } from 'native-base';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faCreditCard, faMoneyBill } from '@fortawesome/free-solid-svg-icons';
+import { faCartShopping, faCreditCard, faMoneyBill } from '@fortawesome/free-solid-svg-icons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {Toast}  from 'react-native-toast-message/lib/src/Toast';
+import { Item } from 'react-native-paper/lib/typescript/src/components/Drawer/Drawer';
 
 
 interface Props {
@@ -31,12 +32,7 @@ export const ShoppingScreen = ({ product  }: Props) => {
   const { isOpen, onOpen, onClose} = useDisclose();
   const [datosGuardados, setDatosGuardados] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
-
   const [selectedPaymentOption, setSelectedPaymentOption] = useState<'Tarjeta' | 'PagoContraEntrega' | null>(null);
-
-
-
-
 
 
   const cartShopping = async () => {
@@ -51,13 +47,26 @@ export const ShoppingScreen = ({ product  }: Props) => {
     setCart(parsedCart);
     setTotalPrice(total);
     setTotalProducts(productCount);
-  
   };
+
+  //  const cartShopping = async => {
+  //     const storedCart = await AsyncStorage.getItem('cart');}
+  //     const parsedCart = JSON.parse(storedCart);
+  //     const uniqueProductIds = new Set();
+  //     let productCount = 0;
+  //         parsedCart.forEach(item => {
+  //           total += item.quantity * item.product_id.price;
+  //           productCount += item.quantity;
+  //         });
+  //        setCart(parsedCart);
+  //        setTotalPrice(total);
+  //        setTotalProducts(productCount);
+  //      };
+  
 
   useEffect(() => {
     fetchLatestData();
     cartShopping();
-
     const unsubscribe = navigation.addListener('focus', fetchLatestData);
     return () => {
       unsubscribe();
@@ -144,12 +153,14 @@ export const ShoppingScreen = ({ product  }: Props) => {
         filteredProducts: cart1,
         totalPrice: totalPrice,
         selectedPaymentOption: selectedPaymentOption,
+       
         // discountProductsCart: discountProductsCart
-        filterdatos:  filterdatos,
+       
       
       });
     }
   };
+
 
 
   const handleDeleteAll = () => {
@@ -194,7 +205,6 @@ const obtenerDatosGuardados = async () => {
 const fetchLatestData = useCallback(() => {
   obtenerDatosGuardados();
 }, []); 
-
 
 
 const filterdatos = async () => {
@@ -319,13 +329,15 @@ const filterdatos = async () => {
           <View style={{padding: 10, marginLeft: 5}}>
             <Text style={styles.headerText2}>Productos: ({totalProducts})</Text>
             <Text style={styles.headerText2}>Total: ${totalPrice}</Text>
+
+
+
             <TouchableOpacity>
-
-
             <Text style={styles.textgray}
            onPress={() => setShowModal2(true)}
             > Agregar codigo de descueto   </Text>
             </TouchableOpacity>
+
 
             <Modal isOpen={showModal2} onClose={() => setShowModal2(false)}>
           <Modal.Content maxWidth="500px">
@@ -582,7 +594,7 @@ const filterdatos = async () => {
         padding: 2,
       },
       textgray: {
-        color: 'gray',
+        color: 'black',
         fontSize: 18,
       },
       shoppingCartButton: {

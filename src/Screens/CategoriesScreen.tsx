@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native'; import API from '../API/API';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import LoadingScreen from './loadintgScreen';
@@ -18,6 +18,9 @@ export const CategoriesScreen = ({route, navigation} : Props)  => {
   const [isError, setIsError] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+
+ 
+
 
   const getCategories = async () => {
     try {
@@ -74,7 +77,7 @@ export const CategoriesScreen = ({route, navigation} : Props)  => {
     
 
     return (
-      <View style={{marginBottom: 40}} >
+      <View style={{marginBottom: 65}} >
          <Text style={[styles.TextContainer, { fontSize: 25, color: '#FFF', fontWeight: 'bold', marginVertical:-10 }]}>WAPIZIMA</Text>
 
 
@@ -82,7 +85,7 @@ export const CategoriesScreen = ({route, navigation} : Props)  => {
         style={styles.IconContainer}
         onPress={() => navigation.navigate('Shopping', { totalProducts: cartCount })}>
         <View style={styles.IconCircle}>
-          <Icon name="shopping-cart" size={30} color="#000" />
+          <Icon name="cart-outline" size={35} color="#000" />
           {cartCount > 0 && <ShoppingCartBadge count={cartCount} />}
         </View>
       </TouchableOpacity>
@@ -112,7 +115,6 @@ export const CategoriesScreen = ({route, navigation} : Props)  => {
 };
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },

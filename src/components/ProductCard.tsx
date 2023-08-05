@@ -28,32 +28,20 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
   const [favorites, setFavorites] = useState([]);
   const carouselRef = useRef(null); 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-
-
   const [disabled, setDisabled] = useState(false);
-
-  // const removeFromCart = async (productId: string) => {
-  //   const cartArray = await AsyncStorage.getItem('cart');
-  //   let cart = [];
-  //   if (cartArray) {
-  //     cart = JSON.parse(cartArray);
-  //     const newCart = cart.filter((item) => item.product_id._id !== productId);
-  //     await AsyncStorage.setItem('cart', JSON.stringify(newCart));
-  //     updateCartCount(); 
-  //     getCartItems(); 
-  //   }
-  // };
-
+  
+  const [availableQuantity, setAvailableQuantity] = useState(product.quantity);
+  const [isCardDisabled, setIsCardDisabled] = useState(false);
 
   const decrementQuantity = () => {
     if (quantity > 1) {
       setQuantity(quantity - 1);
     } else {
-      setDisabled(true); 
+      setDisabled(true);
     }
   };
   const incrementQuantity = () => {
-    if (quantity < product.quantity) {
+    if (quantity < availableQuantity) {
       setQuantity(quantity + 1);
       setDisabled(false);
     }
@@ -66,8 +54,17 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
         text1: 'Error',
         text2: 'Agregue un producto',
       });
-      return; 
+      return;
     }
+    if (quantity > availableQuantity) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'No hay suficiente cantidad disponible del producto',
+      });
+      return;
+    }
+    
     Toast.show({
       type: 'success',
       text1: 'Producto agregado',
@@ -96,8 +93,8 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
       cart.push(cartItem);
     }
     await AsyncStorage.setItem('cart', JSON.stringify(cart));
-  
     updateCartCount();
+    setAvailableQuantity(availableQuantity - quantity);
   };
 
 
@@ -170,6 +167,13 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
     </TouchableOpacity>
   );
 
+  useEffect(() => {
+    if (availableQuantity === 0) {
+      setIsCardDisabled(true);
+    }
+  }, [availableQuantity]);
+
+
   const handleContinuar =() => {
 
   }
@@ -177,8 +181,13 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
   
   return (
     <>
-  <TouchableOpacity onPress={onOpen} style={[styles.container, disabled && styles.disabledContainer]}>
-        <Card style={[styles.cardContainer, disabled && styles.disabledCardContainer]}>
+   <TouchableOpacity
+        onPress={onOpen}
+        style={[styles.container, isCardDisabled && styles.disabledContainer]}
+      >
+        <Card
+          style={[styles.cardContainer, isCardDisabled && styles.disabledCardContainer]}
+        >
     <Image style={styles.productImage} source={{ uri: product.multimedia[0].images['400x400'] }} />
     <View style={styles.favoriteContainer}>
     <TouchableOpacity onPress={() => toggleFavorite(product)} style={styles.favoriteButton}>
@@ -204,9 +213,8 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
     <TouchableOpacity style={styles.addToCartButton} onPress={() => {
       addToCart(product, quantity, product.price, product.multimedia);
     }}>
-      <Text style={styles.addToCartButtonText}>Agregar al carrito   </Text>
+      <Text style={styles.addToCartButtonText}>Agregar al carrito  </Text>
     </TouchableOpacity>
-    
     {/* <TouchableOpacity style={styles.viewFavoritesButton}>
       <Text style={styles.viewFavoritesButtonText}>Ver favoritos</Text>
     </TouchableOpacity> */}
@@ -231,9 +239,10 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
           <View style={styles.productContainer}>
             <Text style={styles.productCard}>{product.name}</Text>
           </View>
-            <Card style={styles.cardcontainer}>
-            <Text style={styles.productName}> Disponible:  {product.quantity} </Text>
-              <Text style={styles.Textcard}>{product.description}</Text>
+            <Text style={styles.productName}> Disponoble:  {product.quantity} </Text>
+
+            <Card style={styles.cardContainer2}>
+          <Text style={styles.description}>{product.description}</Text>
             </Card>
 
             <View style={styles.cardContainer}>
@@ -244,19 +253,20 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
               <TouchableOpacity onPress={incrementQuantity}>
                 <Text style={styles.quantityUwu}>+</Text>
               </TouchableOpacity>
-
             </View>
+            <Card style={styles.cardContainer}>
+              
+            <TouchableOpacity
+            style={styles.addToCartButton}
+            onPress={() => {
+              addToCart(product, quantity, product.price, product.multimedia);
+            }}
+            disabled={isCardDisabled}
+          >
+            <Text style={styles.addToCartButtonText}>Agregar al carrito</Text>
+          </TouchableOpacity>
 
-               <View>
-
-            <TouchableOpacity style={styles.buyButton} onPress={() => {
-           addToCart(product, quantity, product.price, product.multimedia );
-         }}>
-             <Text style={styles.textWhite}>Agregar al carrito </Text>
-         </TouchableOpacity>
-         </View>
-
-         
+            </Card>
       
          <Modal visible={showModal} transparent={true}>
             <TouchableOpacity style={styles.modalContainer} onPress={closeImageModal}>
@@ -277,11 +287,15 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 10,
   },
+  description: {
+    fontSize: 16,
+    color: 'black',
+  },
   disabledCardContainer:{
-     backgroundColor: 'gray'
+    opacity: 0.5, 
   },
   disabledContainer: {
-     backgroundColor: 'black'
+    opacity: 0.5, 
   },
   badgeContainer: {
     position: 'absolute',
@@ -301,7 +315,7 @@ const styles = StyleSheet.create({
   },
   textWhite: {
     color: '#f5fff',
-    fontSize: 22,
+    fontSize: 25,
     fontWeight: 'bold',
   },
   favoriteButton: {
@@ -486,6 +500,7 @@ const styles = StyleSheet.create({
     height: 500,
     width: Dimensions.get('screen').width,
   },
+   
   cardContainer: {
     width: '100%',
     alignItems: 'center',
@@ -503,6 +518,11 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
+
+  cardContainer2:{
+    height: 50,
+  },
+
   textGray: {
     color: 'gray',
     marginTop: 5,

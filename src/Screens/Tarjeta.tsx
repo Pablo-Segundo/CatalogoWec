@@ -1,13 +1,13 @@
-import { View, Text, TouchableOpacity, StyleSheet, FlatList, TextInput, Image } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, FlatList, TextInput, Image, Button } from 'react-native';
 import React, { useEffect, useState } from "react";
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Card } from "react-native-paper";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import { PaymentSheet,PaymentSheetProvider, usePaymentSheet } from '@stripe/stripe-react-native';
 import { useRoute } from '@react-navigation/native';
-
-
+import { StripeProvider } from '@stripe/stripe-react-native';
+import { CardField, useStripe } from '@stripe/stripe-react-native';
+import LoadingScreen from './loadintgScreen';
 
 
 export const TarjetaScreen = () => {
@@ -21,9 +21,9 @@ export const TarjetaScreen = () => {
 
     const [publishableKey, setPublishableKey] = useState('');
     
-
     const route = useRoute();
     const { filteredProducts, totalPrice, selectedPaymentOption, discountProductsCart,filterdatos } = route.params;
+    const { confirmPayment } = useStripe();
 
 
 
@@ -44,68 +44,53 @@ export const TarjetaScreen = () => {
       useEffect(() => {
     cartShopping();
     fetchPublishableKey();
-      // Stripe.setOptionsAsync({ publishableKey: 'codigo xd' });
   }, []);
 
-
-  const handleCardNumberChange = (text) => {
-    setCardNumber(text);
-  };
-  const handleExpirationDateChange = (text) => {
-    setExpirationDate(text);
-  };
-  const handleSecurityCodeChange = (text) => {
-    setSecurityCode(text);
-  };
-
-
-
   const fetchPublishableKey = async () => {
-    const key = await fetchKey();
+    const key = await fetchKey("pk_test_51NNPllBsn6AXnSPi6VTNj1dg4eBhC4HCHadwxH1a4JNJ0Ffp3tqutylGB7mocT7tJAajQR8tV2p8xDtUNZvjfVXq00oKgyVEmy"); // fetch key from your server here
     setPublishableKey(key);
   };
 
+//stripe-----------------------------------------------------------------
 
-  const handleContinue = async () => {
-    try {
-     
-      const cardDetails = {
-        card: {
-          number: cardNumber,
-          expMonth: expirationDate.split('/')[0],
-          expYear: expirationDate.split('/')[1],
-          cvc: securityCode,
-        },
-      };
-      // const paymentMethod = await stripe.createPaymentMethodAsync(cardDetails);
-      setPaymentSheetEnabled(true);
-    } catch (error) {
-      console.error('Error creating payment method:', error);
-     
+  const fetchPaymentIntentClientSecret = async () => {
+    const response = await fetch(`${API_URL}/create-payment-intent`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        currency: 'usd',
+      }),
+    });
+    const {clientSecret} = await response.json();
+    return clientSecret;
+  };
+
+  const handlePayPress = async () => {
+    if (!card) {
+      return;
     }
+    const clientSecret = await fetchPaymentIntentClientSecret();
   };
 
 
    return(
     <>
+
+<StripeProvider
+      publishableKey={publishableKey}
+      merchantIdentifier="merchant.identifier" // required for Apple Pay
+    >
     <View style={styles.header}>
     <Text style={styles.headerWITHE}>Pago con Tarjeta    </Text>
 
-    {/* <TouchableOpacity
-          style={styles.IconContainer}
-          onPress={() => navigation.navigate('Shopping', {})}>
-       <View style={styles.IconCircle}>
-         <Icon name="shopping-cart" size={30} color="#000" />
-         </View>
-        </TouchableOpacity> */}
   </View>
 
 <Card style={styles.cardcontainer}>
 <Text style={styles.textRosa}>  Total a Pagar:   </Text>
 <Text style={styles.headerText}>$ {totalPrice} </Text>
 </Card>
- 
-
   <View> 
     <Text style={styles.rowText}> Productos filtrados prueba  </Text>
     <View>
@@ -117,11 +102,8 @@ export const TarjetaScreen = () => {
       <Text style={styles.rowText}>Precio total: ${totalPrice}</Text>
       <Text style={styles.rowText}>Metodo de pago: {selectedPaymentOption}</Text>
       <Text style={styles.rowText}> Datos filtrados : {filterdatos}</Text>
-      
   </View>
-
-
-
+  
 {/* <Card style={styles.detailsContainer}>
         <Text style={styles.detailsTitle}>Tarjeta de crédito</Text>
         
@@ -147,15 +129,50 @@ export const TarjetaScreen = () => {
           onChangeText={handleSecurityCodeChange}
         />
   </Card> */}
+
+<CardField
+      postalCodeEnabled={true}
+      placeholders={{
+        number: '4242 4242 4242 4242',
+      }}
+      cardStyle={{
+        backgroundColor: '#FFFFFF',
+        textColor: '#000000',
+      }}
+      style={{
+        width: '100%',
+        height: 50,
+        marginVertical: 30,
+      }}
+      onCardChange={(cardDetails) => {
+        console.log('cardDetails', cardDetails);
+      }}
+      onFocus={(focusedField) => {
+        console.log('focusField', focusedField);
+      }}
+    />
+
+
+<View>
+      <CardField
+        onCardChange={(cardDetails) => console.log('cardDetails', cardDetails)}
+      />
+      <Button onPress={handlePayPress} title="Pay"   />
+    </View>
+
+
+
+
+
+  
      
 
-<TouchableOpacity style={styles.buyButton} onPress={handleContinue}>
+{/* <TouchableOpacity style={styles.buyButton} onPress={handleContinue}>
         <Text style={styles.buyButtonText}>Continuar</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     
+    </StripeProvider>
 </>
-
-    
    )
 }
 
