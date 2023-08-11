@@ -14,9 +14,9 @@ export const CategoriesScreen = ({route, navigation} : Props)  => {
     try {
       const { data } = await API.get('/categories');
       const categories = data.categories.filter(
-        (category: Category) => category.totalProducts > 0,
+        (category: any) => category.totalProducts > 0,
       );
-      setCategories(data.categories);console.log(data.categories);
+      setCategories(categories);
       
     } catch (error) {
       console.log(error);
