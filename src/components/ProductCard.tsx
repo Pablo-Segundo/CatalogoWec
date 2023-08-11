@@ -64,7 +64,6 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
       });
       return;
     }
-    
     Toast.show({
       type: 'success',
       text1: 'Producto agregado',
@@ -372,6 +371,7 @@ const styles = StyleSheet.create({
     color: '#1E90FF',
     marginTop: 5,
   },
+  
   buyButton: {
     backgroundColor: '#FF1493',
     paddingVertical: 30,

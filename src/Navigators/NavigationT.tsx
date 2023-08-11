@@ -27,9 +27,10 @@ return (
           tabBar={(props) => <AnimatedTabBar {...props} />}
         >
       <Tab.Screen
-            name="Home"
+            name="Wapizima "
             options={{
               headerShown: false,
+              headerStyle: { height: 70, backgroundColor: '#debdce' },
               // @ts-ignore
               tabBarIcon: ({ ref }) => <Lottie ref={ref} loop={false} source={require('./assets/lottie/home.icon.json')} style={styles.icon} />,
             }}

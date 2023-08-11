@@ -77,8 +77,8 @@ export const CategoriesScreen = ({route, navigation} : Props)  => {
     
 
     return (
-      <View style={{marginBottom: 65}} >
-         <Text style={[styles.TextContainer, { fontSize: 25, color: '#FFF', fontWeight: 'bold', marginVertical:-10 }]}>WAPIZIMA</Text>
+      <View>
+         {/* <Text style={[styles.TextContainer, { fontSize: 25, color: '#FFF', fontWeight: 'bold', marginVertical:-10 }]}>WAPIZIMA</Text>
 
 
        <TouchableOpacity
@@ -88,12 +88,12 @@ export const CategoriesScreen = ({route, navigation} : Props)  => {
           <Icon name="cart-outline" size={35} color="#000" />
           {cartCount > 0 && <ShoppingCartBadge count={cartCount} />}
         </View>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
 
 
 
-        <View style={styles.divider} />
+        <View/>
         <FlatList
           data={categories}
           renderItem={({ item }) => (
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   divider: {
-    height: '9%',
+    height: '10%',
     backgroundColor: '#debdce',
     // borderBottomLeftRadius: 20,
     // borderBottomRightRadius: 20,

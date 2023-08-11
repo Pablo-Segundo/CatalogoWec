@@ -5,13 +5,14 @@ import { useNavigation } from '@react-navigation/native';
 import { useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Card, Button } from 'react-native-paper';
-import { useToast, Modal, useDisclose, Row } from 'native-base';
+import { useToast, Modal, useDisclose, Row, Actionsheet } from 'native-base';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faCartShopping, faCreditCard, faMoneyBill } from '@fortawesome/free-solid-svg-icons';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import {Toast}  from 'react-native-toast-message/lib/src/Toast';
 import { Item } from 'react-native-paper/lib/typescript/src/components/Drawer/Drawer';
-
+import trash from 're'
 
 interface Props {
   product: Product;
@@ -72,7 +73,6 @@ export const ShoppingScreen = ({ product  }: Props) => {
       unsubscribe();
     };
   }, [fetchLatestData]);
-
 
 
   const decrementQuantity = (index) => {
@@ -161,8 +161,6 @@ export const ShoppingScreen = ({ product  }: Props) => {
     }
   };
 
-
-
   const handleDeleteAll = () => {
     AsyncStorage.removeItem('cart')
     .then(() => {
@@ -243,33 +241,22 @@ const filterdatos = async () => {
  
   return (
     <>
-   
       <View style={styles.header}>
         <View style={styles.directiorow}>
-        <TouchableOpacity >
-        <Icon name="pencil" size={30} color="#fff" />
-        </TouchableOpacity>
-        <View style={styles.directiorow1}>
-        <Text style={styles.headerWITHE}>Agregue su dirección </Text>
         </View>
-        </View>
-         {/* <TouchableOpacity style={styles.shoppingCartButton} onPress={() => navigation.navigate('Shopping')}>
-          <View style={styles.shoppingCartIcon}>
-            <Icon name="shopping-cart" size={30} color="#000" />
-          </View>
-        </TouchableOpacity> */}
         <View >
-        <TouchableOpacity onPress={() => navigation.replace('mapaScreen', { owner: ' ' })}>
+        <TouchableOpacity  onPress={onOpen}>
         <View style={styles.viewuwu}>
-          <Card style={styles.cardcontainer}>
-            <View> 
-              {datosGuardados && <Text style={styles.textgray}>Enviar a: {datosGuardados.nombre} , {datosGuardados.selectedAddress}  </Text>}
+            <View style={styles.cardcontainer}> 
+            <Icon name="map-marker-outline" size={30} color="black" />
+              <Text style={styles.textblack}>Enviar a : 
+              {datosGuardados && <Text style={styles.textgray}> {datosGuardados.nombre} , {datosGuardados.selectedAddress}  </Text>}
+              </Text>
             </View>
-          </Card>
-          <Image
+          {/* <Image
             source={require('../Navigators/assets/lottie/icon/marcador.png')}
             style={styles.imagemap}
-          />
+          /> */}
         </View>
       </TouchableOpacity>
         </View>
@@ -282,7 +269,7 @@ const filterdatos = async () => {
             <View style={styles.tableRow}>
               <Text style={styles.headerText}>Productos agregados ({totalProducts})</Text>
               <TouchableOpacity style={styles.buyButton3} onPress={handleDeleteAll}>
-                <Text style={styles.headerTextWhite}>Vaciar carrito</Text>
+                <Text style={styles.headerTextWhite}>Vaciar </Text>
               </TouchableOpacity>
             </View>
           </>
@@ -290,7 +277,7 @@ const filterdatos = async () => {
         <FlatList
           data={cart1}
           renderItem={({ item, index }) => (
-            <View style={styles.container}>
+            <Card >
               <View style={styles.rowContainer}>
                 <View style={styles.imageContainer}>
                   <Image style={styles.image} source={{ uri: item.multimedia[0].images['400x400'] }} />
@@ -322,7 +309,7 @@ const filterdatos = async () => {
                 </View>
                 </View>
               </View>
-            </View>
+            </Card>
           )}
         />
           <Card>
@@ -330,50 +317,34 @@ const filterdatos = async () => {
             <Text style={styles.headerText2}>Productos: ({totalProducts})</Text>
             <Text style={styles.headerText2}>Total: ${totalPrice}</Text>
 
-
-
-            <TouchableOpacity>
-            <Text style={styles.textgray}
-           onPress={() => setShowModal2(true)}
-            > Agregar codigo de descueto   </Text>
-            </TouchableOpacity>
-
+            <TextInput
+              style={styles.directionInput}
+              placeholder="codigo de descuento :"
+              placeholderTextColor={'gray'}
+            
+            />
 
             <Modal isOpen={showModal2} onClose={() => setShowModal2(false)}>
           <Modal.Content maxWidth="500px">
             <Modal.CloseButton style={styles.modalCloseButton} />
-            <Modal.Header style={styles.modalHeader}>Agregue un codigo de descuento </Modal.Header>
+            <Modal.Header style={styles.modalHeader}>Agregue un codigo de descuento: </Modal.Header>
             <Modal.Body style={styles.modalBody}>
-
-            <TextInput
-              style={styles.directionInput}
-              placeholder="codigo:"
-              placeholderTextColor={'gray'}
-              
-            />
-          
             </Modal.Body>
             <TouchableOpacity onPress={handleContinuar} style={styles.continueButton}>
               <Text style={styles.continueButtonText}>aplicar  </Text>
             </TouchableOpacity>
           </Modal.Content>
-      </Modal>
-
-
-         
+        </Modal>
           </View>
           <View>
           <TouchableOpacity    onPress={() => setShowModal(true)}   style={styles.buyButton2}>
         <Text style={styles.headerTextWhite}>Continuar</Text>
       </TouchableOpacity>
       
-      
 
       {/* <TouchableOpacity onPress={filterdatos} style={styles.buyButton2}>
         <Text style={styles.headerTextWhite}>tesssst</Text>
       </TouchableOpacity> */}
-
-
 
        <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
           <Modal.Content maxWidth="500px">
@@ -410,6 +381,31 @@ const filterdatos = async () => {
           </View>
           </Card>
           </View>
+
+        <Actionsheet isOpen={isOpen} onClose={onClose}>
+           <Actionsheet.Content>
+            <Text> HOLA papu </Text>
+              <Text> Ingresa los datos </Text>
+              <View style={styles.rowContainer}> 
+
+              <Card style={styles.cards}> 
+              <TouchableOpacity style={styles.buyButton}>
+                <Text> PRUEBA PAPU </Text>
+              </TouchableOpacity>
+              </Card>
+
+              <Card style={styles.cards}> 
+              <TouchableOpacity style={styles.buyButton}  onPress={() => navigation.replace('mapaScreen', { owner: ' ' })} >
+                <Text> Agregar una nueva direccion  </Text>
+              </TouchableOpacity>
+              </Card>
+              </View>
+           </Actionsheet.Content>
+
+        </Actionsheet>
+
+
+
     </>
   );
 };
@@ -417,13 +413,16 @@ const filterdatos = async () => {
     const styles = StyleSheet.create({
   
       header: {
-        padding: 20,
+        padding: 5,
         backgroundColor: '#debdce',
-        borderBottomLeftRadius: 50,
-        borderBottomRightRadius: 50,
+        // borderBottomLeftRadius: 50,
+        // borderBottomRightRadius: 50,
       },
       modalBodyWithMargin: {
         marginBottom: 20,
+      },
+      cards:{
+        height: 150,
       },
       directionInput: {
         borderWidth: 1,
@@ -509,7 +508,6 @@ const filterdatos = async () => {
         padding: 20,
       },
       paymentOption: {
-      
         width: '100%',
         borderRadius: 15,
         justifyContent: 'center',
@@ -548,8 +546,12 @@ const filterdatos = async () => {
       continueButtonText: {
         color: '#fff',
         fontSize: 18,
-        fontWeight: 'bold',
-       
+       fontWeight: 'bold',
+      },
+      headeerWITHE:{
+        color: '#fff',
+        fontSize: 22,
+       fontWeight: 'bold',
       },
 
       image: {
@@ -564,6 +566,11 @@ const filterdatos = async () => {
         resizeMode: 'cover',
         margin: 5,
         
+      },
+      textblack: {
+      color: 'black',
+      
+      fontSize: 18,
       },
       textelimit: {
         color: '#1e90ff',
@@ -609,6 +616,7 @@ const filterdatos = async () => {
         flex: 1,
         padding: 5,
         backgroundColor: '#FFF',
+
       },
       tableHeader: {
         flexDirection: 'row',
@@ -650,12 +658,13 @@ const filterdatos = async () => {
       },
       buyButton3: {
         backgroundColor: '#ff1493',
-        paddingVertical: 2,
+        paddingVertical: 5,
         borderRadius: 10,
         marginHorizontal: 1,
         marginVertical:5,
        justifyContent: 'center',
-       alignItems: 'center'
+       alignItems: 'center',
+       marginRight: 20
       },
       
       cardcontent: {
@@ -703,16 +712,17 @@ const filterdatos = async () => {
         alignItems: 'center',
       },
       imageContainer: {
-        width: 120,
-        marginRight: 15,
+        width: 130,
+        marginRight: 5,
       },
       detailsContainer: {
         flex: 1,
       },
       cardcontainer: {
         padding: 10,
-        width: '85%',
-       maxHeight: 65
+        width: '75%',
+       maxHeight: 65,
+       flexDirection: 'row',
         
       },
       viewuwu: {

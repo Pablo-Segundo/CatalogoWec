@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, RefreshControl } from 'react-native';
 import API from '../API/API';
 import { FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -14,13 +14,13 @@ interface Props extends NativeStackScreenProps<any, any> {}
 
 
 export const PetañaScreen = ({ route, navigation }: Props) => {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState(0);
   const [categories, setCategories] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   const [cart, setCart] = useState([]);
-
+  const [refreshing, setRefreshing] = React.useState(false);
  
 
 
@@ -44,13 +44,18 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
 
   const getProducts = async () => {
     try {
+      console.log('hola');
       const { data } = await API.get(`/products/category/${route.params}`);
       setProducts(data.products);
     } catch (error) {
       setIsError(true);
       console.log(error);
+    }finally{
+      setRefreshing(false);
     }
   };
+  
+
 
   const getCategories = async () => {
     try {
@@ -109,10 +114,33 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
       </View>
     );
   };
+
+  const renderEmptyCart = () => {
+    return (
+      <View>
+        <Text style={styles.TextContainer}>Ningún producto agregado</Text>
+        <TouchableOpacity
+          
+          onPress={() => navigation.navigate('Home')}
+        >
+          {/* <Image source={require('../Navigators/assets/lottie/osuxd.png')} style={styles.exploreImage} /> */}
+          <Text>Explorar y comprar productos</Text>
+        </TouchableOpacity>
+      </View>
+    );
+};
+
   return (
 
     <>
     <View style={{marginBottom:60,}}>
+   
+        <TouchableOpacity
+            style={styles.directionrow}
+            onPress={() => navigation.navigate('pestanas'  >
+            )}>
+            <Icon name="arrow-left" size={30} color="#fff" />
+         </TouchableOpacity> 
 
       <TouchableOpacity
         style={styles.IconContainer}
@@ -130,21 +158,17 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
           <Icon name="heart-outline" size={35} color="black" />
         </View>
       </TouchableOpacity>
-      
-      <TouchableOpacity
-        style={styles.directionrow}
-        onPress={() => navigation.navigate('Home', {})}>
-        <Icon name="arrow-left" size={30} color="#fff" />
-      </TouchableOpacity>
-      <View style={{zIndex: 9999}}>
 
-        
-        {/* <Toast /> */}
-      </View>
-      <View style={{ height: '9%', backgroundColor: '#DEBDCE', }} />
+   
+      
+        <View style={styles.header} />
+      
       <FlatList
         data={products}
         numColumns={2}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={getProducts} />
+        }
         renderItem={({ item }) => (
           <ProductCard product={item} updateCartCount={updateCartCount} getCartItems={function (): void {
             throw new Error('Function not implemented.');
@@ -164,6 +188,18 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
           justifyContent: 'center',
           alignItems: 'center',
         },
+        header: {
+          padding: 40,
+          backgroundColor: '#debdce',
+          borderBottomLeftRadius: 50,
+          borderBottomRightRadius: 50,
+        },
+        scrollView: {
+          flex: 1,
+          backgroundColor: 'pink',
+          alignItems: 'center',
+          justifyContent: 'center',
+        },
         image: {
           width: 400,
           backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -172,9 +208,9 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
           margin: 10,
         },
         directionrow:{
-          paddingHorizontal: 22,
+          paddingHorizontal: 35,
           position: 'absolute',
-          top: 15, 
+          top: 29, 
           zIndex: 1,
         },
         badgeContainer: {
@@ -249,14 +285,14 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
         },
         IconContainer: {
          position: 'absolute',
-         top: 10, 
-         right: 10,
+         top: 25, 
+         right: 25,
          zIndex: 1,
         },
         IconContainer2: {
           position: 'absolute',
-          top: 10, 
-          right: 70,
+          top: 25, 
+          right: 85,
           zIndex: 1,
          },
         TextContainer: {

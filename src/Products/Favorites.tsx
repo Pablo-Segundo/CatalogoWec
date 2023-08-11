@@ -40,8 +40,8 @@ export const FavoritesScreen = ({ route, product }: Props) => {
   const handleDelete = (product) => {
     const updatedFavorites = [...favorites];
     updatedFavorites.splice(product, 1);
-    
     AsyncStorage.setItem('favorites', JSON.stringify(updatedFavorites))
+    
       .then(() => {
         setFavorites(updatedFavorites);
       })
@@ -59,43 +59,47 @@ export const FavoritesScreen = ({ route, product }: Props) => {
       <TouchableOpacity style={styles.directionrow}  onPress={() => navigation.navigate('pestanas', {})}>
         <Icon name="arrow-left" size={30} color="#fff" />
         </TouchableOpacity>
+        <Text style={styles.productWithe}> Productos agregados  </Text> 
         <TouchableOpacity
           style={styles.shoppingCartButton}
           onPress={() => navigation.navigate('Shopping', {})}>
           <View style={styles.shoppingCartIcon}>
             <Icon name="shopping-cart" size={30} color="#000" />
           </View>
-          
         </TouchableOpacity>
       </View>
-
-    
-            <Text style={styles.favoritesHeaderText}>Productos favoritos</Text>
+            
+           
+         
 
             {favorites.length > 0 ? (
            
         <FlatList
             data={favorites}
+            numColumns={2}
             keyExtractor={(item) => item._id}
             renderItem={({ item }) => (
               <View style={styles.productContainer}>
-               
-
-                
+                <Card style={styles.cardContainer}>
                 <Image style={styles.productImage} source={{ uri: item.multimedia[0].images['400x400'] }} />
-                  
-                 <Text numbserOfLines={4} ellipsizeMode="tail" style={styles.productName}>{item.name}</Text>
+                 <Text style={styles.productName}>{item.name}</Text>
+                 <Text style={styles.productPrice}>${item.price}MX </Text>
                   <View>
                  </View>
                  <TouchableOpacity style={styles.deleteButton} onPress={() => handleDelete(product)}>
-                  <Icon name="trash" size={30} color="#fff" />
+                  <Icon name="trash-o" size={30} color="#ff0000" />
                 </TouchableOpacity> 
+                   
+                   <TouchableOpacity style={styles.continueButton} >
+                      <Text style={styles.headerText}> Agregar al carrito </Text>
+                      <Text></Text>
+                   </TouchableOpacity>
 
-               
+                </Card>
             </View>
             )}
           />
-            
+        
               ) : (
                 <View style={styles.emptyCartContainer}>
           <Text style={styles.emptyCartText}>Ningún producto en favoritos </Text>
@@ -125,6 +129,39 @@ const styles = StyleSheet.create({
     backgroundColor: '#DEBDCE',
     borderBottomLeftRadius: 50,
     borderBottomRightRadius: 50,
+  },
+  cardContainer: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    borderRadius: 10,
+    padding: 20,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  productPrice: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#1E90FF',
+    marginTop: 5,
+  },
+  continueButton: {
+    backgroundColor: '#ff1493',
+    borderRadius: 5,
+    padding: 10,
+    alignItems: 'center',
+    marginTop: 20,
+    marginVertical: 15,
+  
+    
   },
   exploreImage: {
     width: 30,
@@ -193,7 +230,7 @@ const styles = StyleSheet.create({
     display:'flex',
   },
   deleteButton: {
-    backgroundColor: 'red',
+    color:"black",
     padding: 5,
     borderRadius: 5,
     marginRight: 10,
@@ -205,7 +242,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 15,
     color: '#fff',
   },
   buyButton: {
@@ -239,17 +276,14 @@ const styles = StyleSheet.create({
     color: 'gray',
     padding: 15
   },
-  cardContainer: {
-    borderRadius: 10,
-    padding: 10,
-  },
+
   productContainer: {
-    flexDirection: 'row',
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
+    margin: 5,
+    borderRadius: 10,
     marginBottom: 10,
-    backgroundColor: '#dcdcdc',
-    marginHorizontal: 10,
-        
   },
   productImage: {
     width: 100,
@@ -263,4 +297,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'black',
   },
+  productWithe: {
+    flex: 1,
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+
 });
