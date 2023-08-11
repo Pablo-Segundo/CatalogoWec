@@ -4,7 +4,7 @@ import { Navigation } from './src/Navigators/Navigation';
 import { NativeBaseProvider } from 'native-base';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
 import { StripeProvider } from '@stripe/stripe-react-native';
-import { TarjetaScreen } from './src/Screens/Tarjeta';
+import { TarjetaScreen } from './src/Screens/PaymentScreen';
 
 
 export default function App() {

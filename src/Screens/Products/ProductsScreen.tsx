@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, RefreshControl } from 'react-native';
-import API from '../API/API';
+import API from '../../API/API';
 import { FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import LoadingScreen from '../Screens/loadintgScreen';
+import LoadingScreen from '../LoadintgScreen';
 import { Actionsheet, Button, useDisclose } from "native-base";
-import { ProductCard } from '../components/ProductCard';
+import { ProductCard } from '../../components/ProductCard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
+import { NoInternet } from '../../components/NoInternet';
 
 interface Props extends NativeStackScreenProps<any, any> {}
 
@@ -83,12 +84,7 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
     getCategories();
   }, []);
   if (isError) {
-    return (
-      <View style={styles.errorContainer}>
-        <Text style={styles.errorText}>No hay conexión a internet</Text>
-       <Image source={require('../Navigators/assets/lottie/osuxd.png')} style={styles.errorImage} />
-      </View>
-    );
+    <NoInternet/>
   }
 
 
@@ -137,7 +133,7 @@ export const PetañaScreen = ({ route, navigation }: Props) => {
    
         <TouchableOpacity
             style={styles.directionrow}
-            onPress={() => navigation.navigate('pestanas'  >
+            onPress={() => navigation.navigate('pestanas'
             )}>
             <Icon name="arrow-left" size={30} color="#fff" />
          </TouchableOpacity> 

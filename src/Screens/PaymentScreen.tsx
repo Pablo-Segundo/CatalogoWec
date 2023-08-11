@@ -7,10 +7,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRoute } from '@react-navigation/native';
 import { StripeProvider } from '@stripe/stripe-react-native';
 import { CardField, useStripe } from '@stripe/stripe-react-native';
-import LoadingScreen from './loadintgScreen';
+import LoadingScreen from './LoadintgScreen';
 
 
-export const TarjetaScreen = () => {
+export const PaymentScreen = () => {
     const navigation = useNavigation();
     const [totalProducts, setTotalProducts] = useState(0);
     const [cart1, setCart] = useState(0);

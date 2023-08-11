@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer, useRef } from 'react'
-import { Pressable, StatusBar,StyleSheet,View,Text,LayoutChangeEvent,} from 'react-native'
+import { Pressable, StatusBar, StyleSheet, View, Text, LayoutChangeEvent, Platform, } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { BottomTabBarProps, BottomTabNavigationOptions, createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -7,79 +7,74 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Svg, { Path } from 'react-native-svg'
 import Animated, { useAnimatedStyle, withTiming, useDerivedValue } from 'react-native-reanimated'
 import Lottie from 'lottie-react-native'
-import { CategoriesScreen } from '../Screens/CategoriesScreen';
-import { ShoppingScreen } from '../Screens/shoppingcart'
-import { Direction } from '../Screens/directionsP'
-import { ActionSh } from '../Screens/Actionproduct'
-import { FavoritesScreen } from '../Products/Favorites'
-import { PedidosScreen } from '../Screens/pedidosScreen'
+import { CategoriesScreen } from '../Screens/categories/CategoriesScreen';
+import { PedidosScreen } from '../Screens/PedidosScreen'
+import { CategoriesStack } from './stacks/CategorieStack'
 
 
 const Tab = createBottomTabNavigator()
 const AnimatedSvg = Animated.createAnimatedComponent(Svg)
 
 
-export const NavigationTab =  () => {
-return (
+export const NavigationTab = () => {
+  return (
     <>
-    <StatusBar barStyle="light-content" />
-     <Tab.Navigator
-          tabBar={(props) => <AnimatedTabBar {...props} />}
-        >
-      <Tab.Screen
-            name="Wapizima "
-            options={{
-              headerShown: false,
-              headerStyle: { height: 70, backgroundColor: '#debdce' },
-              // @ts-ignore
-              tabBarIcon: ({ ref }) => <Lottie ref={ref} loop={false} source={require('./assets/lottie/home.icon.json')} style={styles.icon} />,
-            }}
-            component={CategoriesScreen}
-           
-          />
-            <Tab.Screen
-            name="upload"
-                             
-            options={{
-              unmountOnBlur: true,
-              headerShown: false,
-              // @ts-ignore
-              tabBarIcon: ({ ref }) => <Lottie ref={ref} loop={false} source={require('./assets/lottie/upload.icon.json')} style={styles.icon} />,
-            }}
-            component={ PedidosScreen }
-          />
-       </Tab.Navigator>
+      <StatusBar barStyle="light-content" />
+      <Tab.Navigator
+        tabBar={(props) => <AnimatedTabBar {...props} />}
+      >
+        <Tab.Screen
+          name="Wapizima "
+          options={{
+            headerShown: false,
+            headerStyle: { height: 90, backgroundColor: '#debdce' },
+            tabBarIcon: ({ ref }: any) => <Lottie ref={ref} loop={false} source={require('../assets/lottie/home.icon.json')} style={styles.icon} />,
+          }}
+          component={CategoriesStack}
+
+        />
+        <Tab.Screen
+          name="upload"
+          options={{
+            unmountOnBlur: true,
+            headerShown: false,
+            // @ts-ignore
+            tabBarIcon: ({ ref }) => <Lottie ref={ref} loop={false} source={require('../assets/lottie/upload.icon.json')} style={styles.icon} />,
+          }}
+          component={PedidosScreen}
+        />
+      </Tab.Navigator>
 
     </>
-)
+  )
 }
-const AnimatedTabBar = ({ state: { index: activeIndex, routes }, navigation, descriptors } : BottomTabBarProps) => {
-    const { bottom } = useSafeAreaInsets()
-  
-  
-    const reducer = (state: any, action: { x: number, index: number }) => {
-      return [...state, { x: action.x, index: action.index }]
-    }
-  
-    const [layout, dispatch] = useReducer(reducer, [])
-    console.log(layout)
-  
-    const handleLayout = (event: LayoutChangeEvent, index: number) => {
-      dispatch({ x: event.nativeEvent.layout.x, index })
-    }
-  
-    
+const AnimatedTabBar = ({ state: { index: activeIndex, routes }, navigation, descriptors }: BottomTabBarProps) => {
+  const { bottom } = useSafeAreaInsets()
+
+
+  const reducer = (state: any, action: { x: number, index: number }) => {
+    return [...state, { x: action.x, index: action.index }]
+  }
+
+  const [layout, dispatch] = useReducer(reducer, [])
+  console.log(layout)
+
+  const handleLayout = (event: LayoutChangeEvent, index: number) => {
+    dispatch({ x: event.nativeEvent.layout.x, index })
+  }
+
+
   const xOffset = useDerivedValue(() => {
-   
+
     if (layout.length !== routes.length) return 0;
-    
+
     return [...layout].find(({ index }) => index === activeIndex)!.x - 25
-   
+
   }, [activeIndex, layout])
 
   const animatedStyles = useAnimatedStyle(() => {
     return {
-    
+
       transform: [{ translateX: withTiming(xOffset.value, { duration: 250 }) }],
     }
   })
@@ -118,93 +113,93 @@ const AnimatedTabBar = ({ state: { index: activeIndex, routes }, navigation, des
   )
 }
 type TabBarComponentProps = {
-    active?: boolean
-    options: BottomTabNavigationOptions
-    onLayout: (e: LayoutChangeEvent) => void
-    onPress: () => void
-  }
-  
-  const TabBarComponent = ({ active, options, onLayout, onPress }: TabBarComponentProps) => {
-   
-    const ref = useRef(null)
-  
-    useEffect(() => {
-      if (active && ref?.current) {
-        // @ts-ignore
-        ref.current.play()
-      }
-    }, [active])
-  
-   
-    const animatedComponentCircleStyles = useAnimatedStyle(() => {
-      return {
-        transform: [
-          {
-            scale: withTiming(active ? 1 : 0, { duration: 250 })
-          }
-        ]
-      }
-    })
-  
-    const animatedIconContainerStyles = useAnimatedStyle(() => {
-      return {
-        opacity: withTiming(active ? 1 : 0.5, { duration: 250 })
-      }
-    })
-  
-    return (
-      <Pressable onPress={onPress} onLayout={onLayout} style={styles.component}>
-        <Animated.View
-          style={[styles.componentCircle, animatedComponentCircleStyles]}
-        />
-        <Animated.View style={[styles.iconContainer, animatedIconContainerStyles]}>
-          {/* @ts-ignore */}
-          {options.tabBarIcon ? options.tabBarIcon({ ref }) : <Text>?</Text>}
-        </Animated.View>
-      </Pressable>
-    )
-  }
-  
-  // ------------------------------------------------------------------
-  
-  const styles = StyleSheet.create({
-    tabBar: {
-      backgroundColor: '#debdce',
-     
-    },
-    activeBackground: {
-      position: 'absolute',
-    },
-    tabBarContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-evenly',
-       
-    },
-    component: {
-      height: 60,
-      width: 60,
-      marginTop: -5,
-    },
-    componentCircle: {
-      flex: 1,
-      borderRadius: 30,
-      backgroundColor: 'white',
-    },
-    iconContainer: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      justifyContent: 'center',
-      alignItems: 'center'
-    },
-    icon: {
-      height: 36,
-      width: 36,
+  active?: boolean
+  options: BottomTabNavigationOptions
+  onLayout: (e: LayoutChangeEvent) => void
+  onPress: () => void
+}
+
+const TabBarComponent = ({ active, options, onLayout, onPress }: TabBarComponentProps) => {
+
+  const ref = useRef(null)
+
+  useEffect(() => {
+    if (active && ref?.current) {
+      // @ts-ignore
+      ref.current.play()
+    }
+  }, [active])
+
+
+  const animatedComponentCircleStyles = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          scale: withTiming(active ? 1 : 0, { duration: 250 })
+        }
+      ]
     }
   })
-  
-  
-  
+
+  const animatedIconContainerStyles = useAnimatedStyle(() => {
+    return {
+      opacity: withTiming(active ? 1 : 0.5, { duration: 250 })
+    }
+  })
+
+  return (
+    <Pressable onPress={onPress} onLayout={onLayout} style={styles.component}>
+      <Animated.View
+        style={[styles.componentCircle, animatedComponentCircleStyles]}
+      />
+      <Animated.View style={[styles.iconContainer, animatedIconContainerStyles]}>
+        {/* @ts-ignore */}
+        {options.tabBarIcon ? options.tabBarIcon({ ref }) : <Text>?</Text>}
+      </Animated.View>
+    </Pressable>
+  )
+}
+
+// ------------------------------------------------------------------
+
+const styles = StyleSheet.create({
+  tabBar: {
+    backgroundColor: '#debdce',
+
+  },
+  activeBackground: {
+    position: 'absolute',
+  },
+  tabBarContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+
+  },
+  component: {
+    height: 60,
+    width: 60,
+    marginTop: -5,
+  },
+  componentCircle: {
+    flex: 1,
+    borderRadius: 30,
+    backgroundColor: 'white',
+  },
+  iconContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  icon: {
+    height: 36,
+    width: 36,
+  }
+})
+
+
+
 

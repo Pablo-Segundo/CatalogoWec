@@ -11,8 +11,6 @@ import { faCartShopping, faCreditCard, faMoneyBill } from '@fortawesome/free-sol
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {Toast}  from 'react-native-toast-message/lib/src/Toast';
-import { Item } from 'react-native-paper/lib/typescript/src/components/Drawer/Drawer';
-import trash from 're'
 
 interface Props {
   product: Product;
@@ -20,7 +18,7 @@ interface Props {
 }
 
 
-export const ShoppingScreen = ({ product  }: Props) => {
+export const ShoppingScreen = () => {
   const route = useRoute();
   const navigation = useNavigation();
   const [quantity, setQuantity] = useState(0);
@@ -181,7 +179,7 @@ export const ShoppingScreen = ({ product  }: Props) => {
             style={styles.exploreButton}
             onPress={() => navigation.navigate('Home')}
           >
-            <Image source={require('../Navigators/assets/lottie/osuxd.png')} style={styles.exploreImage} />
+            <Image source={require('../assets/lottie/osuxd.png')} style={styles.exploreImage} />
             <Text style={styles.exploreButtonText}>Explorar y comprar productos</Text>
           </TouchableOpacity>
         </View>

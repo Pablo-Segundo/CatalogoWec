@@ -1,20 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, Dimensions, FlatList, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Product } from '../interfaces/ProductsCategoryInterface';
+import { Product } from '../../interfaces/ProductsCategoryInterface';
 import { Card } from "react-native-paper";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Box,useToast } from "native-base";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-
-
-interface Props {
-  product: Product;
-  route: any;
-}
-export const FavoritesScreen = ({ route, product }: Props) => {
-  const navigation = useNavigation();
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+interface Props extends NativeStackScreenProps<any, any> {}
+export const FavoritesScreen = ({ route, navigation }: Props) => {
   const toast = useToast();
   const [favorites,setFavorites] = useState(0);
   const [showModal,setShowModal] = useState(false);
@@ -107,7 +101,7 @@ export const FavoritesScreen = ({ route, product }: Props) => {
             style={styles.exploreButton}
             onPress={() => navigation.navigate('Home')}
           >
-            <Image source={require('../Navigators/assets/lottie/osuxd.png')} style={styles.exploreImage} />
+            <Image source={require('../../assets/lottie/osuxd.png')} style={styles.exploreImage} />
             <Text style={styles.exploreButtonText}>Marca tus productos favoritos </Text>
           </TouchableOpacity>
         </View>

@@ -269,7 +269,7 @@ export function MapScreen() {
       )}
               <Text style={styles.headerText}>Número telefónico:</Text>
                 <View style={styles.phoneInputContainer}>
-                <Image source={require('../Navigators/assets/lottie/mexico.png')} style={styles.flagImage} />
+                <Image source={require('../assets/lottie/mexico.png')} style={styles.flagImage} />
                             <TextInput
                     style={[styles.phoneInput, errorTelefono && styles.errorInput]}
                     keyboardType="numeric"
