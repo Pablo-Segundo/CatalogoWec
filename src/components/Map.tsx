@@ -175,22 +175,6 @@ export function MapScreen() {
   return (
     <> 
 
-
-
-
-    <View style={styles.header}>
-        <TouchableOpacity style={styles.directionrow} onPress={() => navigation.navigate('Shopping', {})}>
-          <Icon name="arrow-left" size={30} color="#fff" />
-        </TouchableOpacity>
-
-        <TextInput
-          style={styles.directionInput}
-          placeholder="Escriba su calle:"
-          placeholderTextColor={'black'}
-          onChangeText={handleAddressChange}
-        />
-      </View>
-
     <ActionSheetProvider>    
         <View style={styles.container}>
           {currentLocation && (

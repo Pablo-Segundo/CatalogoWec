@@ -393,7 +393,7 @@ const filterdatos = async () => {
               </Card>
 
               <Card style={styles.cards}> 
-              <TouchableOpacity style={styles.buyButton}  onPress={() => navigation.replace('mapaScreen', { owner: ' ' })} >
+              <TouchableOpacity style={styles.buyButton}  onPress={() => navigation.navigate('mapaScreen', { owner: ' ' })} >
                 <Text> Agregar una nueva direccion  </Text>
               </TouchableOpacity>
               </Card>

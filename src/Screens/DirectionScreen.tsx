@@ -124,7 +124,7 @@ const handleCardPress = (datos) => {
       <View style={styles.header}>
         <Text style={styles.headerWITHE}>Direcciones del usuario  </Text>
         <View>
-         <TouchableOpacity  onPress={() => navigation.replace('mapaScreen', {owner:' '})}>
+         <TouchableOpacity  onPress={() => navigation.navigate('mapaScreen', {owner:' '})}>
             <Card style={styles.cardcontainer}>
               <View>
                 <Text style={styles.textgray}> Agregar una nueva direccion   </Text>
