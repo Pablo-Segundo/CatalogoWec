@@ -4,11 +4,13 @@ import { CategoriesScreen } from '../../Screens/categories/CategoriesScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { TouchableOpacity } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 
 export const CategoriesStack = () => {
     return (
+        <>
         <Stack.Navigator
             initialRouteName="Categories"
         >
@@ -38,12 +40,13 @@ export const CategoriesStack = () => {
                                             Categorias
                                         </Text>
                                     </View>
-                                    <View style={{ width: '30%', alignItems: 'center', justifyContent: 'center' }}>
+                                     
+                                    <TouchableOpacity style={{ width: '30%', alignItems: 'center', justifyContent: 'center' }}>
                                         <View style={{borderRadius: 100, backgroundColor: 'white', padding: 3, width: '40%', alignItems: 'center'}}>
                                             <Icon name="cart-outline" size={35} color="black" />
                                         </View>
-                                    
-                                    </View>
+                                    </TouchableOpacity>
+                                   
                                 </View>
                             </View>
                         </>
@@ -52,5 +55,6 @@ export const CategoriesStack = () => {
             />
 
         </Stack.Navigator>
+     </>
     );
 };

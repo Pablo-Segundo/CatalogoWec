@@ -8,7 +8,7 @@ import Svg, { Path } from 'react-native-svg'
 import Animated, { useAnimatedStyle, withTiming, useDerivedValue } from 'react-native-reanimated'
 import Lottie from 'lottie-react-native'
 import { CategoriesScreen } from '../Screens/categories/CategoriesScreen';
-import { PedidosScreen } from '../Screens/PedidosScreen'
+import { PedidosScreen } from '../Screens/pedidosScreen'
 import { CategoriesStack } from './stacks/CategorieStack'
 
 
@@ -164,7 +164,7 @@ const TabBarComponent = ({ active, options, onLayout, onPress }: TabBarComponent
 
 const styles = StyleSheet.create({
   tabBar: {
-    backgroundColor: '#debdce',
+    backgroundColor: '#F00A84',
 
   },
   activeBackground: {

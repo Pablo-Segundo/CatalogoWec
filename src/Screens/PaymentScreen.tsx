@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRoute } from '@react-navigation/native';
 import { StripeProvider } from '@stripe/stripe-react-native';
 import { CardField, useStripe } from '@stripe/stripe-react-native';
-import LoadingScreen from './LoadintgScreen';
+import LoadingScreen from './Products/loadintgScreen';
 
 
 export const PaymentScreen = () => {

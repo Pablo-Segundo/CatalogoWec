@@ -3,7 +3,7 @@ import { RefreshControl, View} from 'react-native';
 import API from '../../API/API';
 import { FlatList } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import LoadingScreen from '../LoadintgScreen';
+import LoadingScreen from './loadintgScreen';
 import { ProductCard } from '../../components/ProductCard';
 import { NoInternet } from '../../components/NoInternet';
 

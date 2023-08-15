@@ -7,7 +7,7 @@ type CartContextProps = {
 cart : [];
 success: boolean
 errorMessage: string;
-addToCart: (product: Product, quantity: number) => void;
+addToCart: (product: Product, quantity: number, name: string) => void;
 };
 
 const CartInitialState: CartState = {
@@ -21,24 +21,32 @@ const CartInitialState: CartState = {
   export const CartProvider = ({children}: any) => {
     const [state, dispatch] = useReducer(CartReducer, CartInitialState);
 
-    const addToCart =async(product: Product, quantity:number)=>{
+    const addToCart =async(product: Product, quantity:number,  )=>{
         try {
             const cartArray = await AsyncStorage.getItem('cart');
             let cart: any = [];
             const cartItem: any ={
               product,
-              quantity 
+              quantity: quantity,
             };
+          
+            
             if (cartArray) {
               cart = JSON.parse(cartArray);
               const productExists = cart.find(
-                (item: Product) => item._id === product._id,
+                (item: any) => item.product._id === product._id,
               );
+          console.log(cartArray,'-------------',productExists);
+              
               if (productExists) {
+               console.log('si eentra');
+                
                 const index = cart.findIndex(
-                  (item: Product) => item._id === product._id,
+                  (item: any) => item.product._id === product._id,
                 );
-                cart[index].quantity = quantity;
+                
+                cart[index].quantity = cart[index].quantity++;
+                
               }
               else {
                 cart.push(cartItem);
@@ -52,7 +60,7 @@ const CartInitialState: CartState = {
               payload: {cart: cart, errorMessage: 'si jala'}
             })
         }catch(error: any) {
-       console.log('xd');
+       console.log(error);
         }
 
        

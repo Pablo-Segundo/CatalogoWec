@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useReducer, useContext } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, Dimensions, FlatList, Modal } from 'react-native';
 import { Product } from '../interfaces/ProductsCategoryInterface';
 import { useNavigation } from '@react-navigation/native';
@@ -9,6 +9,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
 import { MdError, MdCheckCircle } from 'react-icons/md';
 import { motion } from 'framer-motion';
+import { CartContext } from '../context/cart/CartContext';
+
 
 
 interface Props {
@@ -33,6 +35,9 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
   const [availableQuantity, setAvailableQuantity] = useState(product.quantity);
   const [isCardDisabled, setIsCardDisabled] = useState(false);
 
+  const {addToCart} = useContext(CartContext); 
+  const {cart} = useContext(CartContext); 
+
   const decrementQuantity = () => {
     if (quantity > 1) {
       setQuantity(quantity - 1);
@@ -47,54 +52,54 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
     }
   };
   
-  const addToCart = async (product: Product, quantity: number, price: number, multimedia: Multimedia[]) => {
-    if (quantity === 0) {
-      Toast.show({
-        type: 'error',
-        text1: 'Error',
-        text2: 'Agregue un producto',
-      });
-      return;
-    }
-    if (quantity > availableQuantity) {
-      Toast.show({
-        type: 'error',
-        text1: 'Error',
-        text2: 'No hay suficiente cantidad disponible del producto',
-      });
-      return;
-    }
-    Toast.show({
-      type: 'success',
-      text1: 'Producto agregado',
-      text2: 'El producto se ha agregado al carrito de compras',
-    });
-    if (!quantity) quantity = 1;
-    const cartArray = await AsyncStorage.getItem('cart');
-    let cart = [];
-    const cartItem = {
-      product_id: product,
-      quantity,
-      _id: product._id,
-      price: product.price,
-      multimedia: product.multimedia,
-    };
-    if (cartArray) {
-      cart = JSON.parse(cartArray);
-      const productExists = cart.find((item) => item.product_id._id === product._id);
-      if (productExists) {
-        const index = cart.findIndex((item) => item.product_id._id === product._id);
-        cart[index].quantity = quantity;
-      } else {
-        cart.push(cartItem);
-      }
-    } else {
-      cart.push(cartItem);
-    }
-    await AsyncStorage.setItem('cart', JSON.stringify(cart));
-    updateCartCount();
-    setAvailableQuantity(availableQuantity - quantity);
-  };
+  // const addToCart = async (product: Product, quantity: number, price: number, multimedia: Multimedia[]) => {
+  //   if (quantity === 0) {
+  //     Toast.show({
+  //       type: 'error',
+  //       text1: 'Error',
+  //       text2: 'Agregue un producto',
+  //     });
+  //     return;
+  //   }
+  //   if (quantity > availableQuantity) {
+  //     Toast.show({
+  //       type: 'error',
+  //       text1: 'Error',
+  //       text2: 'No hay suficiente cantidad disponible del producto',
+  //     });
+  //     return;
+  //   }
+  //   Toast.show({
+  //     type: 'success',
+  //     text1: 'Producto agregado',
+  //     text2: 'El producto se ha agregado al carrito de compras',
+  //   });
+  //   if (!quantity) quantity = 1;
+  //   const cartArray = await AsyncStorage.getItem('cart');
+  //   let cart = [];
+  //   const cartItem = {
+  //     product_id: product,
+  //     quantity,
+  //     _id: product._id,
+  //     price: product.price,
+  //     multimedia: product.multimedia,
+  //   };
+  //   if (cartArray) {
+  //     cart = JSON.parse(cartArray);
+  //     const productExists = cart.find((item) => item.product_id._id === product._id);
+  //     if (productExists) {
+  //       const index = cart.findIndex((item) => item.product_id._id === product._id);
+  //       cart[index].quantity = quantity;
+  //     } else {
+  //       cart.push(cartItem);
+  //     }
+  //   } else {
+  //     cart.push(cartItem);
+  //   }
+  //   await AsyncStorage.setItem('cart', JSON.stringify(cart));
+  //   updateCartCount();
+  //   setAvailableQuantity(availableQuantity - quantity);
+  // };
 
 
   const toggleFavorite = async (product) => {
@@ -209,9 +214,12 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
         <Text style={styles.quantityButtonText}>+</Text>
       </TouchableOpacity>
     </View>
-    <TouchableOpacity style={styles.addToCartButton} onPress={() => {
-      addToCart(product, quantity, product.price, product.multimedia);
-    }}>
+    <TouchableOpacity style={styles.addToCartButton} 
+        onPress={() => {
+          addToCart(product, 1);
+          console.log(product)
+        }}
+    >
       <Text style={styles.addToCartButtonText}>Agregar al carrito  </Text>
     </TouchableOpacity>
     {/* <TouchableOpacity style={styles.viewFavoritesButton}>
@@ -258,9 +266,10 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
             <TouchableOpacity
             style={styles.addToCartButton}
             onPress={() => {
-              addToCart(product, quantity, product.price, product.multimedia);
+              addToCart(product, 1);
+              console.log(product)
             }}
-            disabled={isCardDisabled}
+            
           >
             <Text style={styles.addToCartButtonText}>Agregar al carrito</Text>
           </TouchableOpacity>

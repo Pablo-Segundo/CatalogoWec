@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback,useContext } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList, TextInput, Image,  } from 'react-native';
 import { Product } from '../interfaces/ProductsCategoryInterface';
 import { useNavigation } from '@react-navigation/native';
@@ -9,8 +9,9 @@ import { useToast, Modal, useDisclose, Row, Actionsheet } from 'native-base';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faCartShopping, faCreditCard, faMoneyBill } from '@fortawesome/free-solid-svg-icons';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
 import {Toast}  from 'react-native-toast-message/lib/src/Toast';
+
+import { CartContext } from '../context/cart/CartContext';
 
 interface Props {
   product: Product;
@@ -21,8 +22,8 @@ interface Props {
 export const ShoppingScreen = () => {
   const route = useRoute();
   const navigation = useNavigation();
-  const [quantity, setQuantity] = useState(0);
-  const [cart1, setCart] = useState(0);
+   const [quantity, setQuantity] = useState();
+  // const [cart1, setCart] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
   const [ totalProducts,setTotalProducts] = useState(0);
   const toast = useToast();
@@ -32,20 +33,22 @@ export const ShoppingScreen = () => {
   const [datosGuardados, setDatosGuardados] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedPaymentOption, setSelectedPaymentOption] = useState<'Tarjeta' | 'PagoContraEntrega' | null>(null);
+  const {cart} = useContext(CartContext); 
+  console.log(cart, '---------------------')
 
 
   const cartShopping = async () => {
     const storedCart = await AsyncStorage.getItem('cart');
-    const parsedCart = JSON.parse(storedCart);
-    let total = 0;
-    let productCount = 0;
-    parsedCart.forEach(item => {
-      total += item.quantity * item.product_id.price;
-      productCount += item.quantity;
-    });
-    setCart(parsedCart);
-    setTotalPrice(total);
-    setTotalProducts(productCount);
+    // const parsedCart = JSON.parse(storedCart);
+    // let total = 0;
+    // let productCount = 0;
+    // parsedCart.forEach(item => {
+    //   total += quantity * item.product_id.price;
+    //   productCount += quantity;
+    // });
+    // setCart(parsedCart);
+    // setTotalPrice(total);
+    // setTotalProducts(productCount);
   };
 
   //  const cartShopping = async => {
@@ -143,7 +146,7 @@ export const ShoppingScreen = () => {
     } else if (!selectedPaymentOption) {
       Toast.show({
         type: 'error',
-        text1: 'Seleccione una opción de pago',
+        text1: 'Seleccione una opción de pago', 
         text2: 'Por favor, elija una opción de pago antes de continuar',
       });
     } else {
@@ -162,9 +165,8 @@ export const ShoppingScreen = () => {
   const handleDeleteAll = () => {
     AsyncStorage.removeItem('cart')
     .then(() => {
-      setCart([]);
-      setTotalPrice(0);
-      setTotalProducts(0);
+      cart({});
+    
     })
     .catch(error => {
       console.error('Error al borrar el carrito :', error);
@@ -259,55 +261,63 @@ const filterdatos = async () => {
       </TouchableOpacity>
         </View>
       </View>
-      <View style={styles.container}>
-        {totalProducts === 0 ? (
-          renderEmptyCart()
-        ) : (
-          <>
+     
             <View style={styles.tableRow}>
               <Text style={styles.headerText}>Productos agregados ({totalProducts})</Text>
               <TouchableOpacity style={styles.buyButton3} onPress={handleDeleteAll}>
                 <Text style={styles.headerTextWhite}>Vaciar </Text>
               </TouchableOpacity>
             </View>
-          </>
-        )}
+        
         <FlatList
-          data={cart1}
-          renderItem={({ item, index }) => (
+          data={cart}
+          //  <Text style={styles.rowText}>{item.product.name}</Text>
+          //       <Text style={styles.rowText}>{item.product.price} </Text> 
+          renderItem={({ item,  }) => (
             <Card >
-              <View style={styles.rowContainer}>
-                <View style={styles.imageContainer}>
-                  <Image style={styles.image} source={{ uri: item.multimedia[0].images['400x400'] }} />
-                </View>
-                <View style={styles.detailsContainer}>
-                  <View style={styles.tableRow}>
-                    <Text style={styles.rowText}>{item.product_id.name}</Text>
-                  </View>
-                <View style={styles.rowContainer}>
-                <Text style={styles.rowText}>( {item.quantity} ) x </Text>
-                <Text style={styles.productPrice}>${item.price} </Text>
-                  </View>
-                <View style={styles.quantityContainer}>
-                  <TouchableOpacity onPress={() => decrementQuantity(index)}>
-                    <Text style={styles.quantityButton}>-</Text>
-                  </TouchableOpacity>
-                  <Text style={styles.quantity}>{item.quantity}</Text>
-                  <TouchableOpacity
-                      onPress={() => incrementQuantity(index)}
-                      disabled={item.quantity >= item.product_id.quantity}
-                        >
-                      <Text style={[styles.quantityButton, item.quantity >= item.product_id.quantity && { opacity: 0.1 }]}>
-                        +
-                      </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.updateButton} onPress={() => deleteData(index)}>
-                <Icon name="trash" size={30} color="#fff" />
-              </TouchableOpacity>
-                </View>
-                </View>
+            <View style={styles.rowContainer}>
+              <View style={styles.imageContainer}>
+                <Image style={styles.image} source={{ uri: item.product.multimedia[0].images['400x400'] }} />
               </View>
-            </Card>
+              <View style={styles.detailsContainer}>
+                <View style={styles.tableRow}>
+                <Text style={styles.rowText}>{item.product.name}</Text>
+              
+                {/* <Text  style={styles.rowText}>{item.product.quantity}</Text> */}
+                </View>
+
+              <View style={styles.rowContainer}>
+              <Text style={styles.rowText}>{item.product.price} </Text> 
+             
+              <Text  style={styles.rowText}>( {item.quantity} )</Text>
+            
+                </View>
+
+                <View style={styles.rowContainer}>
+               
+                    <TouchableOpacity style={styles.updateButton} onPress={() => deleteData(item)}>
+                    <Icon name="map-marker-outline" size={30} color="#fff" />
+                    </TouchableOpacity>
+                </View>
+
+              {/* <View style={styles.quantityContainer}>
+                <TouchableOpacity onPress={() => decrementQuantity(index)}>
+                  <Text style={styles.quantityButton}>-</Text>
+                </TouchableOpacity>
+                <Text style={styles.quantity}>{item.product.quantity}</Text>
+                <TouchableOpacity
+                    onPress={() => incrementQuantity(index)}
+                    disabled={item.quantity >= item.product_id.quantity}
+                      >
+                    <Text style={[styles.quantityButton, item.product.quantity >= item.product_id.quantity && { opacity: 0.1 }]}>
+                      +
+                    </Text>
+                </TouchableOpacity>
+               
+              </View> */}
+              </View>
+            </View>
+          </Card>
           )}
         />
           <Card>
@@ -378,7 +388,7 @@ const filterdatos = async () => {
       </Modal>
           </View>
           </Card>
-          </View>
+          
 
         <Actionsheet isOpen={isOpen} onClose={onClose}>
            <Actionsheet.Content>
@@ -719,6 +729,7 @@ const filterdatos = async () => {
       cardcontainer: {
         padding: 10,
         width: '75%',
+      
        maxHeight: 65,
        flexDirection: 'row',
         

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, FlatList, Dimensions, ImageBackground } from 'react-native';
 import API from '../../API/API';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import LoadingScreen from '../Products/loadintgScreen';
 import { NoInternet } from '../../components/NoInternet';
 
 
@@ -29,7 +30,7 @@ export const CategoriesScreen = ({ route, navigation }: Props) => {
 
   if (!categories) {
     return (
-      <NoInternet />
+    <LoadingScreen/>
     );
   }
   return (
