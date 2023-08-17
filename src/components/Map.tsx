@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, View, Dimensions, Platform,  TouchableOpacity, Text, TextInput, KeyboardAvoidingView, ScrollView,  } from 'react-native';
+import { StyleSheet, View, Dimensions, Platform, TouchableOpacity, Text, TextInput, KeyboardAvoidingView, ScrollView, } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import { mapStyle } from '../Styles/mapStyle';
 import Geolocation from 'react-native-geolocation-service';
@@ -22,7 +22,7 @@ import { usePermissions } from '../hook/usePermission';
 
 
 export function MapScreen() {
-  const { isOpen, onOpen, onClose} = useDisclose();
+  const { isOpen, onOpen, onClose } = useDisclose();
   const navigation = useNavigation();
   const [nombre, setNombre] = useState('');
   const [numeroTelefonico, setNumeroTelefonico] = useState('');
@@ -39,17 +39,17 @@ export function MapScreen() {
   const [errorTelefonoMessage, setErrorTelefonoMessage] = useState('');
   const { askLocationPermission } = usePermissions();
 
-  const [showModal, setShowModal] = useState(false); 
+  const [showModal, setShowModal] = useState(false);
 
 
 
   const getCurrentLocation = () => {
-    Geocoder.init('AIzaSyDFHYFl_pImNIwTzu2YwjL5R8pH-nlWCE4');   
+    Geocoder.init('AIzaSyDFHYFl_pImNIwTzu2YwjL5R8pH-nlWCE4');
     Geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
         console.log(position);
-        
+
         setCurrentLocation({ latitude, longitude });
       },
       (error) => {
@@ -72,7 +72,7 @@ export function MapScreen() {
         console.log('Error al obtener los datos guardados:', error);
       }
     };
-  
+
     obtenerDatosGuardados();
   }, []);
 
@@ -90,7 +90,7 @@ export function MapScreen() {
   // };
 
 
-  
+
   const guardarDatos = async () => {
     try {
       const datosGuardados = await AsyncStorage.getItem('datos');
@@ -112,11 +112,11 @@ export function MapScreen() {
       console.log('Error al guardar los datos unu:', error);
     }
   };
-  
-   
+
+
 
   const handleMapPress = async (coordinate) => {
-     
+
     try {
       const response = await Geocoder.from(coordinate.latitude, coordinate.longitude);
       const address = response.results[0].formatted_address;
@@ -127,8 +127,8 @@ export function MapScreen() {
     }
   };
 
-  const  handleAddressChange = async (text,) => {
-    
+  const handleAddressChange = async (text,) => {
+
     setSelectedAddress(text);
     try {
       const response = await Geocoder.from(text);
@@ -145,7 +145,7 @@ export function MapScreen() {
   };
 
   const isValidPhoneNumber = (phone) => {
-   
+
     const regex = /^\d{10}$/;
     return regex.test(phone);
   };
@@ -173,248 +173,150 @@ export function MapScreen() {
   };
 
   return (
-    <> 
+    <>
+      <View style={{
+        zIndex: 1, opacity: 0.7,
+        position: 'absolute', alignSelf: 'center'
+      }}>
+        <TextInput
+          style={styles.directionInput}
+          placeholder="Escriba su calle:"
+          placeholderTextColor={'black'}
+          onChangeText={handleAddressChange}
+        />
+      </View>
 
-    <ActionSheetProvider>    
-        <View style={styles.container}>
-          {currentLocation && (
-            <>
-    <MapView
-        provider={Platform.OS == "android" ? PROVIDER_GOOGLE : MapView.PROVIDER_GOOGLE}
-        style={{ flex: 1, position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
-        region={{
-          latitude: currentLocation?.latitude || 0,
-          longitude: currentLocation?.longitude || 0,
-          latitudeDelta: 0.003,
-          longitudeDelta: 0.003,
-        }}
-        mapType={"standard"}
-        onPress={(e) => handleMapPress(e.nativeEvent.coordinate)}
-      >
-        {currentLocation && (
-          <Marker
-            coordinate={{ latitude: currentLocation.latitude, longitude: currentLocation.longitude }}
-            title=" Tu ubicación Actual"
-            description="Ubicacion aproximada  "
-            draggable
-          />
-        )}
-        {selectedLocation && (
-          <Marker
-            coordinate={{
-              latitude: selectedLocation.latitude,
-              longitude: selectedLocation.longitude,
+      {currentLocation && (
+        <>
+          <MapView
+            provider={Platform.OS == "android" ? PROVIDER_GOOGLE : MapView.PROVIDER_GOOGLE}
+            style={{ flex: 1, position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
+            region={{
+              latitude: currentLocation?.latitude || 0,
+              longitude: currentLocation?.longitude || 0,
+              latitudeDelta: 0.003,
+              longitudeDelta: 0.003,
             }}
-            title="Nueva ubicación"
-            description="Ubicación seleccionada"
-            draggable={isMarkerDraggable}
-            onDragEnd={handleMarkerDrag}
-          />
-        )}
-      </MapView>
-
-           
-            <Actionsheet  isOpen={isOpen} onClose={onClose} size="100%"   >
-           <Actionsheet.Content>
-          <KeyboardAvoidingView  behavior={Platform.OS === 'android' ? 'padding' : 'height'} >
-
-            <ScrollView style={{flex:1}} keyboardDismissMode='interactive'> 
-
-             <Text style={styles.textgray}> *IMPORTANTE* *recuerde poner los datos de quien va a recibir el paquete*</Text> 
-
-       <View style={{marginHorizontal: 10}}>
-            <Text style={styles.headerText}> Direccion:  </Text>
-                <TextInput
-            style={[styles.discountCodeInput, errorDireccion && styles.errorInput]}
-            placeholder="Escriba su calle:"
-            value={selectedAddress}
-            placeholderTextColor={'black'}
-            onChangeText={(text) => {
-              setErrorDireccion(false);
-              setSelectedAddress(text);
-            }}
-          />
-          {errorDireccion && (
-            <Text style={styles.errorMessage}>Este campo es obligatorio.</Text>
-          )}
-            <Text style={styles.headerText}>Nombre de quien recibe:</Text> 
-            <TextInput
-        style={[styles.discountCodeInput, errorNombre && styles.errorInput]}
-        placeholder="Por favor, escriba su nombre"
-        placeholderTextColor={'black'}
-        value={nombre}
-        onChangeText={(text) => {
-          setErrorNombre(false);
-          setNombre(text);
-        }}
-      />
-      {errorNombre && (
-        <Text style={styles.errorMessage}>Este campo es obligatorio.</Text>
-      )}
-              <Text style={styles.headerText}>Número telefónico:</Text>
-                <View style={styles.phoneInputContainer}>
-                <Image source={require('../assets/lottie/mexico.png')} style={styles.flagImage} />
-                            <TextInput
-                    style={[styles.phoneInput, errorTelefono && styles.errorInput]}
-                    keyboardType="numeric"
-                    placeholder="Escriba su numero:"
-                    placeholderTextColor={'black'}
-                    value={numeroTelefonico}
-                    onChangeText={(text) => {
-                      setErrorTelefono(false);
-                      setNumeroTelefonico(text);
-                    }}
-                  />
-                  {errorTelefono && (
-                    <Text style={styles.errorMessage}>{errorTelefonoMessage}</Text>
-                  )}
-              </View>
-
-                <Text style={styles.headerText}>Referencias (opcional):</Text>
-                <TextInput
-                  style={styles.discountCodeInput}
-                  placeholder="Escriba su referencia: "
-                  value={referencias}
-                  placeholderTextColor={'black'}
-                  onChangeText={text => setReferencias(text)}
-                /> 
-</View>
-<TouchableOpacity style={styles.buyButton2} onPress={handleSaveData}>
-        <Text style={styles.headerWITHE}> Guardar Datos </Text>
-      </TouchableOpacity> 
-            </ScrollView> 
-            </KeyboardAvoidingView>
-            </Actionsheet.Content>
-            </Actionsheet>
-          
-              </>
+            mapType={"standard"}
+            onPress={(e) => handleMapPress(e.nativeEvent.coordinate)}
+          >
+            {currentLocation && (
+              <Marker
+                coordinate={{ latitude: currentLocation.latitude, longitude: currentLocation.longitude }}
+                title=" Tu ubicación Actual"
+                description="Ubicacion aproximada  "
+                draggable
+              />
             )}
-          </View>
-        </ActionSheetProvider>
+            {selectedLocation && (
+              <Marker
+                coordinate={{
+                  latitude: selectedLocation.latitude,
+                  longitude: selectedLocation.longitude,
+                }}
+                title="Nueva ubicación"
+                description="Ubicación seleccionada"
+                draggable={isMarkerDraggable}
+                onDragEnd={handleMarkerDrag}
+              />
+            )}
+          </MapView>
 
 
-        {/* <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-          <Modal.Content  maxWidth="500px" >
-              <Modal.Header>
-                <Modal.Body>
-                <ScrollView style={{flex:1}} keyboardDismissMode='interactive'> 
-                <KeyboardAvoidingView  behavior={Platform.OS === 'android' ? 'padding' : 'height'} >
+          <Actionsheet isOpen={isOpen} onClose={onClose} size="100%"   >
+            <Actionsheet.Content>
+              <KeyboardAvoidingView behavior={Platform.OS === 'android' ? 'padding' : 'height'} >
 
-                <Text style={styles.textgray}> *IMPORTANTE* *recuerde poner los datos de quien va a recibir el paquete*</Text> 
+                <ScrollView style={{ flex: 1 }} keyboardDismissMode='interactive'>
 
-<View style={{marginHorizontal: 10}}>
-     <Text style={styles.headerText}> Direccion:  </Text>
-         <TextInput
-     style={[styles.discountCodeInput, errorDireccion && styles.errorInput]}
-     placeholder="Escriba su calle:"
-     value={selectedAddress}
-     placeholderTextColor={'black'}
-     onChangeText={(text) => {
-       setErrorDireccion(false);
-       setSelectedAddress(text);
-     }}
-   />
-   {errorDireccion && (
-     <Text style={styles.errorMessage}>Este campo es obligatorio.</Text>
-   )}
+                  <Text style={styles.textgray}> *IMPORTANTE* *recuerde poner los datos de quien va a recibir el paquete*</Text>
 
+                  <View style={{ marginHorizontal: 10 }}>
+                    <Text style={styles.headerText}> Direccion:  </Text>
+                    <TextInput
+                      style={[styles.discountCodeInput, errorDireccion && styles.errorInput]}
+                      placeholder="Escriba su calle:"
+                      value={selectedAddress}
+                      placeholderTextColor={'black'}
+                      onChangeText={(text) => {
+                        setErrorDireccion(false);
+                        setSelectedAddress(text);
+                      }}
+                    />
+                    {errorDireccion && (
+                      <Text style={styles.errorMessage}>Este campo es obligatorio.</Text>
+                    )}
+                    <Text style={styles.headerText}>Nombre de quien recibe:</Text>
+                    <TextInput
+                      style={[styles.discountCodeInput, errorNombre && styles.errorInput]}
+                      placeholder="Por favor, escriba su nombre"
+                      placeholderTextColor={'black'}
+                      value={nombre}
+                      onChangeText={(text) => {
+                        setErrorNombre(false);
+                        setNombre(text);
+                      }}
+                    />
+                    {errorNombre && (
+                      <Text style={styles.errorMessage}>Este campo es obligatorio.</Text>
+                    )}
+                    <Text style={styles.headerText}>Número telefónico:</Text>
+                    <View style={styles.phoneInputContainer}>
+                      <Image source={require('../assets/lottie/mexico.png')} style={styles.flagImage} />
+                      <TextInput
+                        style={[styles.phoneInput, errorTelefono && styles.errorInput]}
+                        keyboardType="numeric"
+                        placeholder="Escriba su numero:"
+                        placeholderTextColor={'black'}
+                        value={numeroTelefonico}
+                        onChangeText={(text) => {
+                          setErrorTelefono(false);
+                          setNumeroTelefonico(text);
+                        }}
+                      />
+                      {errorTelefono && (
+                        <Text style={styles.errorMessage}>{errorTelefonoMessage}</Text>
+                      )}
+                    </View>
 
+                    <Text style={styles.headerText}>Referencias (opcional):</Text>
+                    <TextInput
+                      style={styles.discountCodeInput}
+                      placeholder="Escriba su referencia: "
+                      value={referencias}
+                      placeholderTextColor={'black'}
+                      onChangeText={text => setReferencias(text)}
+                    />
+                  </View>
+                  <TouchableOpacity style={styles.buyButton2} onPress={handleSaveData}>
+                    <Text style={styles.headerWITHE}> Guardar Datos </Text>
+                  </TouchableOpacity>
+                </ScrollView>
+              </KeyboardAvoidingView>
+            </Actionsheet.Content>
+          </Actionsheet>
 
-     <Text style={styles.headerText}>Nombre de quien recibe:</Text> 
-     <TextInput
- style={[styles.discountCodeInput, errorNombre && styles.errorInput]}
- placeholder="Por favor, escriba su nombre"
- placeholderTextColor={'black'}
- value={nombre}
- onChangeText={(text) => {
-   setErrorNombre(false);
-   setNombre(text);
- }}
-/>
-{errorNombre && (
- <Text style={styles.errorMessage}>Este campo es obligatorio.</Text>
-)}
-
-
-       <Text style={styles.headerText}>Número telefónico:</Text>
-         <View style={styles.phoneInputContainer}>
-         <Image source={require('../Navigators/assets/lottie/mexico.png')} style={styles.flagImage} />
-                     <TextInput
-             style={[styles.phoneInput, errorTelefono && styles.errorInput]}
-             keyboardType="numeric"
-             placeholder="Escriba su numero:"
-             placeholderTextColor={'black'}
-             value={numeroTelefonico}
-             onChangeText={(text) => {
-               setErrorTelefono(false);
-               setNumeroTelefonico(text);
-             }}
-           />
-           {errorTelefono && (
-             <Text style={styles.errorMessage}>{errorTelefonoMessage}</Text>
-           )}
-       </View>
-
-         <Text style={styles.headerText}>Referencias (opcional):</Text>
-         <TextInput
-           style={styles.discountCodeInput}
-           placeholder="Escriba su referencia: "
-           value={referencias}
-           placeholderTextColor={'black'}
-           onChangeText={text => setReferencias(text)}
-         /> 
-
-</View>
-
-<TouchableOpacity style={styles.buyButton2} onPress={handleSaveData}>
- <Text style={styles.headerWITHE}> Guardar Datos </Text>
-</TouchableOpacity>
-   </KeyboardAvoidingView>
-   </ScrollView>
+        </>
+      )}
 
 
-                </Modal.Body>
-              </Modal.Header>
-             </Modal.Content>
-          </Modal> */}
 
 
-         {/* <View> 
-          <Card>
-        <TouchableOpacity onPress={onOpen} style={styles.buyButton}>
-             <Text style={styles.headerWITHE}> Agregue sus datos </Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.buyButton}
-         onPress={() => {
-        navigation.navigate('Direction');
-         }}
-        >
-           <Text style={styles.headerWITHE}>Direcciones guardads  </Text>
-        </TouchableOpacity> 
-        </Card>
-        </View>  */}
 
-  
-
-<View style={styles.buttonContainer}>
-<TouchableOpacity onPress={onOpen} style={styles.buyButton}>
-          <Text style={styles.buttonText}>Agregue sus datos</Text>
-        </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.buyButton}
           onPress={() => {
-            navigation.navigate('Direction');
+            onOpen(true)
           }}
         >
-          <Text style={styles.buttonText}>Direcciones guardadas</Text>
+          <Text style={styles.buttonText}>Continuar {'>'} </Text>
         </TouchableOpacity>
-      </View>
-        
+
 
 
     </>
-          
+
   );
 }
 
@@ -425,10 +327,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  directionrow:{
+  directionrow: {
     paddingHorizontal: 15,
     position: 'absolute',
-    top: 23, 
+    top: 23,
     zIndex: 1,
   },
   errorInput: {
@@ -452,7 +354,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'gray',
     borderRadius: 8,
-    marginLeft: 40,
     marginHorizontal: 5,
     paddingVertical: 10,
     paddingHorizontal: 16,
@@ -464,11 +365,15 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
+    width: '98%',
+    minWidth: '98%',
+    maxWidth: '98%',
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    marginTop: 9
   },
-  
+
   headerWITHE: {
     fontWeight: 'bold',
     fontSize: 20,
@@ -483,18 +388,18 @@ const styles = StyleSheet.create({
   },
   CardInfo: {
     height: '10%',
-    paddingHorizontal:'15%'
+    paddingHorizontal: '15%'
   },
   discountCodeInput: {
-    borderColor: 'gray', 
+    borderColor: 'gray',
     borderWidth: 1,
     borderRadius: 5,
     padding: 15,
     marginTop: 10,
     color: 'black',
-    
+
   },
- 
+
 
   header: {
     padding: 15,
@@ -542,28 +447,26 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 16,
   },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginVertical: 20,
-  },
+  
   buyButton: {
+    position: 'absolute',
+    shadowColor: 'black',
+    shadowOpacity: 30,
+    shadowOffset: {
+      width: -1,
+      height: 3
+    },
+    right: 30,
+    bottom: 50,
     backgroundColor: '#ff1493',
-    borderRadius: 8,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    width: '48%',
-  },
-  buyButton2: {
-    backgroundColor: '#ff1493',
-    borderRadius: 8,
-    paddingVertical: 10,
-    marginTop: 15,
-    marginHorizontal: 10,
- 
+    borderRadius: 100,
+    width: '30%',
+    height: '10%',
+    justifyContent: 'center'
   },
   buttonText: {
     color: 'white',
+    fontWeight: 'bold',
     fontSize: 16,
     textAlign: 'center',
   },
