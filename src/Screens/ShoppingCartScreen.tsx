@@ -10,7 +10,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faCartShopping, faCreditCard, faMoneyBill } from '@fortawesome/free-solid-svg-icons';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Toast}  from 'react-native-toast-message/lib/src/Toast';
-
 import { CartContext } from '../context/cart/CartContext';
 
 interface Props {
@@ -18,8 +17,7 @@ interface Props {
   route: any;
 }
 
-
-export const ShoppingScreen = () => {
+export const ShoppingScreen = ({product} : Props) => {
   const route = useRoute();
   const navigation = useNavigation();
    const [quantity, setQuantity] = useState();
@@ -33,177 +31,15 @@ export const ShoppingScreen = () => {
   const [datosGuardados, setDatosGuardados] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedPaymentOption, setSelectedPaymentOption] = useState<'Tarjeta' | 'PagoContraEntrega' | null>(null);
+  
   const {cart} = useContext(CartContext); 
-  console.log(cart, '---------------------')
+  const {removeItemFromCart , clearCart, incrementQuantity, decrementQuantity } = useContext(CartContext);
 
 
   const cartShopping = async () => {
     const storedCart = await AsyncStorage.getItem('cart');
-    // const parsedCart = JSON.parse(storedCart);
-    // let total = 0;
-    // let productCount = 0;
-    // parsedCart.forEach(item => {
-    //   total += quantity * item.product_id.price;
-    //   productCount += quantity;
-    // });
-    // setCart(parsedCart);
-    // setTotalPrice(total);
-    // setTotalProducts(productCount);
-  };
-
-  //  const cartShopping = async => {
-  //     const storedCart = await AsyncStorage.getItem('cart');}
-  //     const parsedCart = JSON.parse(storedCart);
-  //     const uniqueProductIds = new Set();
-  //     let productCount = 0;
-  //         parsedCart.forEach(item => {
-  //           total += item.quantity * item.product_id.price;
-  //           productCount += item.quantity;
-  //         });
-  //        setCart(parsedCart);
-  //        setTotalPrice(total);
-  //        setTotalProducts(productCount);
-  //      };
-  
-
-  useEffect(() => {
-    fetchLatestData();
-    cartShopping();
-    const unsubscribe = navigation.addListener('focus', fetchLatestData);
-    return () => {
-      unsubscribe();
-    };
-  }, [fetchLatestData]);
-
-
-  const decrementQuantity = (index) => {
-    const updatedCart = [...cart1];
-    const updatedProduct = updatedCart[index];
-    if (updatedProduct.quantity > 1) {
-      updatedProduct.quantity -= 1;
-      const updatedPrice = updatedProduct.product_id.price;
-      AsyncStorage.setItem('cart', JSON.stringify(updatedCart))
-        .then(() => {
-          setCart(updatedCart);
-          setTotalPrice(totalPrice - updatedPrice);
-          setTotalProducts(totalProducts - 1);
-        })
-        .catch(error => {});
-    }
-  };
-
-  const incrementQuantity = (index) => {
-    const updatedCart = [...cart1];
-    const updatedProduct = updatedCart[index];
-    const updatedPrice = updatedProduct.product_id.price;
-    if (updatedProduct.quantity < updatedProduct.product_id.quantity) {
-      updatedProduct.quantity += 1;
-      AsyncStorage.setItem('cart', JSON.stringify(updatedCart))
-        .then(() => {
-          setCart(updatedCart);
-          setTotalPrice(totalPrice + updatedPrice);
-          setTotalProducts(totalProducts + 1);
-        })
-        .catch(error => {});
-    } else {
-      Toast.show({
-        type: 'error',
-        text1: 'Producto agotado',
-        text2: 'No hay suficiente cantidad disponible',
-      });
-    }
-  };
  
-
-
-  const deleteData = (index) => {
-    const updatedCart = [...cart1];
-    const deletedProduct = updatedCart[index];
-    const updatedPrice = deletedProduct.quantity * deletedProduct.product_id.price;
-    updatedCart.splice(index, 1);
-    AsyncStorage.setItem('cart', JSON.stringify(updatedCart))
-      .then(() => {
-        setCart(updatedCart);
-        setTotalPrice(totalPrice - updatedPrice);
-        setTotalProducts(totalProducts - deletedProduct.quantity);
-      })
-      .catch(error => {});
   };
-
-
-  const handleOptionSelect = (option: 'Tarjeta' | 'PagoContraEntrega') => {
-    setSelectedPaymentOption(option);
-  };
-  
-
-  const handleContinuar = () => {
-    if (totalProducts === 0 || !datosGuardados) {
-      Toast.show({
-        type: 'error',
-        text1: 'Datos incompletos',
-        text2: 'Agregue productos y complete la dirección antes de continuar',
-      });
-    } else if (!selectedPaymentOption) {
-      Toast.show({
-        type: 'error',
-        text1: 'Seleccione una opción de pago', 
-        text2: 'Por favor, elija una opción de pago antes de continuar',
-      });
-    } else {
-      navigation.navigate('tarjetaScreen', {
-        filteredProducts: cart1,
-        totalPrice: totalPrice,
-        selectedPaymentOption: selectedPaymentOption,
-       
-        // discountProductsCart: discountProductsCart
-       
-      
-      });
-    }
-  };
-
-  const handleDeleteAll = () => {
-    AsyncStorage.removeItem('cart')
-    .then(() => {
-      cart({});
-    
-    })
-    .catch(error => {
-      console.error('Error al borrar el carrito :', error);
-    });
-  };
-
- const renderEmptyCart = () => {
-      return (
-        <View style={styles.emptyCartContainer}>
-          <Text style={styles.emptyCartText}>Ningún producto agregado</Text>
-          <TouchableOpacity
-            style={styles.exploreButton}
-            onPress={() => navigation.navigate('Home')}
-          >
-            <Image source={require('../assets/lottie/osuxd.png')} style={styles.exploreImage} />
-            <Text style={styles.exploreButtonText}>Explorar y comprar productos</Text>
-          </TouchableOpacity>
-        </View>
-      );
-};
-
-const obtenerDatosGuardados = async () => {
-  try {
-    const datosGuardados = await AsyncStorage.getItem('datos');
-    if (datosGuardados) {
-      const datosParseados = JSON.parse(datosGuardados);
-      const ultimoDatoGuardado = datosParseados[datosParseados.length - 1];
-      setDatosGuardados(ultimoDatoGuardado);
-    }
-  } catch (error) {
-    console.log('Error al obtener los datos guardados:', error);
-  }
-};
-const fetchLatestData = useCallback(() => {
-  obtenerDatosGuardados();
-}, []); 
-
 
 const filterdatos = async () => {
   try {
@@ -238,6 +74,8 @@ const filterdatos = async () => {
   }
 }
 
+
+  
  
   return (
     <>
@@ -264,8 +102,8 @@ const filterdatos = async () => {
      
             <View style={styles.tableRow}>
               <Text style={styles.headerText}>Productos agregados ({totalProducts})</Text>
-              <TouchableOpacity style={styles.buyButton3} onPress={handleDeleteAll}>
-                <Text style={styles.headerTextWhite}>Vaciar </Text>
+              <TouchableOpacity style={styles.buyButton3} >
+                <Text style={styles.headerTextWhite}  onPress={clearCart}>Vaciar </Text>
               </TouchableOpacity>
             </View>
         
@@ -295,27 +133,30 @@ const filterdatos = async () => {
 
                 <View style={styles.rowContainer}>
                
-                    <TouchableOpacity style={styles.updateButton} onPress={() => deleteData(item)}>
+                    <TouchableOpacity style={styles.updateButton} 
+                    onPress={() => removeItemFromCart(item.product._id)}
+                    >
                     <Icon name="map-marker-outline" size={30} color="#fff" />
                     </TouchableOpacity>
                 </View>
-
-              {/* <View style={styles.quantityContainer}>
-                <TouchableOpacity onPress={() => decrementQuantity(index)}>
+            <View style={styles.rowContainer}>
+              <View style={styles.quantityContainer}>
+                <TouchableOpacity onPress={() => decrementQuantity(item.product._id)}>
                   <Text style={styles.quantityButton}>-</Text>
                 </TouchableOpacity>
                 <Text style={styles.quantity}>{item.product.quantity}</Text>
                 <TouchableOpacity
-                    onPress={() => incrementQuantity(index)}
-                    disabled={item.quantity >= item.product_id.quantity}
+                    onPress={() => incrementQuantity(item.product._id)}
                       >
-                    <Text style={[styles.quantityButton, item.product.quantity >= item.product_id.quantity && { opacity: 0.1 }]}>
+                    <Text style={styles.quantityButton}>
                       +
                     </Text>
+                  
                 </TouchableOpacity>
                
-              </View> */}
               </View>
+              </View>
+            </View>
             </View>
           </Card>
           )}
@@ -338,7 +179,7 @@ const filterdatos = async () => {
             <Modal.Header style={styles.modalHeader}>Agregue un codigo de descuento: </Modal.Header>
             <Modal.Body style={styles.modalBody}>
             </Modal.Body>
-            <TouchableOpacity onPress={handleContinuar} style={styles.continueButton}>
+            <TouchableOpacity  style={styles.continueButton}>
               <Text style={styles.continueButtonText}>aplicar  </Text>
             </TouchableOpacity>
           </Modal.Content>
@@ -381,7 +222,7 @@ const filterdatos = async () => {
             </TouchableOpacity>
             </Modal.Body>
 
-            <TouchableOpacity onPress={handleContinuar}   style={styles.continueButton}>
+            <TouchableOpacity  style={styles.continueButton}>
             <Text style={styles.continueButtonText}> Continuar  </Text>
           </TouchableOpacity>
           </Modal.Content>

@@ -21,20 +21,15 @@ interface Props {
 
 
 export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) => {
-  const navigation = useNavigation();
-  const bottomSheet = useRef();
   const [quantity, setQuantity] = useState(1);
-  const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclose();
   const [showModal, setShowModal] = useState(false);
   const [favorites, setFavorites] = useState([]);
-  const carouselRef = useRef(null); 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [disabled, setDisabled] = useState(false);
-  
   const [availableQuantity, setAvailableQuantity] = useState(product.quantity);
   const [isCardDisabled, setIsCardDisabled] = useState(false);
-
+  
   const {addToCart} = useContext(CartContext); 
   const {cart} = useContext(CartContext); 
 
@@ -178,9 +173,7 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
   }, [availableQuantity]);
 
 
-  const handleContinuar =() => {
 
-  }
 
   
   return (
@@ -217,7 +210,6 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
     <TouchableOpacity style={styles.addToCartButton} 
         onPress={() => {
           addToCart(product, 1);
-          console.log(product)
         }}
     >
       <Text style={styles.addToCartButtonText}>Agregar al carrito  </Text>
