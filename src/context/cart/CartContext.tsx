@@ -128,7 +128,7 @@ const CartInitialState: CartState = {
                   if (cart[index].quantity < cart[index].product.availableQuantity) {
                       cart[index].quantity++;
                      
-                      await AsyncStorage.setItem('cart', JSON.stringify(cart));
+                      await AsyncStorage.setItem('cart', JSON.stringify(cart)); 
                      
                       dispatch({
                           type: 'addToCart',
@@ -173,6 +173,8 @@ const CartInitialState: CartState = {
           console.log(error);
       }
   };
+
+  
 
     return (
 <CartContext.Provider value={{

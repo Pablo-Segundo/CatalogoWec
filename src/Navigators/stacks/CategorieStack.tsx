@@ -41,7 +41,7 @@ export const CategoriesStack = () => {
                                         </Text>
                                     </View>
                                      
-                                    <TouchableOpacity style={{ width: '30%', alignItems: 'center', justifyContent: 'center' }}>
+                                    <TouchableOpacity style={{ width: '30%', alignItems: 'center', justifyContent: 'center' }} >
                                         <View style={{borderRadius: 100, backgroundColor: 'white', padding: 3, width: '40%', alignItems: 'center'}}>
                                             <Icon name="cart-outline" size={35} color="black" />
                                         </View>

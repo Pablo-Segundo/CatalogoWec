@@ -74,7 +74,21 @@ const filterdatos = async () => {
   }
 }
 
-
+const obtenerDatosGuardados = async () => {
+  try {
+    const datosGuardados = await AsyncStorage.getItem('datos');
+    if (datosGuardados) {
+      const datosParseados = JSON.parse(datosGuardados);
+      const ultimoDatoGuardado = datosParseados[datosParseados.length - 1];
+      setDatosGuardados(ultimoDatoGuardado);
+    }
+  } catch (error) {
+    console.log('Error al obtener los datos guardados:', error);
+  }
+};
+const fetchLatestData = useCallback(() => {
+  obtenerDatosGuardados();
+}, []); 
   
  
   return (
@@ -101,7 +115,7 @@ const filterdatos = async () => {
       </View>
      
             <View style={styles.tableRow}>
-              <Text style={styles.headerText}>Productos agregados ({totalProducts})</Text>
+              <Text style={styles.headerText}>Productos agregados ({ })</Text>
               <TouchableOpacity style={styles.buyButton3} >
                 <Text style={styles.headerTextWhite}  onPress={clearCart}>Vaciar </Text>
               </TouchableOpacity>
@@ -126,38 +140,36 @@ const filterdatos = async () => {
 
               <View style={styles.rowContainer}>
               <Text style={styles.rowText}>{item.product.price} </Text> 
-             
               <Text  style={styles.rowText}>( {item.quantity} )</Text>
-            
                 </View>
 
-                <View style={styles.rowContainer}>
-               
-                    <TouchableOpacity style={styles.updateButton} 
-                    onPress={() => removeItemFromCart(item.product._id)}
-                    >
-                    <Icon name="map-marker-outline" size={30} color="#fff" />
-                    </TouchableOpacity>
-                </View>
+  
+
             <View style={styles.rowContainer}>
               <View style={styles.quantityContainer}>
-                <TouchableOpacity onPress={() => decrementQuantity(item.product._id)}>
-                  <Text style={styles.quantityButton}>-</Text>
-                </TouchableOpacity>
-                <Text style={styles.quantity}>{item.product.quantity}</Text>
-                <TouchableOpacity
-                    onPress={() => incrementQuantity(item.product._id)}
-                      >
-                    <Text style={styles.quantityButton}>
-                      +
-                    </Text>
-                  
-                </TouchableOpacity>
-               
+          <TouchableOpacity onPress={() => decrementQuantity(item.product._id)}>
+              <Text style={styles.quantityButton}>-</Text>
+                  </TouchableOpacity>
+                    <Text style={styles.quantity}>{item.quantity}</Text>
+                    <TouchableOpacity
+                          onPress={() => incrementQuantity(item.product._id)}
+                          disabled={item.quantity >= item.product.availableQuantity}>
+                        <Text style={[styles.quantityButton, item.quantity >= item.product.availableQuantity && { opacity: 0.1 }]}>
+                              +
+                        </Text>
+        </TouchableOpacity>   
               </View>
+
+              <View style={styles.rowContainer}>
+                    <TouchableOpacity style={styles.updateButton} 
+                    onPress={() => removeItemFromCart(item.product._id)}>
+                    <Icon name="map-marker-outline" size={30} color="#fff" />
+                     </TouchableOpacity>
+                </View>
+
               </View>
             </View>
-            </View>
+            </View> 
           </Card>
           )}
         />
@@ -233,21 +245,21 @@ const filterdatos = async () => {
 
         <Actionsheet isOpen={isOpen} onClose={onClose}>
            <Actionsheet.Content>
-            <Text> HOLA papu </Text>
-              <Text> Ingresa los datos </Text>
+            <Text style={{color:'black', fontSize: 16, fontWeight: 'bold', flexDirection:'column-reverse' }}>Agrega datos de dirección </Text>
+            <Text style={{color:'gray'}}>Seleccion su direccion o ingrese una nueva</Text>
               <View style={styles.rowContainer}> 
 
               <Card style={styles.cards}> 
-              <TouchableOpacity style={styles.buyButton}>
-                <Text> PRUEBA PAPU </Text>
-              </TouchableOpacity>
+              {datosGuardados && <Text style={styles.textgray}> {datosGuardados.nombre} , {datosGuardados.selectedAddress}  </Text>}
               </Card>
+
 
               <Card style={styles.cards}> 
               <TouchableOpacity style={styles.buyButton}  onPress={() => navigation.navigate('mapaScreen', { owner: ' ' })} >
-                <Text> Agregar una nueva direccion  </Text>
+                <Text> Agregar   </Text>
               </TouchableOpacity>
               </Card>
+
               </View>
            </Actionsheet.Content>
 
@@ -272,6 +284,7 @@ const filterdatos = async () => {
       },
       cards:{
         height: 150,
+        maxWidth: 200
       },
       directionInput: {
         borderWidth: 1,

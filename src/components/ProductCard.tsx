@@ -197,7 +197,7 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
     </View>
     <Text style={styles.productName}>{product.name}</Text>
     <Text style={styles.textGray}>Disponible: {product.quantity}</Text>
-    <Text style={styles.productPrice}>${product.price}</Text>
+    <Text style={styles.productPrice}>${product.price} MXN</Text>
     <View style={styles.quantityContainer}>
       <TouchableOpacity onPress={decrementQuantity} style={styles.quantityButton}>
         <Text style={styles.quantityButtonText}>-</Text>

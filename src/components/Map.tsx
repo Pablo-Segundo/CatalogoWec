@@ -151,7 +151,7 @@ export function MapScreen() {
   };
 
   const handleSaveData = () => {
-    // Validar que los campos no estén vacíos
+    
     if (!nombre || !numeroTelefonico || !selectedAddress) {
       setErrorNombre(!nombre);
       setErrorTelefono(!numeroTelefonico);
@@ -160,14 +160,14 @@ export function MapScreen() {
       return;
     }
 
-    // Validar el número de teléfono
+    
     if (!isValidPhoneNumber(numeroTelefonico)) {
       setErrorTelefono(true);
       setErrorTelefonoMessage('El número de teléfono debe tener 10 dígitos.');
       return;
     }
 
-    // Guardar los datos
+    
     guardarDatos();
     navigation.navigate('Shopping');
   };
@@ -288,7 +288,7 @@ export function MapScreen() {
                       onChangeText={text => setReferencias(text)}
                     />
                   </View>
-                  <TouchableOpacity style={styles.buyButton2} onPress={handleSaveData}>
+                  <TouchableOpacity style={{backgroundColor: 'black'}} onPress={handleSaveData}>
                     <Text style={styles.headerWITHE}> Guardar Datos </Text>
                   </TouchableOpacity>
                 </ScrollView>

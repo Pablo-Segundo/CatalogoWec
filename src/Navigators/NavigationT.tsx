@@ -9,7 +9,7 @@ import Animated, { useAnimatedStyle, withTiming, useDerivedValue } from 'react-n
 import Lottie from 'lottie-react-native'
 import { CategoriesScreen } from '../Screens/categories/CategoriesScreen';
 import { CategoriesStack } from './stacks/CategorieStack'
-import { PedidosScreen } from '../Screens/PedidosScreen'
+import { PedidosScreen } from '../Screens/pedidosScreen'
 
 
 const Tab = createBottomTabNavigator()
