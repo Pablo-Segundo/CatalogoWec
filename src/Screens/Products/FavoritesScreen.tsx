@@ -49,23 +49,6 @@ export const FavoritesScreen = ({ route, navigation }: Props) => {
   return (
     <>
     
-      <View style={styles.container}>
-      <TouchableOpacity style={styles.directionrow}  onPress={() => navigation.navigate('pestanas', {})}>
-        <Icon name="arrow-left" size={30} color="#fff" />
-        </TouchableOpacity>
-        <Text style={styles.productWithe}> Productos agregados  </Text> 
-        <TouchableOpacity
-          style={styles.shoppingCartButton}
-          onPress={() => navigation.navigate('Shopping', {})}>
-          <View style={styles.shoppingCartIcon}>
-            <Icon name="shopping-cart" size={30} color="#000" />
-          </View>
-        </TouchableOpacity>
-      </View>
-            
-           
-         
-
             {favorites.length > 0 ? (
            
         <FlatList
@@ -184,6 +167,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
+        marginHorizontal: 10,
       
       },
       exploreButton: {

@@ -4,6 +4,8 @@ export interface CartState {
     cart: [];
     errorMessage: string;
     success: boolean;
+    totalProducts: number;
+    totalPrice: number;
 }
 
 export type CartAction= | {
@@ -35,7 +37,13 @@ export type CartAction= | {
         cart: [], errorMessage: string,
            }    
     }
+    | {
+    type: 'calculateTotalProductsAndPrice'
+    payload: {
+        cart: [], errorMessage: string,
 
+          }    
+    }
 
 
 }
@@ -49,7 +57,6 @@ export const CartReducer = ( state: CartState, action: CartAction): CartState =>
                 errorMessage:  action.payload.errorMessage,
                 success: false,
             };
-        
             case 'removeItemFromCart':
             return {
                 ...state,
@@ -57,7 +64,6 @@ export const CartReducer = ( state: CartState, action: CartAction): CartState =>
                 errorMessage:  action.payload.errorMessage,
                 success: false,
             };
-
             case 'clearCart':
             return {
                 ...state,
@@ -79,8 +85,13 @@ export const CartReducer = ( state: CartState, action: CartAction): CartState =>
                     errorMessage:  action.payload.errorMessage,
                     success: false,
                     };
-        
-    
+            case 'calculateTotalProductsAndPrice':
+                  return {
+                    ...state,
+                    cart: action.payload.cart,
+                     errorMessage:  action.payload.errorMessage,
+                     success: false,
+                     };            
 
 
 

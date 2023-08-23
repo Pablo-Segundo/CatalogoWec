@@ -48,28 +48,28 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
   };
   
   // const addToCart = async (product: Product, quantity: number, price: number, multimedia: Multimedia[]) => {
-  //   if (quantity === 0) {
-  //     Toast.show({
-  //       type: 'error',
-  //       text1: 'Error',
-  //       text2: 'Agregue un producto',
-  //     });
-  //     return;
-  //   }
-  //   if (quantity > availableQuantity) {
-  //     Toast.show({
-  //       type: 'error',
-  //       text1: 'Error',
-  //       text2: 'No hay suficiente cantidad disponible del producto',
-  //     });
-  //     return;
-  //   }
-  //   Toast.show({
-  //     type: 'success',
-  //     text1: 'Producto agregado',
-  //     text2: 'El producto se ha agregado al carrito de compras',
-  //   });
-  //   if (!quantity) quantity = 1;
+    // if (quantity === 0) {
+    //   Toast.show({
+    //     type: 'error',
+    //     text1: 'Error',
+    //     text2: 'Agregue un producto',
+    //   });
+    //   return;
+    // }
+    // if (quantity > availableQuantity) {
+    //   Toast.show({
+    //     type: 'error',
+    //     text1: 'Error',
+    //     text2: 'No hay suficiente cantidad disponible del producto',
+    //   });
+    //   return;
+    // }
+    // Toast.show({
+    //   type: 'success',
+    //   text1: 'Producto agregado',
+    //   text2: 'El producto se ha agregado al carrito de compras',
+    // });
+    // if (!quantity) quantity = 1;
   //   const cartArray = await AsyncStorage.getItem('cart');
   //   let cart = [];
   //   const cartItem = {

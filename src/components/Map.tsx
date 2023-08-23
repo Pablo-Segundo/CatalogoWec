@@ -60,7 +60,7 @@ export function MapScreen() {
   };
 
   useEffect(() => {
-    askLocationPermission();
+    // askLocationPermission();
     getCurrentLocation();
     const obtenerDatosGuardados = async () => {
       try {

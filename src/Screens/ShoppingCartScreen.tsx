@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Card, Button } from 'react-native-paper';
-import { useToast, Modal, useDisclose, Row, Actionsheet } from 'native-base';
+import { useToast, Modal, useDisclose, Row, Actionsheet } from 'native-base'; 
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faCartShopping, faCreditCard, faMoneyBill } from '@fortawesome/free-solid-svg-icons';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -22,8 +22,6 @@ export const ShoppingScreen = ({product} : Props) => {
   const navigation = useNavigation();
    const [quantity, setQuantity] = useState();
   // const [cart1, setCart] = useState(0);
-  const [totalPrice, setTotalPrice] = useState(0);
-  const [ totalProducts,setTotalProducts] = useState(0);
   const toast = useToast();
   const [showModal, setShowModal] = useState(false);
   const [showModal2, setShowModal2] = useState(false);
@@ -34,6 +32,7 @@ export const ShoppingScreen = ({product} : Props) => {
   
   const {cart} = useContext(CartContext); 
   const {removeItemFromCart , clearCart, incrementQuantity, decrementQuantity } = useContext(CartContext);
+  const { totalProducts, totalPrice } = useContext(CartContext);
 
 
   const cartShopping = async () => {
@@ -88,7 +87,7 @@ const obtenerDatosGuardados = async () => {
 };
 const fetchLatestData = useCallback(() => {
   obtenerDatosGuardados();
-}, []); 
+}, []);  
   
  
   return (
@@ -115,7 +114,7 @@ const fetchLatestData = useCallback(() => {
       </View>
      
             <View style={styles.tableRow}>
-              <Text style={styles.headerText}>Productos agregados ({ })</Text>
+              <Text style={styles.headerText}>Productos agregados ({totalProducts})</Text>
               <TouchableOpacity style={styles.buyButton3} >
                 <Text style={styles.headerTextWhite}  onPress={clearCart}>Vaciar </Text>
               </TouchableOpacity>
@@ -175,8 +174,8 @@ const fetchLatestData = useCallback(() => {
         />
           <Card>
           <View style={{padding: 10, marginLeft: 5}}>
-            <Text style={styles.headerText2}>Productos: ({totalProducts})</Text>
-            <Text style={styles.headerText2}>Total: ${totalPrice}</Text>
+          <Text style={styles.headerText2}>Productos: ({totalProducts})</Text>
+      <Text style={styles.headerText2}>Total: ${totalPrice}</Text>
 
             <TextInput
               style={styles.directionInput}
@@ -249,13 +248,15 @@ const fetchLatestData = useCallback(() => {
             <Text style={{color:'gray'}}>Seleccion su direccion o ingrese una nueva</Text>
               <View style={styles.rowContainer}> 
 
-              <Card style={styles.cards}> 
-              {datosGuardados && <Text style={styles.textgray}> {datosGuardados.nombre} , {datosGuardados.selectedAddress}  </Text>}
-              </Card>
+             <Card style={styles.cards}> 
+             <TouchableOpacity style={styles.buyButton}  onPress={() => navigation.navigate('mapaScreen', { owner: ' ' })} >
+                <Text> Agregar   </Text>
+              </TouchableOpacity>
+             </Card>
 
 
               <Card style={styles.cards}> 
-              <TouchableOpacity style={styles.buyButton}  onPress={() => navigation.navigate('mapaScreen', { owner: ' ' })} >
+              <TouchableOpacity style={styles.buyButton}  onPress={() => navigation.navigate('Direction')} >
                 <Text> Agregar   </Text>
               </TouchableOpacity>
               </Card>
@@ -284,7 +285,9 @@ const fetchLatestData = useCallback(() => {
       },
       cards:{
         height: 150,
-        maxWidth: 200
+        width: 150,
+        marginHorizontal: 10
+       
       },
       directionInput: {
         borderWidth: 1,

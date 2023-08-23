@@ -1,12 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Dimensions, Platform, SafeAreaView, Text, View } from 'react-native';
 import { CategoriesScreen } from '../../Screens/categories/CategoriesScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { TouchableOpacity } from 'react-native';
+import { usePermissions } from '../../hook/usePermission';
+
+
+
 
 const Stack = createNativeStackNavigator();
+const { askLocationPermission } = usePermissions();
+
+
+useEffect(() => {
+askLocationPermission(); 
+})
+
+
 
 export const CategoriesStack = () => {
     return (
