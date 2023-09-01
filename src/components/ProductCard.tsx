@@ -30,22 +30,22 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
   const [availableQuantity, setAvailableQuantity] = useState(product.quantity);
   const [isCardDisabled, setIsCardDisabled] = useState(false);
   
-  const {addToCart} = useContext(CartContext); 
+  const {addToCart,incrementQuantity,decrementQuantity } = useContext(CartContext); 
   const {cart} = useContext(CartContext); 
 
-  const decrementQuantity = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1);
-    } else {
-      setDisabled(true);
-    }
-  };
-  const incrementQuantity = () => {
-    if (quantity < availableQuantity) {
-      setQuantity(quantity + 1);
-      setDisabled(false);
-    }
-  };
+  // const decrementQuantity = () => {
+  //   if (quantity > 1) {
+  //     setQuantity(quantity - 1);
+  //   } else {
+  //     setDisabled(true);
+  //   }
+  // };
+  // const incrementQuantity = () => {
+  //   if (quantity < availableQuantity) {
+  //     setQuantity(quantity + 1);
+  //     setDisabled(false);
+  //   }
+  // };
   
   // const addToCart = async (product: Product, quantity: number, price: number, multimedia: Multimedia[]) => {
     // if (quantity === 0) {
@@ -130,7 +130,6 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
 
   const isInFavorites = () => {
     return favorites.some((item) => item._id === product._id);
-  
   };
   useEffect(() => {
     const loadFavorites = async () => {
@@ -195,7 +194,9 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
               />
             </TouchableOpacity>
     </View>
-    <Text style={styles.productName}>{product.name}</Text>
+    <Text style={styles.productName} numberOfLines={1} ellipsizeMode="tail">
+    {product.name}
+    </Text>
     <Text style={styles.textGray}>Disponible: {product.quantity}</Text>
     <Text style={styles.productPrice}>${product.price} MXN</Text>
     <View style={styles.quantityContainer}>
@@ -210,6 +211,7 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
     <TouchableOpacity style={styles.addToCartButton} 
         onPress={() => {
           addToCart(product, 1);
+          
         }}
     >
       <Text style={styles.addToCartButtonText}>Agregar al carrito  </Text>

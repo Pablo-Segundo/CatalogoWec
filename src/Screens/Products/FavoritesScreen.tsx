@@ -1,17 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, Dimensions, FlatList, ScrollView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { Product } from '../../interfaces/ProductsCategoryInterface';
 import { Card } from "react-native-paper";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Box,useToast } from "native-base";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { CartContext } from "../../context/cart/CartContext";
+import { Product } from "../../interfaces/ProductsCategoryInterface";
+import { Toast } from 'react-native-toast-message/lib/src/Toast';
+
+
 interface Props extends NativeStackScreenProps<any, any> {}
-export const FavoritesScreen = ({ route, navigation }: Props) => {
-  const toast = useToast();
+
+interface Props {
+  product: Product;
+}
+
+
+export const FavoritesScreen = ({ product, navigation }: Props) => {
+  
   const [favorites,setFavorites] = useState(0);
-  const [showModal,setShowModal] = useState(false);
+  const {addToCart} = useContext(CartContext); 
+  const toast = useToast();
+ 
 
   useEffect(() => {
     const loadFavorites = async () => {
@@ -26,10 +37,18 @@ export const FavoritesScreen = ({ route, navigation }: Props) => {
     };
     loadFavorites();
   }, []);
+ 
+  const addtoCard = (product: Product) => {
+    addToCart(product, 1); 
+    Toast.show({
+      type:'success',
+      text1:'Producto agregado',
+      text2:'EL producto se agrego al carrito de compras ',
 
-  const addtoCard = () =>{
+    })
 
-  }
+   
+  };
  
   const handleDelete = (product) => {
     const updatedFavorites = [...favorites];
@@ -59,19 +78,19 @@ export const FavoritesScreen = ({ route, navigation }: Props) => {
               <View style={styles.productContainer}>
                 <Card style={styles.cardContainer}>
                 <Image style={styles.productImage} source={{ uri: item.multimedia[0].images['400x400'] }} />
-                 <Text style={styles.productName}>{item.name}</Text>
+                 <Text style={styles.productName} numberOfLines={1} ellipsizeMode="tail" >{item.name}</Text>
                  <Text style={styles.productPrice}>${item.price}MX </Text>
+                 {/* <Text style={styles.productName}>{item.quantity} </Text> */}
                   <View>
                  </View>
-                 <TouchableOpacity style={styles.deleteButton} onPress={() => handleDelete(product)}>
-                  <Icon name="trash-o" size={30} color="#ff0000" />
-                </TouchableOpacity> 
-                   
-                   <TouchableOpacity style={styles.continueButton} >
-                      <Text style={styles.headerText}> Agregar al carrito </Text>
-                      <Text></Text>
-                   </TouchableOpacity>
-
+                 <TouchableOpacity
+                 style={styles.addToCartButton}
+                  onPress={() => {
+                 addtoCard(item);
+                   }}
+                    >
+                    <Text style={styles.textWhite}> Agregar al carrito </Text>
+                  </TouchableOpacity>
                 </Card>
             </View>
             )}
@@ -106,6 +125,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#DEBDCE',
     borderBottomLeftRadius: 50,
     borderBottomRightRadius: 50,
+  },
+  addToCartButton: {
+    backgroundColor: '#ff1493',
+    borderRadius: 5,
+    padding: 10,
+    marginTop: 10,
   },
   cardContainer: {
     width: '100%',

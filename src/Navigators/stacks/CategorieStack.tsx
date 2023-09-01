@@ -1,17 +1,24 @@
-import React, { useEffect } from 'react';
-import { Dimensions, Platform, SafeAreaView, Text, View } from 'react-native';
+import React, { useEffect,useContext } from 'react';
+import { Dimensions, Platform, SafeAreaView, Text, View, StyleSheet } from 'react-native';
 import { CategoriesScreen } from '../../Screens/categories/CategoriesScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { TouchableOpacity } from 'react-native';
 import { usePermissions } from '../../hook/usePermission';
-
+import { CartContext } from '../../context/cart/CartContext';
+import { useNavigation } from '@react-navigation/native';
 
 
 
 const Stack = createNativeStackNavigator();
 const { askLocationPermission } = usePermissions();
+ const { cart } = useContext(CartContext);
+ const navigation = useNavigation();
+ const size = Platform.OS === 'ios' ? 30:35;
+
+const uniqueProductIds = new Set(cart.map(item => item.product._id));
+    // console.log('Unique Product IDs:', uniqueProductIds);
 
 
 useEffect(() => {
@@ -53,9 +60,13 @@ export const CategoriesStack = () => {
                                         </Text>
                                     </View>
                                      
-                                    <TouchableOpacity style={{ width: '30%', alignItems: 'center', justifyContent: 'center' }} >
+                                    <TouchableOpacity style={{ width: '30%', alignItems: 'center', justifyContent: 'center' }} 
+                                     onPress={() => navigation.navigate('Shopping')}>
                                         <View style={{borderRadius: 100, backgroundColor: 'white', padding: 3, width: '40%', alignItems: 'center'}}>
-                                            <Icon name="cart-outline" size={35} color="black" />
+                                        <Icon name="cart-outline" size={size } color="black" />
+                                      {uniqueProductIds.size > 0 && (
+                                    <Text style={styles.productCount2}>{uniqueProductIds.size}</Text>
+                                       )}
                                         </View>
                                     </TouchableOpacity>
                                    
@@ -70,3 +81,30 @@ export const CategoriesStack = () => {
      </>
     );
 };
+
+const styles = StyleSheet.create({
+    icon: {
+        borderRadius: 100,
+        backgroundColor: '#E3087E',
+        padding: Platform.OS === 'ios' ? 2 : 6,
+        alignItems: 'center',
+        position: 'relative', 
+       
+    },
+    productCount: {
+        position: 'absolute', 
+        top: -9, 
+        right: 13, 
+        color: 'black',
+        fontSize: 20,
+        zIndex: 9999,
+    },
+    productCount2: {
+        position: 'absolute', 
+        top: -9, 
+        right: 13, 
+        color: 'black',
+        fontSize: 20,
+        zIndex: 9999,
+    },
+});

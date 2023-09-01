@@ -8,7 +8,7 @@ import { Card, Button } from 'react-native-paper';
 import { useToast, Modal, useDisclose, Row, Actionsheet } from 'native-base'; 
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faCartShopping, faCreditCard, faMoneyBill } from '@fortawesome/free-solid-svg-icons';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/Ionicons';
 import {Toast}  from 'react-native-toast-message/lib/src/Toast';
 import { CartContext } from '../context/cart/CartContext';
 
@@ -31,7 +31,7 @@ export const ShoppingScreen = ({product} : Props) => {
   const [selectedPaymentOption, setSelectedPaymentOption] = useState<'Tarjeta' | 'PagoContraEntrega' | null>(null);
   
   const {cart} = useContext(CartContext); 
-  const {removeItemFromCart , clearCart, incrementQuantity, decrementQuantity } = useContext(CartContext);
+  const {removeItemFromCart , clearCart, incrementQuantity, decrementQuantity, addToCart } = useContext(CartContext);
   const { totalProducts, totalPrice } = useContext(CartContext);
 
 
@@ -87,8 +87,7 @@ const obtenerDatosGuardados = async () => {
 };
 const fetchLatestData = useCallback(() => {
   obtenerDatosGuardados();
-}, []);  
-  
+}, []); 
  
   return (
     <>
@@ -99,7 +98,7 @@ const fetchLatestData = useCallback(() => {
         <TouchableOpacity  onPress={onOpen}>
         <View style={styles.viewuwu}>
             <View style={styles.cardcontainer}> 
-            <Icon name="map-marker-outline" size={30} color="black" />
+            <Icon name="location-outline" size={30} color="black" />
               <Text style={styles.textblack}>Enviar a : 
               {datosGuardados && <Text style={styles.textgray}> {datosGuardados.nombre} , {datosGuardados.selectedAddress}  </Text>}
               </Text>
@@ -115,7 +114,7 @@ const fetchLatestData = useCallback(() => {
      
             <View style={styles.tableRow}>
               <Text style={styles.headerText}>Productos agregados ({totalProducts})</Text>
-              <TouchableOpacity style={styles.buyButton3} >
+              <TouchableOpacity style={styles.buyButton3} > 
                 <Text style={styles.headerTextWhite}  onPress={clearCart}>Vaciar </Text>
               </TouchableOpacity>
             </View>
@@ -127,10 +126,10 @@ const fetchLatestData = useCallback(() => {
           renderItem={({ item,  }) => (
             <Card >
             <View style={styles.rowContainer}>
-              <View style={styles.imageContainer}>
-                <Image style={styles.image} source={{ uri: item.product.multimedia[0].images['400x400'] }} />
+            <View style={styles.imageContainer}>
+                <Image style={styles.image} source={{ uri:item.product.multimedia[0].images['400x400'] }} />
               </View>
-              <View style={styles.detailsContainer}>
+              <View >
                 <View style={styles.tableRow}>
                 <Text style={styles.rowText}>{item.product.name}</Text>
               
@@ -138,7 +137,7 @@ const fetchLatestData = useCallback(() => {
                 </View>
 
               <View style={styles.rowContainer}>
-              <Text style={styles.rowText}>{item.product.price} </Text> 
+              <Text style={styles.rowTextPrice}>{item.product.price} </Text> 
               <Text  style={styles.rowText}>( {item.quantity} )</Text>
                 </View>
 
@@ -162,7 +161,7 @@ const fetchLatestData = useCallback(() => {
               <View style={styles.rowContainer}>
                     <TouchableOpacity style={styles.updateButton} 
                     onPress={() => removeItemFromCart(item.product._id)}>
-                    <Icon name="map-marker-outline" size={30} color="#fff" />
+                    <Icon name="trash-outline" size={30} color="#1E90FF"  />
                      </TouchableOpacity>
                 </View>
 
@@ -174,8 +173,9 @@ const fetchLatestData = useCallback(() => {
         />
           <Card>
           <View style={{padding: 10, marginLeft: 5}}>
-          <Text style={styles.headerText2}>Productos: ({totalProducts})</Text>
-      <Text style={styles.headerText2}>Total: ${totalPrice}</Text>
+          <Text style={styles.headerText2}>Productos: {totalProducts}</Text>
+        <Text style={styles.headerText2}>Total: ${totalPrice.toFixed(2)}</Text>
+
 
             <TextInput
               style={styles.directionInput}
@@ -200,6 +200,11 @@ const fetchLatestData = useCallback(() => {
           <TouchableOpacity    onPress={() => setShowModal(true)}   style={styles.buyButton2}>
         <Text style={styles.headerTextWhite}>Continuar</Text>
       </TouchableOpacity>
+
+      <TouchableOpacity  style={styles.continueButton}  onPress={() => navigation.navigate('ventana')}>
+            <Text style={styles.continueButtonText}> Prueba  </Text>
+          </TouchableOpacity>
+
       
 
       {/* <TouchableOpacity onPress={filterdatos} style={styles.buyButton2}>
@@ -242,29 +247,34 @@ const fetchLatestData = useCallback(() => {
           </Card>
           
 
-        <Actionsheet isOpen={isOpen} onClose={onClose}>
-           <Actionsheet.Content>
-            <Text style={{color:'black', fontSize: 16, fontWeight: 'bold', flexDirection:'column-reverse' }}>Agrega datos de dirección </Text>
-            <Text style={{color:'gray'}}>Seleccion su direccion o ingrese una nueva</Text>
-              <View style={styles.rowContainer}> 
+          <Actionsheet isOpen={isOpen} onClose={onClose}>
+  <Actionsheet.Content>
+    <Text style={{ color: '#ff1493', fontSize: 16, fontWeight: 'bold', flexDirection: 'column-reverse' }}>Agrega datos de dirección</Text>
+    <Text style={{ color: 'gray' }}>Selecciona tu dirección o ingresa una nueva</Text>
+    <View style={styles.rowContainer}>
+      <Card style={styles.cards}>
 
-             <Card style={styles.cards}> 
-             <TouchableOpacity style={styles.buyButton}  onPress={() => navigation.navigate('mapaScreen', { owner: ' ' })} >
-                <Text> Agregar   </Text>
-              </TouchableOpacity>
-             </Card>
+      <TouchableOpacity  style={{ alignItems: 'center' }} onPress={() => navigation.navigate('mapaScreen', { owner: ' ' })}>
+          <Text style={{ fontWeight: 'bold', color: 'black' }}>Agrega b direccion </Text>
+          <Icon name="map-outline" size={25} color="#ff1493" /> 
+          </TouchableOpacity>
+        {/* <TouchableOpacity style={styles.buyButton} onPress={() => navigation.navigate('mapaScreen', { owner: ' ' })}>
+          <Text> Agregar una nueva dirección  </Text>
+        </TouchableOpacity> */}
+      </Card>
 
+      <Card style={styles.cards}>
+        <View style={{ alignItems: 'center' }}>
+          <TouchableOpacity  style={{ alignItems: 'center' }} onPress={() => navigation.navigate('Direction')}>
+          <Text style={{ fontWeight: 'bold', color: 'black' }}>Modificar direccion </Text>
+          <Icon name="create-outline" size={25} color="#ff1493" /> 
+          </TouchableOpacity>
+        </View>
+      </Card>
+    </View>
+  </Actionsheet.Content>
+</Actionsheet>
 
-              <Card style={styles.cards}> 
-              <TouchableOpacity style={styles.buyButton}  onPress={() => navigation.navigate('Direction')} >
-                <Text> Agregar   </Text>
-              </TouchableOpacity>
-              </Card>
-
-              </View>
-           </Actionsheet.Content>
-
-        </Actionsheet>
 
 
 
@@ -276,24 +286,30 @@ const fetchLatestData = useCallback(() => {
   
       header: {
         padding: 5,
-        backgroundColor: '#debdce',
+        backgroundColor: '#ff69b4',
         // borderBottomLeftRadius: 50,
         // borderBottomRightRadius: 50,
       },
-      modalBodyWithMargin: {
-        marginBottom: 20,
+   
+      rowContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 20,
       },
-      cards:{
-        height: 150,
-        width: 150,
+      cards: {
+        borderColor: 'gray',
+        padding: 50,
+        borderRadius: 8,
+        flex: 1,
+        maxHeight: 150,
+        maxWidth: 200,
         marginHorizontal: 10
-       
       },
+    
       directionInput: {
         borderWidth: 1,
         borderColor: 'gray',
         borderRadius: 8,
-        
         marginHorizontal: 5,
         paddingVertical: 10,
         paddingHorizontal: 16,
@@ -326,7 +342,6 @@ const fetchLatestData = useCallback(() => {
       
       },
       updateButton: {
-        backgroundColor: '#1E90FF',
         padding: 5,
         borderRadius: 5,
         marginLeft: 50
@@ -413,11 +428,7 @@ const fetchLatestData = useCallback(() => {
         fontSize: 18,
        fontWeight: 'bold',
       },
-      headeerWITHE:{
-        color: '#fff',
-        fontSize: 22,
-       fontWeight: 'bold',
-      },
+   
 
       image: {
         width: 100,
@@ -425,21 +436,13 @@ const fetchLatestData = useCallback(() => {
         resizeMode: 'cover',
         margin: 10,
       },
-      imagemap: {
-        width: 50,
-        height: 50,
-        resizeMode: 'cover',
-        margin: 5,
-        
-      },
+   
       textblack: {
       color: 'black',
       
       fontSize: 18,
       },
-      textelimit: {
-        color: '#1e90ff',
-      },
+      
       headerText: {
         fontWeight: 'bold',
         fontSize: 16,
@@ -477,18 +480,8 @@ const fetchLatestData = useCallback(() => {
         borderRadius: 50,
         backgroundColor: '#FFF',
       },
-      container: {
-        flex: 1,
-        padding: 5,
-        backgroundColor: '#FFF',
-
-      },
-      tableHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginBottom: 15,
-        color: 'black',
-      },
+     
+   
       productPrice: {
         fontSize: 14,
         fontWeight: 'bold',
@@ -503,6 +496,11 @@ const fetchLatestData = useCallback(() => {
         fontSize: 14,
         color: 'black',
       },
+      rowTextPrice: {
+        fontSize: 14,
+        color: '#1E90FF',
+      },
+
 
       buyButton: {
         backgroundColor: '#ff1493',
@@ -539,17 +537,7 @@ const fetchLatestData = useCallback(() => {
         alignItems: 'center',
       },
 
-      buyButtonText: {
-        color: 'white',
-        fontWeight: 'bold',
-        fontSize: 16,
-        alignItems: 'center',
-        borderWidth:1,
-        padding: 10,
-       marginBottom: 10,
-        borderRadius:70,
-        borderColor: '#ff1493'
-      },
+    
 
       quantityContainer: {
         flexDirection: 'row',
@@ -580,9 +568,7 @@ const fetchLatestData = useCallback(() => {
         width: 130,
         marginRight: 5,
       },
-      detailsContainer: {
-        flex: 1,
-      },
+   
       cardcontainer: {
         padding: 10,
         width: '75%',
@@ -591,12 +577,6 @@ const fetchLatestData = useCallback(() => {
        flexDirection: 'row',
         
       },
-      viewuwu: {
-        flexDirection: 'row',
-       
-      },
-      cardcenter: {
-        justifyContent: 'center',
-        alignItems: 'center',
-      }
+     
+   
     });

@@ -9,6 +9,7 @@ import { PaymentScreen } from '../Screens/PaymentScreen';
 import { FavoritesScreen } from '../Screens/Products/FavoritesScreen';
 import { Dimensions } from 'react-native';
 import { HeaderRight } from '../components/header/HeaderRight';
+import { Ventanauwu } from '../Screens/Products/vantanauwu';
 
 const Stack = createNativeStackNavigator()
 export const Navigation = () => {
@@ -63,6 +64,10 @@ export const Navigation = () => {
       <Stack.Screen
         name="tarjetaScreen"
         component={PaymentScreen}
+      />
+         <Stack.Screen
+        name="ventana"
+        component={Ventanauwu}
        
       />
       <Stack.Screen

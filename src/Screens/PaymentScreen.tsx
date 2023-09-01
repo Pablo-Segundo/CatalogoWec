@@ -8,6 +8,9 @@ import { useRoute } from '@react-navigation/native';
 import { StripeProvider } from '@stripe/stripe-react-native';
 import { CardField, useStripe } from '@stripe/stripe-react-native';
 import LoadingScreen from './Products/loadintgScreen';
+import { CartReducer } from '../context/cart/CartReducer';
+
+
 
 
 export const PaymentScreen = () => {
@@ -17,12 +20,12 @@ export const PaymentScreen = () => {
     const [ setTotalPrice] = useState(0);
     const [cardNumber, setCardNumber] = useState("");
     const [expirationDate, setExpirationDate] = useState("");
-    const [securityCode, setSecurityCode] = useState("");
+    // const [securityCode, setSecurityCode] = useState("");
 
     const [publishableKey, setPublishableKey] = useState('');
     
     const route = useRoute();
-    const { filteredProducts, totalPrice, selectedPaymentOption, discountProductsCart,filterdatos } = route.params;
+    // const { filteredProducts, totalPrice, selectedPaymentOption, discountProductsCart,filterdatos } = route.params;
     const { confirmPayment } = useStripe();
 
 
@@ -37,7 +40,7 @@ export const PaymentScreen = () => {
         productCount += item.quantity;
       });
       setCart(parsedCart);
-      setTotalPrice(total);
+      // setTotalPrice(total);
       setTotalProducts(productCount);
     };
 
@@ -82,53 +85,14 @@ export const PaymentScreen = () => {
       publishableKey={publishableKey}
       merchantIdentifier="merchant.identifier" // required for Apple Pay
     >
-    <View style={styles.header}>
-    <Text style={styles.headerWITHE}>Pago con Tarjeta    </Text>
-
-  </View>
-
-<Card style={styles.cardcontainer}>
-<Text style={styles.textRosa}>  Total a Pagar:   </Text>
-<Text style={styles.headerText}>$ {totalPrice} </Text>
-</Card>
-  <View> 
-    <Text style={styles.rowText}> Productos filtrados prueba  </Text>
-    <View>
-        {filteredProducts.map((product, index) => (
-          <Text style={styles.rowText} key={index}>{product.product_id.name} - ${product.price}</Text>
-        ))}
+      <View>
+        <Card style={styles.cardcontent}>
+          <Text style={{color:'black'}}> Total a pagar </Text>
+        </Card>
       </View>
+   
 
-      <Text style={styles.rowText}>Precio total: ${totalPrice}</Text>
-      <Text style={styles.rowText}>Metodo de pago: {selectedPaymentOption}</Text>
-      <Text style={styles.rowText}> Datos filtrados : {filterdatos}</Text>
-  </View>
-  
-{/* <Card style={styles.detailsContainer}>
-        <Text style={styles.detailsTitle}>Tarjeta de crédito</Text>
-        
-        <TextInput
-          style={styles.input}
-          placeholderTextColor={'black'}
-          placeholder="Número de tarjeta"
-          value={cardNumber}
-          onChangeText={handleCardNumberChange}
-        />
-        <TextInput
-          style={styles.input}
-          placeholderTextColor={'black'}
-          placeholder="Fecha de vencimiento (MM/AA)"
-          value={expirationDate}
-          onChangeText={handleExpirationDateChange}
-        />
-        <TextInput
-          style={styles.input}
-          placeholderTextColor={'black'}
-          placeholder="Código de seguridad"
-          value={securityCode}
-          onChangeText={handleSecurityCodeChange}
-        />
-  </Card> */}
+  {/* <Text style={{color:'black', fontSize: 18,fontWeight: "bold",}}>Total a pagar </Text> */}
 
 <CardField
       postalCodeEnabled={true}
@@ -153,12 +117,14 @@ export const PaymentScreen = () => {
     />
 
 
-<View>
+   <View>
       <CardField
         onCardChange={(cardDetails) => console.log('cardDetails', cardDetails)}
       />
       <Button onPress={handlePayPress} title="Pay"   />
-    </View>
+   </View>
+
+
 
 
 
@@ -167,9 +133,9 @@ export const PaymentScreen = () => {
   
      
 
-{/* <TouchableOpacity style={styles.buyButton} onPress={handleContinue}>
+<TouchableOpacity style={styles.buyButton} >
         <Text style={styles.buyButtonText}>Continuar</Text>
-      </TouchableOpacity> */}
+      </TouchableOpacity>
     
     </StripeProvider>
 </>
@@ -187,104 +153,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginBottom: 8,
       },
-      detailsContainer: {
-        backgroundColor: "#F5F5F5",
-        padding: 10,
-        margin: 10,
-        borderRadius: 8,
-      },
-      detailsTitle: {
-        fontSize: 18,
-        fontWeight: "bold",
-        marginBottom: 10,
-        color: 'black',
-        marginVertical: -30
-      },
-      input: {
-        height: 40,
-        borderColor: "#ccc",
-        borderWidth: 1,
-        borderRadius: 4,
-        paddingHorizontal: 10,
-        marginBottom: 10,
-        color: 'black'
-      },
-      buttonContainer: {
-        marginTop: 16,
-      },
-      button: {
-        backgroundColor: 'blue',
-      },
-  
-    header: {
-      padding: 30,
-      backgroundColor: '#debdce',
-      borderBottomLeftRadius: 50,
-      borderBottomRightRadius: 50,
-    },
-    image: {
-      width: 100,
-      height: 100,
-      resizeMode: 'cover',
-      margin: 10,
-    },
-    textelimit: {
-      color: '#1e90ff',
-    },
-    headerText: {
-      fontWeight: 'bold',
-      fontSize: 30,
-      color: 'black',
-      padding: 2,
-    },      
-    headerTextWhite: {
-      fontWeight: 'bold',
-      fontSize: 20,
-      color: '#FFF',
-      padding: 2,
-    }, 
-    headerWITHE: {
-      fontWeight: 'bold',
-      fontSize: 20,
-      color: '#fff',
-      padding: 2,
-    },
-    textRosa: {
-      fontWeight: 'bold',
-      color: '#debdce',
-      fontSize: 25,
-      alignItems: 'center'
-    },
-    shoppingCartButton: {
-      marginRight: 10,
-    },
-    shoppingCartIcon: {
-      padding: 5,
-      borderRadius: 50,
-      backgroundColor: '#FFF',
-    },
-    tableHeader: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      marginBottom: 15,
-      color: 'black',
-    },
-    productPrice: {
-      fontSize: 14,
-      fontWeight: 'bold',
-      color:'#1e90ff',
-     
-      
-    },
-    tableRow: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-    },
-    rowText: {
-      fontSize: 14,
-      color: 'black',
-    },
-
     buyButton: {
       backgroundColor: '#ff1493',
       alignItems: 'center',
@@ -307,68 +175,9 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       borderWidth:1,
       padding: 10,
-     marginBottom: 10,
+      marginBottom: 10,
       borderRadius:70,
       borderColor: '#ff1493',
     },
 
-    quantityContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginTop: 10,
-    },
-    quantityButton: {
-      color: 'black',
-      fontSize: 20,
-      fontWeight: 'bold',
-      paddingHorizontal: 15,
-    },
-    quantity: {
-      color: 'gray',
-      fontSize: 16,
-      fontWeight: 'bold',
-      marginHorizontal: 10,
-    },
-    discountCodeInput: {
-      borderWidth: 10,
-      borderColor: 'gray',
-      borderRadius: 5,
-      padding: 10,
-      marginTop: 10,
-      color: 'gray'
-    },
-    rowContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
-    imageContainer: {
-      width: 120,
-      marginRight: 15,
-    },
-    detailsContainer: {
-      padding: 60,
-      marginTop: 25,
-      borderRadius: 35,
-
-    },
-    cardcontainer: {
-      padding: 30,
-      marginTop: 5,
-      borderRadius: 20,
-      
-    },
-    IconCircle: {
-        width: 45,
-        height:  45,
-        borderRadius: 25,
-        backgroundColor: '#FFF',
-        alignItems: 'center',
-        justifyContent: 'center',
-      },
-      IconContainer: {
-        position: 'absolute',
-        top: 20,
-        right: 30,
-        zIndex: 1,
-      },
   });
