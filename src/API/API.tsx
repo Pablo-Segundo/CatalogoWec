@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseURL = 'https://testapi.wapizima.com/api';
+const baseURL = 'https://api.wapizima.com/api';
 
 const API = axios.create({baseURL});
 
