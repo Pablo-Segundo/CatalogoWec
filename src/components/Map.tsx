@@ -10,7 +10,7 @@ import { useDisclose, Button, Actionsheet, Modal } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import Geocoder from 'react-native-geocoding';
 import { Image } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { usePermissions } from '../hook/usePermission';
 
@@ -288,9 +288,19 @@ export function MapScreen() {
                       onChangeText={text => setReferencias(text)}
                     />
                   </View>
-                  <TouchableOpacity style={{backgroundColor: 'black'}} onPress={handleSaveData}>
+
+                  <TouchableOpacity style={styles.buyButton}
+               onPress={() => {
+                guardarDatos();
+              }}
+              >
+               <Text style={styles.headerWITHE}> Guardar Datos </Text>
+              </TouchableOpacity>
+                  {/* <TouchableOpacity style={{backgroundColor: 'black'}} onPress={handleSaveData}>
                     <Text style={styles.headerWITHE}> Guardar Datos </Text>
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
+
+
                 </ScrollView>
               </KeyboardAvoidingView>
             </Actionsheet.Content>
@@ -310,10 +320,13 @@ export function MapScreen() {
             onOpen(true)
           }}
         >
-          <Text style={styles.buttonText}>Continuar {'>'} </Text>
+              <View style={{flexDirection: 'row'}}>
+          <Text style={styles.buttonText}>Continuar</Text>
+          <Icon name="play-outline" size={30} color="white" />
+          </View>
+
         </TouchableOpacity>
-
-
+           
 
     </>
 
@@ -397,7 +410,6 @@ const styles = StyleSheet.create({
     padding: 15,
     marginTop: 10,
     color: 'black',
-
   },
 
 
@@ -468,6 +480,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     fontSize: 16,
-    textAlign: 'center',
+   
   },
 });
