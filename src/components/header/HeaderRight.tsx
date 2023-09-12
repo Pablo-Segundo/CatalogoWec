@@ -21,11 +21,13 @@ export const HeaderRight = ({ favorites }: any) => {
                     <TouchableOpacity
                         onPress={() => navigation.navigate('Shopping')}>
                         <View style={styles.icon}>
-                            <Icon name="cart-outline" size={size } color="white" />
-                            {uniqueProductIds.size > 0 && (
-                        <Text style={styles.productCount2}>{uniqueProductIds.size}</Text>
+                    <Icon name="cart-outline" size={size} color="white" />
+                    {uniqueProductIds.size > 0 && (
+                        <Text style={styles.productCount}>{uniqueProductIds.size}</Text>
+
+
                     )}
-                        </View>
+                </View>
 
                     </TouchableOpacity>
                 </>) : (<>
@@ -36,6 +38,7 @@ export const HeaderRight = ({ favorites }: any) => {
                     <Icon name="cart-outline" size={size} color="white" />
                     {uniqueProductIds.size > 0 && (
                         <Text style={styles.productCount}>{uniqueProductIds.size}</Text>
+
                     )}
                 </View>
                  </TouchableOpacity>
@@ -66,13 +69,18 @@ const styles = StyleSheet.create({
        
     },
     productCount: {
-        position: 'absolute', 
-        top: -9, 
-        right: 13, 
-        color: 'black',
-        fontSize: 20,
+        position: 'absolute',
+        top: -9,
+        right: 13,
+        backgroundColor: 'red', 
+        color: 'white', 
+        fontSize: 16, 
+        borderRadius: 50, 
+        paddingHorizontal: 8, 
+        paddingVertical: 4, 
         zIndex: 9999,
-    },
+      },
+      
     productCount2: {
         position: 'absolute', 
         top: -9, 

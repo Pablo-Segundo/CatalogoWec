@@ -29,10 +29,12 @@ export const ShoppingScreen = ({product} : Props) => {
   const [datosGuardados, setDatosGuardados] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedPaymentOption, setSelectedPaymentOption] = useState<'Tarjeta' | 'PagoContraEntrega' | null>(null);
+
   
   const {cart} = useContext(CartContext); 
   const {removeItemFromCart , clearCart, incrementQuantity, decrementQuantity, addToCart } = useContext(CartContext);
   const { totalProducts, totalPrice } = useContext(CartContext);
+ 
 
 
   const cartShopping = async () => {
@@ -73,6 +75,7 @@ const filterdatos = async () => {
   }
 }
 
+
 const obtenerDatosGuardados = async () => {
   try {
     const datosGuardados = await AsyncStorage.getItem('datos');
@@ -99,7 +102,7 @@ const fetchLatestData = useCallback(() => {
         <View style={styles.viewuwu}>
             <View style={styles.cardcontainer}> 
             <Icon name="location-outline" size={30} color="black" />
-              <Text style={styles.textblack}>Enviar a : 
+            <Text style={styles.textblack}>Enviar a : 
               {datosGuardados && <Text style={styles.textgray}> {datosGuardados.nombre} , {datosGuardados.selectedAddress}  </Text>}
               </Text>
             </View>
@@ -145,12 +148,12 @@ const fetchLatestData = useCallback(() => {
 
             <View style={styles.rowContainer}>
               <View style={styles.quantityContainer}>
-          <TouchableOpacity onPress={() => decrementQuantity(item.product._id)}>
+          <TouchableOpacity onPress={() => {decrementQuantity(item.product._id);  setQuantity(quantity - 1);  }}>
               <Text style={styles.quantityButton}>-</Text>
                   </TouchableOpacity>
                     <Text style={styles.quantity}>{item.quantity}</Text>
                     <TouchableOpacity
-                          onPress={() => incrementQuantity(item.product._id)}
+                          onPress={() => {incrementQuantity(item.product._id);  setQuantity(quantity - 1);}}
                           disabled={item.quantity >= item.product.availableQuantity}>
                         <Text style={[styles.quantityButton, item.quantity >= item.product.availableQuantity && { opacity: 0.1 }]}>
                               +
@@ -201,9 +204,9 @@ const fetchLatestData = useCallback(() => {
         <Text style={styles.headerTextWhite}>Continuar</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity  style={styles.continueButton}  onPress={() => navigation.navigate('ventana')}>
+      {/* <TouchableOpacity  style={styles.continueButton}  onPress={() => navigation.navigate('ventana')}>
             <Text style={styles.continueButtonText}> Prueba  </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
       
 
@@ -290,7 +293,10 @@ const fetchLatestData = useCallback(() => {
         // borderBottomLeftRadius: 50,
         // borderBottomRightRadius: 50,
       },
-   
+      viewuwu: {
+        flexDirection: 'row',
+      },  
+     
       rowContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',

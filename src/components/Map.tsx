@@ -11,8 +11,8 @@ import { useNavigation } from '@react-navigation/native';
 import Geocoder from 'react-native-geocoding';
 import { Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { usePermissions } from '../hook/usePermission';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 
 
@@ -59,64 +59,15 @@ export function MapScreen() {
     );
   };
 
+
   useEffect(() => {
     // askLocationPermission();
     getCurrentLocation();
-    const obtenerDatosGuardados = async () => {
-      try {
-        const nombreGuardado = await AsyncStorage.getItem('nombre');
-        setDatosGuardados({
-          nombre: nombreGuardado,
-        });
-      } catch (error) {
-        console.log('Error al obtener los datos guardados:', error);
-      }
-    };
-
-    obtenerDatosGuardados();
+    
   }, []);
 
 
-  // const guardarDatos = async () => {
-  //   try {
-  //     await AsyncStorage.setItem('nombre', nombre);
-  //     await AsyncStorage.setItem('numeroTelefonico', numeroTelefonico);
-  //     await AsyncStorage.setItem('referencias', referencias);
-  //     await AsyncStorage.setItem('selectedAddress', selectedAddress);
-  //     console.log('Datos guardados uwu');
-  //   } catch (error) {
-  //     console.log('Error al guardar los datos unu:', error);
-  //   }
-  // };
-
-
-
-  const guardarDatos = async () => {
-    try {
-      const datosGuardados = await AsyncStorage.getItem('datos');
-      let datosActualizados = [];
-      if (datosGuardados) {
-        datosActualizados = JSON.parse(datosGuardados);
-      }
-      const nuevosDatos = {
-        nombre,
-        numeroTelefonico,
-        referencias,
-        selectedAddress,
-      };
-      datosActualizados.push(nuevosDatos);
-      await AsyncStorage.setItem('datos', JSON.stringify(datosActualizados));
-      console.log('Datos guardados uwu');
-      setDatosGuardados(nuevosDatos);
-    } catch (error) {
-      console.log('Error al guardar los datos unu:', error);
-    }
-  };
-
-
-
   const handleMapPress = async (coordinate) => {
-
     try {
       const response = await Geocoder.from(coordinate.latitude, coordinate.longitude);
       const address = response.results[0].formatted_address;
@@ -128,7 +79,6 @@ export function MapScreen() {
   };
 
   const handleAddressChange = async (text,) => {
-
     setSelectedAddress(text);
     try {
       const response = await Geocoder.from(text);
@@ -144,33 +94,9 @@ export function MapScreen() {
     setSelectedLocation(e.nativeEvent.coordinate);
   };
 
-  const isValidPhoneNumber = (phone) => {
 
-    const regex = /^\d{10}$/;
-    return regex.test(phone);
-  };
 
-  const handleSaveData = () => {
-    
-    if (!nombre || !numeroTelefonico || !selectedAddress) {
-      setErrorNombre(!nombre);
-      setErrorTelefono(!numeroTelefonico);
-      setErrorDireccion(!selectedAddress);
-      setErrorTelefonoMessage('Por favor, complete todos los campos.');
-      return;
-    }
 
-    
-    if (!isValidPhoneNumber(numeroTelefonico)) {
-      setErrorTelefono(true);
-      setErrorTelefonoMessage('El número de teléfono debe tener 10 dígitos.');
-      return;
-    }
-
-    
-    guardarDatos();
-    navigation.navigate('Shopping');
-  };
 
   return (
     <>
@@ -178,6 +104,7 @@ export function MapScreen() {
         zIndex: 1, opacity: 0.7,
         position: 'absolute', alignSelf: 'center'
       }}>
+        <Text style={{color:'#ff1493'}}> Seleccione su ubicacion  *IMPORTANTE  *</Text>
         <TextInput
           style={styles.directionInput}
           placeholder="Escriba su calle:"
@@ -185,6 +112,25 @@ export function MapScreen() {
           onChangeText={handleAddressChange}
         />
       </View>
+
+        {/* <View style={{marginTop: 50, zIndex:999, }}>
+       
+           <GooglePlacesAutocomplete
+            placeholder='Enter Location'
+            minLength={2}
+            autoFocus={false}
+            returnKeyType={'default'}
+            fetchDetails={true}
+            onPress={(data, details = null) => {
+              console.log(data.details);
+            }}
+            query={{
+              key:'AIzaSyDFHYFl_pImNIwTzu2YwjL5R8pH-nlWCE4',
+              language: 'es'
+            }}
+           />
+           
+      </View> */}
 
       {currentLocation && (
         <>
@@ -200,14 +146,14 @@ export function MapScreen() {
             mapType={"standard"}
             onPress={(e) => handleMapPress(e.nativeEvent.coordinate)}
           >
-            {currentLocation && (
+            {/* {currentLocation && (
               <Marker
                 coordinate={{ latitude: currentLocation.latitude, longitude: currentLocation.longitude }}
                 title=" Tu ubicación Actual"
                 description="Ubicacion aproximada  "
                 draggable
               />
-            )}
+            )} */}
             {selectedLocation && (
               <Marker
                 coordinate={{
@@ -215,6 +161,7 @@ export function MapScreen() {
                   longitude: selectedLocation.longitude,
                 }}
                 title="Nueva ubicación"
+                pinColor='#ff1493'
                 description="Ubicación seleccionada"
                 draggable={isMarkerDraggable}
                 onDragEnd={handleMarkerDrag}
@@ -224,107 +171,23 @@ export function MapScreen() {
 
 
           <Actionsheet isOpen={isOpen} onClose={onClose} size="100%"   >
-            <Actionsheet.Content>
-              <KeyboardAvoidingView behavior={Platform.OS === 'android' ? 'padding' : 'height'} >
-
-                <ScrollView style={{ flex: 1 }} keyboardDismissMode='interactive'>
-
-                  <Text style={styles.textgray}> *IMPORTANTE* *recuerde poner los datos de quien va a recibir el paquete*</Text>
-
-                  <View style={{ marginHorizontal: 10 }}>
-                    <Text style={styles.headerText}> Direccion:  </Text>
-                    <TextInput
-                      style={[styles.discountCodeInput, errorDireccion && styles.errorInput]}
-                      placeholder="Escriba su calle:"
-                      value={selectedAddress}
-                      placeholderTextColor={'black'}
-                      onChangeText={(text) => {
-                        setErrorDireccion(false);
-                        setSelectedAddress(text);
-                      }}
-                    />
-                    {errorDireccion && (
-                      <Text style={styles.errorMessage}>Este campo es obligatorio.</Text>
-                    )}
-                    <Text style={styles.headerText}>Nombre de quien recibe:</Text>
-                    <TextInput
-                      style={[styles.discountCodeInput, errorNombre && styles.errorInput]}
-                      placeholder="Por favor, escriba su nombre"
-                      placeholderTextColor={'black'}
-                      value={nombre}
-                      onChangeText={(text) => {
-                        setErrorNombre(false);
-                        setNombre(text);
-                      }}
-                    />
-                    {errorNombre && (
-                      <Text style={styles.errorMessage}>Este campo es obligatorio.</Text>
-                    )}
-                    <Text style={styles.headerText}>Número telefónico:</Text>
-                    <View style={styles.phoneInputContainer}>
-                      <Image source={require('../assets/lottie/mexico.png')} style={styles.flagImage} />
-                      <TextInput
-                        style={[styles.phoneInput, errorTelefono && styles.errorInput]}
-                        keyboardType="numeric"
-                        placeholder="Escriba su numero:"
-                        placeholderTextColor={'black'}
-                        value={numeroTelefonico}
-                        onChangeText={(text) => {
-                          setErrorTelefono(false);
-                          setNumeroTelefonico(text);
-                        }}
-                      />
-                      {errorTelefono && (
-                        <Text style={styles.errorMessage}>{errorTelefonoMessage}</Text>
-                      )}
-                    </View>
-
-                    <Text style={styles.headerText}>Referencias (opcional):</Text>
-                    <TextInput
-                      style={styles.discountCodeInput}
-                      placeholder="Escriba su referencia: "
-                      value={referencias}
-                      placeholderTextColor={'black'}
-                      onChangeText={text => setReferencias(text)}
-                    />
-                  </View>
-
-                  <TouchableOpacity style={styles.buyButton}
-               onPress={() => {
-                guardarDatos();
-              }}
-              >
-               <Text style={styles.headerWITHE}> Guardar Datos </Text>
-              </TouchableOpacity>
-                  {/* <TouchableOpacity style={{backgroundColor: 'black'}} onPress={handleSaveData}>
-                    <Text style={styles.headerWITHE}> Guardar Datos </Text>
-                  </TouchableOpacity> */}
-
-
-                </ScrollView>
-              </KeyboardAvoidingView>
-            </Actionsheet.Content>
+           
           </Actionsheet>
 
         </>
       )}
 
-
-
-
-
-
         <TouchableOpacity
           style={styles.buyButton}
           onPress={() => {
-            onOpen(true)
+           navigation.navigate('Datos', { selectedAddress: selectedAddress });
+         
           }}
         >
-              <View style={{flexDirection: 'row'}}>
-          <Text style={styles.buttonText}>Continuar</Text>
+        <View style={{flexDirection: 'row'}}>
+          <Text style={styles.buttonText}>   continuar</Text>
           <Icon name="play-outline" size={30} color="white" />
           </View>
-
         </TouchableOpacity>
            
 
@@ -393,7 +256,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     padding: 2,
     justifyContent: 'center'
-
   },
 
   cardcontainer: {
@@ -419,8 +281,9 @@ const styles = StyleSheet.create({
     zIndex: 9999,
   },
   headerinput: {
-    backgroundColor: '#fff',
-    zIndex: 9999,
+    backgroundColor: 'black',
+    zIndex: 999,
+    color:'black'
   },
   headerText: {
     fontWeight: 'bold',

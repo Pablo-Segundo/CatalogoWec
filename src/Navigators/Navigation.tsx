@@ -10,6 +10,7 @@ import { FavoritesScreen } from '../Screens/Products/FavoritesScreen';
 import { Dimensions } from 'react-native';
 import { HeaderRight } from '../components/header/HeaderRight';
 import { Ventanauwu } from '../Screens/Products/vantanauwu';
+import { DatosPScreen } from '../Screens/DatosPScreen';
 
 const Stack = createNativeStackNavigator()
 export const Navigation = () => {
@@ -70,6 +71,13 @@ export const Navigation = () => {
         component={Ventanauwu}
        
       />
+           <Stack.Screen
+        name="Datos"
+        component={DatosPScreen}
+       
+      />
+
+
       <Stack.Screen
         name="Favorites"
         component={FavoritesScreen}

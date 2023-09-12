@@ -50,18 +50,18 @@ export const FavoritesScreen = ({ product, navigation }: Props) => {
    
   };
  
-  const handleDelete = (product) => {
-    const updatedFavorites = [...favorites];
-    updatedFavorites.splice(product, 1);
-    AsyncStorage.setItem('favorites', JSON.stringify(updatedFavorites))
+  // const handleDelete = (product) => {
+  //   const updatedFavorites = [...favorites];
+  //   updatedFavorites.splice(product, 1);
+  //   AsyncStorage.setItem('favorites', JSON.stringify(updatedFavorites))
     
-      .then(() => {
-        setFavorites(updatedFavorites);
-      })
-      .catch(error => {
-        console.log('Error al eliminar el producto:', error);
-      });
-  };
+  //     .then(() => {
+  //       setFavorites(updatedFavorites);
+  //     })
+  //     .catch(error => {
+  //       console.log('Error al eliminar el producto:', error);
+  //     });
+  // };
 
 
   
@@ -131,29 +131,20 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     marginTop: 10,
+    alignItems: 'center',
   },
   cardContainer: {
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
+    width: Dimensions.get('window').width * 0.45, 
     borderRadius: 10,
-    padding: 20,
+    padding: 10,
     backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
     elevation: 5,
+    margin: 5, 
   },
   productPrice: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
     color: '#1E90FF',
-    marginTop: 5,
   },
   continueButton: {
     backgroundColor: '#ff1493',
@@ -188,32 +179,31 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'gray',
   },
-    emptyCartContainer:{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginHorizontal: 10,
-      
-      },
-      exploreButton: {
-        flexDirection: 'row',
+  emptyCartContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 10,
+  },
+  exploreButton: {
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#F0F0F0',
     paddingVertical: 20,
     paddingHorizontal: 20,
     borderRadius: 5,
-      },
-      emptyCartText: {
-        fontSize: 30,
-        marginBottom: 20,
-        color: 'gray'
-      },
-          exploreButtonText: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: 'gray'
-      },
+  },
+  emptyCartText: {
+    fontSize: 30,
+    marginBottom: 20,
+    color: 'gray',
+  },
+  exploreButtonText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'gray',
+  },
   quantityUwu: {
     padding: 20,
     backgroundColor: '#eee',
@@ -239,9 +229,9 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   textWhite: {
-    color: "#FFF",
+    color: '#FFF',
     fontSize: 15,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   headerText: {
     fontWeight: 'bold',
@@ -289,16 +279,16 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   productImage: {
-    width: 100,
-    height: 100,
+    width: '100%',
+    height: 150, 
     borderRadius: 10,
-    marginRight: 10,
+    marginBottom: 10,
   },
   productName: {
-    flex: 1,
     fontSize: 16,
     fontWeight: 'bold',
     color: 'black',
+    marginBottom: 5,
   },
   productWithe: {
     flex: 1,
@@ -306,5 +296,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#fff',
   },
+ 
 
 });

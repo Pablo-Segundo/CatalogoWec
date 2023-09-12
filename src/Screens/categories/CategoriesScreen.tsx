@@ -30,6 +30,7 @@ export const CategoriesScreen = ({ route, navigation }: Props) => {
 
   if (!categories) {
     return (
+     
     <LoadingScreen/>
     );
   }

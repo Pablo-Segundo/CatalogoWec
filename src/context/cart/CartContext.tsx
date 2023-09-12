@@ -41,33 +41,25 @@ const CartInitialState: CartState = {
   
 
     const addToCart = async (product: Product, quantity: number) => {
-        try {
-          const cartArray = await AsyncStorage.getItem('cart');
-          let cart: any = [];
-          const cartItem: any = {
-            product,
-            quantity: quantity,
-          };
-          if (cartArray) {
-            cart = JSON.parse(cartArray);
-            const productExists = cart.find((item: any) => item.product._id === product._id);
-            if (productExists) {
-              const index = cart.findIndex((item: any) => item.product._id === product._id);
-              cart[index].quantity++;
-              const updatedCart = [...cart];
-              await AsyncStorage.setItem('cart', JSON.stringify(updatedCart));
-              dispatch({
-                type: 'addToCart',
-                payload: { cart: updatedCart, errorMessage: 'Producto añadido al carrito' },
-              });
-            } else {
-              cart.push(cartItem);
-              await AsyncStorage.setItem('cart', JSON.stringify(cart));
-              dispatch({
-                type: 'addToCart',
-                payload: { cart: cart, errorMessage: 'Producto añadido al carrito' },
-              });
-            }
+      try {
+        const cartArray = await AsyncStorage.getItem('cart');
+        let cart: any = [];
+        const cartItem: any = {
+          product,
+          quantity: quantity,
+        };
+        if (cartArray) {
+          cart = JSON.parse(cartArray);
+          const productExists = cart.find((item: any) => item.product._id === product._id);
+          if (productExists) {
+            const index = cart.findIndex((item: any) => item.product._id === product._id);
+            cart[index].quantity++;
+            const updatedCart = [...cart];
+            await AsyncStorage.setItem('cart', JSON.stringify(updatedCart));
+            dispatch({
+              type: 'addToCart',
+              payload: { cart: updatedCart, errorMessage: 'Producto añadido al carrito' },
+            });
           } else {
             cart.push(cartItem);
             await AsyncStorage.setItem('cart', JSON.stringify(cart));
@@ -76,15 +68,25 @@ const CartInitialState: CartState = {
               payload: { cart: cart, errorMessage: 'Producto añadido al carrito' },
             });
           }
-          const { totalProducts, totalPrice } = TotalProductsAndPrice(cart);
+        } else {
+          cart.push(cartItem);
+          await AsyncStorage.setItem('cart', JSON.stringify(cart));
           dispatch({
             type: 'addToCart',
-            payload: { cart: cart, errorMessage: 'Producto añadido al carrito', totalProducts, totalPrice },
+            payload: { cart: cart, errorMessage: 'Producto añadido al carrito' },
           });
-        } catch (error: any) {
-          console.log(error);
         }
-      };
+        const { totalProducts, totalPrice } = TotalProductsAndPrice(cart);
+        dispatch({
+          type: 'addToCart',
+          payload: { cart: cart, errorMessage: 'Producto añadido al carrito', totalProducts, totalPrice },
+        });
+      } catch (error: any) {
+        console.log(error);
+      }
+    };
+    
+    
       const removeItemFromCart = async (productId: string) => {
         try {
           const cartArray = await AsyncStorage.getItem('cart');
@@ -138,59 +140,69 @@ const clearCart = async () => {
    };
 
      //----------------------------------------
-  const incrementQuantity = async (productId: string) => {
-        try {
-          const cartArray = await AsyncStorage.getItem('cart');
-          let cart: any = [];
-          if (cartArray) {
-            cart = JSON.parse(cartArray);
-            const index = cart.findIndex((item: any) => item.product._id === productId);
-            if (index !== -1) {
-              if (cart[index].quantity < cart[index].product.availableQuantity) {
-                cart[index].quantity++;
-                await AsyncStorage.setItem('cart', JSON.stringify(cart));
-                const { totalProducts, totalPrice } = TotalProductsAndPrice(cart);
-                dispatch({
-                  type: 'addToCart',
-                  payload: { cart: cart, errorMessage: 'Cantidad incrementada', totalProducts, totalPrice },
-                });
-              } else {
-                console.log('Cantidad máxima alcanzada');
-              }
+     const incrementQuantity = async (productId: string) => {
+      try {
+        const cartArray = await AsyncStorage.getItem('cart');
+        let cart: any = [];
+        if (cartArray) {
+          cart = JSON.parse(cartArray);
+          const index = cart.findIndex((item: any) => item.product._id === productId);
+          if (index !== -1) {
+            if (cart[index].quantity < cart[index].product.availableQuantity) {
+              cart[index].quantity++;
+              await AsyncStorage.setItem('cart', JSON.stringify(cart));
+    
+             
+              const { totalProducts, totalPrice } = TotalProductsAndPrice(cart);
+              dispatch({
+                type: 'incrementQuantity', 
+                payload: { cart: cart, errorMessage: 'Cantidad incrementada', totalProducts, totalPrice },
+              });
+            } else {
+              console.log('Cantidad máxima alcanzada');
             }
           }
-        } catch (error: any) {
-          console.log(error);
         }
-      };
+      } catch (error: any) {
+        console.log(error);
+      }
+    };
+    
 
   
 
-      const decrementQuantity = async (productId: string) => {
-        try {
-          const cartArray = await AsyncStorage.getItem('cart');
-          let cart: any = [];
-          if (cartArray) {
-            cart = JSON.parse(cartArray);
-            const index = cart.findIndex((item: any) => item.product._id === productId);
-            if (index !== -1) {
-              if (cart[index].quantity > 1) {
-                cart[index].quantity--;
-                await AsyncStorage.setItem('cart', JSON.stringify(cart));
-                const { totalProducts, totalPrice } = TotalProductsAndPrice(cart);
-                dispatch({
-                  type: 'addToCart',
-                  payload: { cart: cart, errorMessage: 'Cantidad decrementada', totalProducts, totalPrice },
-                });
-              } else {
-                console.log('Cantidad mínima alcanzada');
-              }
+   
+    const decrementQuantity = async (productId: string) => {
+      try {
+        const cartArray = await AsyncStorage.getItem('cart');
+        let cart: any = [];
+        if (cartArray) {
+          cart = JSON.parse(cartArray);
+          const index = cart.findIndex((item: any) => item.product._id === productId);
+          if (index !== -1) {
+            if (cart[index].quantity > 1) {
+              cart[index].quantity--;
+              await AsyncStorage.setItem('cart', JSON.stringify(cart));
+              const { totalProducts, totalPrice } = TotalProductsAndPrice(cart);
+              dispatch({
+                type: 'addToCart',
+                payload: { cart: cart, errorMessage: 'Cantidad decrementada', totalProducts, totalPrice },
+              });
             }
           }
-        } catch (error: any) {
-          console.log(error);
         }
-      };
+      } catch (error: any) {
+        console.log(error);
+      }
+    };
+    
+
+
+
+
+
+
+
     return (
   <CartContext.Provider value={{
     addToCart,

@@ -17,29 +17,51 @@ export const PedidosScreen = () => {
          <Text style={styles.textWhite}>Mis compras</Text>
           </TouchableOpacity> 
 
-          {/* <TouchableOpacity
-            style={styles.directionrow}
-            onPress={() => navigation.navigate('Home', {})}>
-            <Icon name="arrow-left" size={30} color="#fff" />
-          </TouchableOpacity> */}
-
-          {/* <TouchableOpacity
+          <TouchableOpacity
             style={styles.shoppingCartButton}
             onPress={() => navigation.navigate('Shopping')}>
             <View style={styles.shoppingCartIcon}>
               <Icon name="shopping-cart" size={30} color="#000" />
             </View>
-          </TouchableOpacity> */}
+          </TouchableOpacity>
+
         </View>  
 
-        <View style={styles.containertext}>
+
+        <View style={styles.emptyCartContainer}>
+          <Text style={styles.emptyCartText} >Empieza a comprar   </Text>
+
+          <TouchableOpacity>
+          <Image source={require('../assets/lottie/osuxd.png')} style={styles.exploreImage} />
+            <Text style={styles.exploreButtonText}> Explora y ecuentra nuevos productos </Text>
+
+          </TouchableOpacity>
+
+        </View>
+
+
+
+
+        {/* <View style={styles.containertext}>
             <Text style={styles.textblack}> Tus compras  </Text>
+       </View> */}
+
+
+
+
+
+
+       <View>
+        <Text> </Text>
+
+
+
        </View>
 
-       <Card>
-         <Text>No. de pedido </Text>
+       {/* <Card>
+         <Text style={{color:'black'}}>No. de pedido </Text>
         
-       </Card>
+       </Card> */}
 
        
 
@@ -57,7 +79,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingVertical: 20,
         paddingHorizontal: 20,
-        backgroundColor: '#DEBDCE',
+        backgroundColor: '#ff1493',
         // borderBottomLeftRadius: 50,
         // borderBottomRightRadius: 50,
       },
@@ -69,7 +91,7 @@ const styles = StyleSheet.create({
       },
       shoppingCartButton: {
         position: 'absolute',
-        top: 20,
+        top: 15,
         right: 30,
         zIndex: 1,
       },
@@ -92,12 +114,33 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginTop: 20,
         marginHorizontal: 20
-      }
+      },
       // directionrow:{
       //   paddingHorizontal: 22,
       //   position: 'absolute',
       //   top: 15, 
       //   zIndex: 1,
       // },
+      emptyCartContainer:{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginHorizontal: 10,
+      },
+      exploreImage: {
+        width: 30,
+        height: 30,
+        marginRight: 10,
+      },
+      exploreButtonText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: 'gray'
+      },
+      emptyCartText: {
+        fontSize: 30,
+        marginBottom: 20,
+        color: 'gray'
+      },
 
 })
