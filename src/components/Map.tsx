@@ -1,28 +1,33 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, View, Dimensions, Platform, TouchableOpacity, Text, TextInput, KeyboardAvoidingView, ScrollView, } from 'react-native';
-import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
-import { mapStyle } from '../Styles/mapStyle';
+import React, {useEffect, useRef, useState} from 'react';
+import {
+  StyleSheet,
+  View,
+  Dimensions,
+  Platform,
+  TouchableOpacity,
+  Text,
+  TextInput,
+  KeyboardAvoidingView,
+  ScrollView,
+} from 'react-native';
+import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
+import {mapStyle} from '../Styles/mapStyle';
 import Geolocation from 'react-native-geolocation-service';
-import { request, PERMISSIONS } from 'react-native-permissions';
-import { ActionSheetProvider, useActionSheet } from '@expo/react-native-action-sheet';
+import {request, PERMISSIONS} from 'react-native-permissions';
+import {
+  ActionSheetProvider,
+  useActionSheet,
+} from '@expo/react-native-action-sheet';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useDisclose, Button, Actionsheet, Modal } from 'native-base';
-import { useNavigation } from '@react-navigation/native';
+import {useDisclose, Button, Actionsheet, Modal} from 'native-base';
+import {useNavigation} from '@react-navigation/native';
 import Geocoder from 'react-native-geocoding';
-import { Image } from 'react-native';
+import {Image} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { usePermissions } from '../hook/usePermission';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-
-
-
-
-
-
-
+import {usePermissions} from '../hook/usePermission';
 
 export function MapScreen() {
-  const { isOpen, onOpen, onClose } = useDisclose();
+  const {isOpen, onOpen, onClose} = useDisclose();
   const navigation = useNavigation();
   const [nombre, setNombre] = useState('');
   const [numeroTelefonico, setNumeroTelefonico] = useState('');
@@ -37,39 +42,37 @@ export function MapScreen() {
   const [errorTelefono, setErrorTelefono] = useState(false);
   const [errorDireccion, setErrorDireccion] = useState(false);
   const [errorTelefonoMessage, setErrorTelefonoMessage] = useState('');
-  const { askLocationPermission } = usePermissions();
+  const {askLocationPermission} = usePermissions();
 
   const [showModal, setShowModal] = useState(false);
-
-
 
   const getCurrentLocation = () => {
     Geocoder.init('AIzaSyDFHYFl_pImNIwTzu2YwjL5R8pH-nlWCE4');
     Geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
+      position => {
+        const {latitude, longitude} = position.coords;
         console.log(position);
 
-        setCurrentLocation({ latitude, longitude });
+        setCurrentLocation({latitude, longitude});
       },
-      (error) => {
+      error => {
         console.log(error.message);
       },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     );
   };
-
 
   useEffect(() => {
     // askLocationPermission();
     getCurrentLocation();
-    
   }, []);
 
-
-  const handleMapPress = async (coordinate) => {
+  const handleMapPress = async coordinate => {
     try {
-      const response = await Geocoder.from(coordinate.latitude, coordinate.longitude);
+      const response = await Geocoder.from(
+        coordinate.latitude,
+        coordinate.longitude,
+      );
       const address = response.results[0].formatted_address;
       setSelectedAddress(address);
       setSelectedLocation(coordinate);
@@ -78,33 +81,34 @@ export function MapScreen() {
     }
   };
 
-  const handleAddressChange = async (text,) => {
+  const handleAddressChange = async text => {
     setSelectedAddress(text);
     try {
       const response = await Geocoder.from(text);
       if (response.results.length > 0) {
-        const { lat, lng } = response.results[0].geometry.location;
-        setCurrentLocation({ latitude: lat, longitude: lng });
+        const {lat, lng} = response.results[0].geometry.location;
+        setCurrentLocation({latitude: lat, longitude: lng});
       }
     } catch (error) {
       console.log('Error retrieving coordinates:', error);
     }
   };
-  const handleMarkerDrag = (e) => {
+  const handleMarkerDrag = e => {
     setSelectedLocation(e.nativeEvent.coordinate);
   };
 
-
-
-
-
   return (
     <>
-      <View style={{
-        zIndex: 1, opacity: 0.7,
-        position: 'absolute', alignSelf: 'center'
-      }}>
-        <Text style={{color:'#ff1493'}}> Seleccione su ubicacion  *IMPORTANTE  *</Text>
+      <View
+        style={{
+          zIndex: 1,
+          opacity: 0.7,
+          position: 'absolute',
+          alignSelf: 'center',
+        }}>
+        <Text style={{color: '#ff1493'}}>
+          Seleccione su ubicacion *IMPORTANTE *
+        </Text>
         <TextInput
           style={styles.directionInput}
           placeholder="Escriba su calle:"
@@ -113,47 +117,40 @@ export function MapScreen() {
         />
       </View>
 
-        {/* <View style={{marginTop: 50, zIndex:999, }}>
-       
-           <GooglePlacesAutocomplete
-            placeholder='Enter Location'
-            minLength={2}
-            autoFocus={false}
-            returnKeyType={'default'}
-            fetchDetails={true}
-            onPress={(data, details = null) => {
-              console.log(data.details);
-            }}
-            query={{
-              key:'AIzaSyDFHYFl_pImNIwTzu2YwjL5R8pH-nlWCE4',
-              language: 'es'
-            }}
-           />
-           
-      </View> */}
-
       {currentLocation && (
         <>
           <MapView
-            provider={Platform.OS == "android" ? PROVIDER_GOOGLE : MapView.PROVIDER_GOOGLE}
-            style={{ flex: 1, position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
+            provider={
+              Platform.OS == 'android'
+                ? PROVIDER_GOOGLE
+                : MapView.PROVIDER_GOOGLE
+            }
+            style={{
+              flex: 1,
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+            }}
             region={{
               latitude: currentLocation?.latitude || 0,
               longitude: currentLocation?.longitude || 0,
               latitudeDelta: 0.003,
               longitudeDelta: 0.003,
             }}
-            mapType={"standard"}
-            onPress={(e) => handleMapPress(e.nativeEvent.coordinate)}
-          >
-            {/* {currentLocation && (
+            onPress={e => handleMapPress(e.nativeEvent.coordinate)}>
+            {currentLocation && (
               <Marker
-                coordinate={{ latitude: currentLocation.latitude, longitude: currentLocation.longitude }}
+                coordinate={{
+                  latitude: currentLocation.latitude,
+                  longitude: currentLocation.longitude,
+                }}
                 title=" Tu ubicación Actual"
                 description="Ubicacion aproximada  "
                 draggable
               />
-            )} */}
+            )}
             {selectedLocation && (
               <Marker
                 coordinate={{
@@ -161,7 +158,7 @@ export function MapScreen() {
                   longitude: selectedLocation.longitude,
                 }}
                 title="Nueva ubicación"
-                pinColor='#ff1493'
+                pinColor="#ff1493"
                 description="Ubicación seleccionada"
                 draggable={isMarkerDraggable}
                 onDragEnd={handleMarkerDrag}
@@ -169,30 +166,24 @@ export function MapScreen() {
             )}
           </MapView>
 
-
-          <Actionsheet isOpen={isOpen} onClose={onClose} size="100%"   >
-           
-          </Actionsheet>
-
+          <Actionsheet
+            isOpen={isOpen}
+            onClose={onClose}
+            size="100%"></Actionsheet>
         </>
       )}
 
-        <TouchableOpacity
-          style={styles.buyButton}
-          onPress={() => {
-           navigation.navigate('Datos', { selectedAddress: selectedAddress });
-         
-          }}
-        >
+      <TouchableOpacity
+        style={styles.buyButton}
+        onPress={() => {
+          navigation.navigate('Datos', {selectedAddress: selectedAddress});
+        }}>
         <View style={{flexDirection: 'row'}}>
-          <Text style={styles.buttonText}>   continuar</Text>
+          <Text style={styles.buttonText}> continuar</Text>
           <Icon name="play-outline" size={30} color="white" />
-          </View>
-        </TouchableOpacity>
-           
-
+        </View>
+      </TouchableOpacity>
     </>
-
   );
 }
 
@@ -247,7 +238,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    marginTop: 9
+    marginTop: 9,
   },
 
   headerWITHE: {
@@ -255,7 +246,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#fff',
     padding: 2,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
 
   cardcontainer: {
@@ -263,7 +254,7 @@ const styles = StyleSheet.create({
   },
   CardInfo: {
     height: '10%',
-    paddingHorizontal: '15%'
+    paddingHorizontal: '15%',
   },
   discountCodeInput: {
     borderColor: 'gray',
@@ -274,7 +265,6 @@ const styles = StyleSheet.create({
     color: 'black',
   },
 
-
   header: {
     padding: 15,
     backgroundColor: '#debdce',
@@ -283,7 +273,7 @@ const styles = StyleSheet.create({
   headerinput: {
     backgroundColor: 'black',
     zIndex: 999,
-    color:'black'
+    color: 'black',
   },
   headerText: {
     fontWeight: 'bold',
@@ -322,14 +312,14 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 16,
   },
-  
+
   buyButton: {
     position: 'absolute',
     shadowColor: 'black',
     shadowOpacity: 30,
     shadowOffset: {
       width: -1,
-      height: 3
+      height: 3,
     },
     right: 30,
     bottom: 50,
@@ -337,12 +327,11 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     width: '30%',
     height: '10%',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   buttonText: {
     color: 'white',
     fontWeight: 'bold',
     fontSize: 16,
-   
   },
 });

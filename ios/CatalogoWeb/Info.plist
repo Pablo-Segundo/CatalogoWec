@@ -40,7 +40,11 @@
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Necesito saber tu ubicaciòn</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Necesito saber tu ubicaciòn</string>
+	<key>NSCameraUsageDescription</key>
+<string>Access camera</string>
+<key>NSPhotoLibraryUsageDescription</key>
+<string>Library</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
