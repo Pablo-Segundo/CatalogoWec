@@ -42,6 +42,37 @@ export const ShoppingScreen = ({product} : Props) => {
  
   };
 
+  const handleOptionSelect = (option: 'Tarjeta' | 'PagoContraEntrega') => {
+    setSelectedPaymentOption(option);
+  };
+  
+
+  const handleContinuar = () => {
+    if (totalProducts === 0 || !datosGuardados) {
+      Toast.show({
+        type: 'error',
+        text1: 'Datos incompletos',
+        text2: 'Agregue productos y complete la dirección antes de continuar',
+      });
+    } else if (!selectedPaymentOption) {
+      Toast.show({
+        type: 'error',
+        text1: 'Seleccione una opción de pago',
+        text2: 'Por favor, elija una opción de pago antes de continuar',
+      });
+    } else {
+      navigation.navigate('tarjetaScreen', {
+        filteredProducts: cart1,
+        totalPrice: totalPrice,
+        selectedPaymentOption: selectedPaymentOption,
+       
+        // discountProductsCart: discountProductsCart
+       
+      
+      });
+    }
+  };
+
 const filterdatos = async () => {
   try {
     const storedCart = await AsyncStorage.getItem('cart');
@@ -74,6 +105,15 @@ const filterdatos = async () => {
     console.log('Error al filtrar datos :', error);
   }
 }
+
+useEffect(() => {
+  fetchLatestData();
+  cartShopping();
+  const unsubscribe = navigation.addListener('focus', fetchLatestData);
+  return () => {
+    unsubscribe();
+  };
+}, [fetchLatestData]);
 
 
 const obtenerDatosGuardados = async () => {
@@ -241,7 +281,7 @@ const fetchLatestData = useCallback(() => {
             </TouchableOpacity>
             </Modal.Body>
 
-            <TouchableOpacity  style={styles.continueButton}>
+            <TouchableOpacity  style={styles.continueButton}  onPress={() => handleContinuar()}>
             <Text style={styles.continueButtonText}> Continuar  </Text>
           </TouchableOpacity>
           </Modal.Content>
@@ -477,6 +517,7 @@ const fetchLatestData = useCallback(() => {
       textgray: {
         color: 'black',
         fontSize: 18,
+        
       },
       shoppingCartButton: {
         marginRight: 10,

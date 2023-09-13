@@ -73,6 +73,7 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
 
   const isInFavorites = () => {
     return favorites.some((item) => item._id === product._id);
+ 
    
   };
 
@@ -254,29 +255,41 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
           autoplay={false}
           autoplayInterval={2000}
         />  */}
+        <TouchableOpacity onPress={() => toggleFavorite(product)} style={styles.favoriteButton2}>
+              <Icon
+                name={isInFavorites() ? 'heart' : 'heart-o'}
+                size={35}
+                color={isInFavorites() ? 'red' : 'gray'}
+                
+              />
+
+            </TouchableOpacity>
 
           <View style={styles.productContainer}>
             <Text style={styles.productCard}>{product.name}</Text>
             <Text style={styles.productName}> Disponible:  {product.quantity} </Text>
           </View>
 
-           
-
             <View style={{height: 150,}}>
               <Text style={{color:'gray'}}>Descripcion</Text>
               <Text style={styles.description}>{product.description}</Text>
             </View>
 
-            <View style={styles.cardContainer}>
-                  <TouchableOpacity onPress={decrementQuantity}>
-                    <Text style={styles.quantityUwu}>-</Text>
-                  </TouchableOpacity>
-                  <Text style={styles.quantity}>{quantity}</Text>
-                  <TouchableOpacity onPress={incrementQuantity}>
-                    <Text style={styles.quantityUwu}>+</Text>
-                  </TouchableOpacity>
-    
-            </View>
+            <View style={styles.quantityContainer}>
+              <TouchableOpacity onPress={() => {
+                decrementQuantity(product._id);
+                setQuantity(quantity - 1); 
+              }} style={styles.quantityButton}>
+                <Text style={styles.quantityButtonText}>-</Text>
+              </TouchableOpacity>
+              <Text style={styles.quantity}>{quantity}</Text>
+              <TouchableOpacity onPress={() => {
+                incrementQuantity(product._id);
+                setQuantity(quantity + 1); 
+              }} style={styles.quantityButton}>
+                <Text style={styles.quantityButtonText}>+</Text>
+              </TouchableOpacity>
+      </View>
 
             {/* <View>
               <TouchableOpacity style={styles.buyButton}>
@@ -286,13 +299,27 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
 
                     
             <View>
-                  <TouchableOpacity
-                style={styles.addToCartButton}
-                onPress={() => {
-                  addToCart(product, 1);
-                  console.log(product)}}>
-                <Text style={styles.addToCartButtonText}>Agregar al carrito</Text>
-              </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.addToCartButton}
+              onPress={() => {
+                if (quantity >= 1) {
+                  addToCart(product, quantity);
+                  Toast.show({
+                    type: 'success',
+                    text1: 'Producto agregado',
+                    text2: 'El producto se agregó al carrito de compras',
+                  });
+                } else if (quantity <=0) {
+                  Toast.show({
+                    type: 'error',
+                    text1: 'ninguna cantidad seleccionada ',
+                    text2: 'debe que tener al menos un producto',
+                  });
+                }
+              }}
+      >
+  <Text style={styles.addToCartButtonText}>Agregar al carrito</Text>
+</TouchableOpacity>
             </View>
          
               
@@ -354,6 +381,10 @@ const styles = StyleSheet.create({
   favoriteButton: {
     padding: 5,
     marginLeft: 20,
+  },
+  favoriteButton2: {
+    padding: 5,
+    marginLeft: 300,
   },
   favoriteContainer: {
     position: 'absolute',
@@ -500,11 +531,6 @@ const styles = StyleSheet.create({
     color: '#333',
     fontWeight: 'bold',
     textAlign: 'center',
-  },
-  textWhite: {
-    color: "#FFF",
-    fontSize: 15,
-    fontWeight: "bold",
   },
   cardImage: {
     width: 300,

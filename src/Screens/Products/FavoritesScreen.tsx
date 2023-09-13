@@ -20,7 +20,7 @@ interface Props {
 export const FavoritesScreen = ({ product, navigation }: Props) => {
   
   const [favorites,setFavorites] = useState(0);
-  const {addToCart} = useContext(CartContext); 
+  const {removeItemFromCart , clearCart, incrementQuantity, decrementQuantity, addToCart } = useContext(CartContext);
   const toast = useToast();
  
 
@@ -50,18 +50,7 @@ export const FavoritesScreen = ({ product, navigation }: Props) => {
    
   };
  
-  // const handleDelete = (product) => {
-  //   const updatedFavorites = [...favorites];
-  //   updatedFavorites.splice(product, 1);
-  //   AsyncStorage.setItem('favorites', JSON.stringify(updatedFavorites))
-    
-  //     .then(() => {
-  //       setFavorites(updatedFavorites);
-  //     })
-  //     .catch(error => {
-  //       console.log('Error al eliminar el producto:', error);
-  //     });
-  // };
+
 
 
   
@@ -82,6 +71,9 @@ export const FavoritesScreen = ({ product, navigation }: Props) => {
                  <Text style={styles.productPrice}>${item.price}MX </Text>
                  {/* <Text style={styles.productName}>{item.quantity} </Text> */}
                   <View>
+                  <TouchableOpacity style={styles.deleteButton} onPress={() => removeItemFromCart(item.productId)}>
+                  <Icon name="trash-o" size={30} color="#ff0000" />
+                </TouchableOpacity> 
                  </View>
                  <TouchableOpacity
                  style={styles.addToCartButton}

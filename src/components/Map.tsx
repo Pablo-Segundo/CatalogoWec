@@ -25,6 +25,7 @@ import Geocoder from 'react-native-geocoding';
 import {Image} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {usePermissions} from '../hook/usePermission';
+import LoadingScreen from '../Screens/Products/loadintgScreen';
 
 export function MapScreen() {
   const {isOpen, onOpen, onClose} = useDisclose();
@@ -58,6 +59,7 @@ export function MapScreen() {
       error => {
         console.log(error.message);
       },
+   
       {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     );
   };
@@ -99,6 +101,7 @@ export function MapScreen() {
 
   return (
     <>
+     
       <View
         style={{
           zIndex: 1,

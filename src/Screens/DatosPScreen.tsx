@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Text, StyleSheet, View,Platform, KeyboardAvoidingView, TextInput, TouchableOpacity } from 'react-native';
+import { Text, StyleSheet, View,Platform, KeyboardAvoidingView, TextInput, TouchableOpacity, ImageBackground,Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRoute } from '@react-navigation/native';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export const DatosPScreen = () => {
   const navigation = useNavigation();
@@ -61,11 +62,13 @@ export const DatosPScreen = () => {
   };
 
   const isValidPhoneNumber = (phone) => {
+
     const regex = /^\d{10}$/;
     return regex.test(phone);
   };
 
   const handleSaveData = () => {
+   
     if (!nombre || !numeroTelefonico || !selectedAddress) {
       setErrorNombre(!nombre);
       setErrorTelefono(!numeroTelefonico);
@@ -73,27 +76,43 @@ export const DatosPScreen = () => {
       setErrorTelefonoMessage('Por favor, complete todos los campos.');
       return;
     }
+
+   
     if (!isValidPhoneNumber(numeroTelefonico)) {
       setErrorTelefono(true);
       setErrorTelefonoMessage('El número de teléfono debe tener 10 dígitos.');
       return;
     }
+
+   
     guardarDatos();
     navigation.navigate('Shopping');
   };
 
   return (
+     <>
+    
+      <View style={styles.container}>
+       
+        
+    <View style={styles.container2}>
+    <ImageBackground  source={require('../assets/lottie/icon/marcador.png')} resizeMode="cover" style={styles.image}>
+          <View style={styles.overlay}>
+            <Text style={{color:'white',fontSize: 20,fontWeight: 'bold',}}>Agrega tu información </Text>
+          </View>
+        </ImageBackground>
+      </View>
 
-    <View style={styles.container}>
+   
       <KeyboardAvoidingView behavior={Platform.OS === 'android' ? 'padding' : 'height'} >
 
-      <Text style={styles.title}>Agrega un domicilio</Text>
+      <Text style={styles.title}>Datos de dirección </Text>
       <Text style={styles.note}>*IMPORTANTE* *Recuerda poner los datos de quien va a recibir el paquete*</Text>
 
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Nombre:</Text>
         <TextInput
-          style={[styles.input, errorDireccion && styles.errorInput]}
+          style={[styles.input, errorNombre && styles.errorInput]}
           placeholder="Por favor, escriba su nombre"
           placeholderTextColor="gray"
           value={nombre}
@@ -102,6 +121,9 @@ export const DatosPScreen = () => {
             setNombre(text);
           }}
         />
+             {errorNombre && (
+        <Text style={styles.errorMessage}>Este es obligatorio.</Text>
+      )}
 
         <Text style={styles.label}>Número de Teléfono:</Text>
         <TextInput
@@ -114,7 +136,13 @@ export const DatosPScreen = () => {
             setErrorTelefono(false);
             setNumeroTelefonico(text);
           }}
-        />
+          />
+            {errorTelefonoMessage && (
+        <Text style={styles.errorMessage}>ste campo debe tener 10 digitos.</Text>
+      )}
+
+     
+     
 
         <Text style={styles.label}>Referencia (opcional):</Text>
         <TextInput
@@ -136,6 +164,9 @@ export const DatosPScreen = () => {
             selectedAddress(text);
           }}
         />
+{errorDireccion && (
+        <Text style={styles.errorMessage}>Este campo es obligatorio.</Text>
+      )}
         <Text style={styles.note}>*Los datos de dirección se llenan en la ventana del mapa*</Text>
       </View>
 
@@ -143,7 +174,12 @@ export const DatosPScreen = () => {
         <Text style={styles.buttonText}>Guardar Datos</Text>
       </TouchableOpacity>
       </KeyboardAvoidingView>
+     
     </View>
+    
+  
+   
+    </>
   
   );
 };
@@ -154,15 +190,41 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  container2: {
+    width: Dimensions.get('window').height / Dimensions.get('window').width > 1.6 ? '100%' : '48%',
+    justifyContent: 'center',
+    
+    alignItems: 'center',
+    margin: Dimensions.get('window').height / Dimensions.get('window').width > 1.6 ? 0 : 5,
+    marginBottom: 5
+  },
+  image: {
+    width: '100%',
+    height: 170,
+    resizeMode: 'cover',
+  },
+  errorMessage: {
+    color: 'red',
+    fontSize: 12,
+    marginBottom: 5,
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   title: {
     color: 'black',
     marginTop: 10,
     fontWeight: 'bold',
     fontSize: 20,
+    marginHorizontal: 20,
   },
   note: {
     color: 'black',
-    marginTop: 10,
+    marginTop: 20,
+    marginHorizontal: 15,
   },
   inputContainer: {
     marginTop: 15,

@@ -154,7 +154,8 @@ const handleCardPress = (datos) => {
 
              
              
-            <Card key={index} style={styles.cardcontainer}>
+            <TouchableOpacity  key={index} style={styles.cardcontainer}
+            onPress={() => navigation.navigate('Shopping')}>
               <View style={styles.rowContainer}>
                 <Icon name="user" size={20} color="#000" style={styles.icon} />
                 <Text style={styles.productname}>{datos.nombre}</Text>
@@ -181,7 +182,7 @@ const handleCardPress = (datos) => {
               </TouchableOpacity>
           
               </View>
-            </Card>
+            </TouchableOpacity>
           ))}
           </ScrollView>
         ) : (
