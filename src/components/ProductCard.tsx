@@ -18,6 +18,8 @@ interface Props {
   getCartItems: () => void;
 }
 
+const screenWidth = Dimensions.get('window').width;
+
 export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) => {
   // const [quantity, setQuantity] = useState(1);
   const { isOpen, onOpen, onClose } = useDisclose();
@@ -113,7 +115,31 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
     }
   }, [availableQuantity]);
 
-  
+
+  const handleScroll = (event) => {
+    const contentOffset = event.nativeEvent.contentOffset.x;
+    const index = Math.floor(contentOffset / screenWidth);
+    setCurrentIndex(index);
+  };
+
+  const renderIndicator = () => {
+    return (
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        {product.multimedia.map((_, index) => (
+          <View
+            key={index}
+            style={{
+              width: 8,
+              height: 8,
+              borderRadius: 4,
+              backgroundColor: currentIndex === index ? 'blue' : 'gray',
+              margin: 4,
+            }}
+          />
+        ))}
+      </View>
+    );
+  };
 
 
 
