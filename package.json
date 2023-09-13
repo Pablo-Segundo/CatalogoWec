@@ -32,6 +32,7 @@
     "deprecated-react-native-prop-types": "^4.1.0",
     "font-awesome": "^4.7.0",
     "framer-motion": "^10.13.0",
+    "i": "^0.3.7",
     "lottie-react-native": "^5.1.5",
     "material-ui-community-icons": "^0.15.0",
     "native-base": "^3.4.28",

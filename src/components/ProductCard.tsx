@@ -18,7 +18,6 @@ interface Props {
   getCartItems: () => void;
 }
 
-
 export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) => {
   // const [quantity, setQuantity] = useState(1);
   const { isOpen, onOpen, onClose } = useDisclose();
@@ -35,23 +34,10 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
   const initialQuantity = cartProduct ? cartProduct.quantity : 1; 
   const [quantity, setQuantity] = useState(initialQuantity);
 
-  const [showCarousel, setShowCarousel] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const flatListRef = useRef(null);
 
-  // const decrementQuantity = () => {
-  //   if (quantity > 1) {
-  //     setQuantity(quantity - 1);
-  //   } else {
-  //     setDisabled(true);
-  //   }
-  // };
-  // const incrementQuantity = () => {
-  //   if (quantity < availableQuantity) {
-  //     setQuantity(quantity + 1);
-  //     setDisabled(false);
-  //   }
-  // };
 
-  
 
   const toggleFavorite = async (product) => {
     const favoriteItem = {
@@ -127,6 +113,12 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
     }
   }, [availableQuantity]);
 
+  
+
+
+
+
+  
 
 
 
@@ -173,7 +165,7 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
       <TouchableOpacity
         style={styles.addToCartButton}
         onPress={() => {
-          if (quantity >= 0) {
+          if (quantity >= 1) {
             addToCart(product, quantity);
             Toast.show({
               type: 'success',
@@ -208,8 +200,23 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
             decelerationRate={0.9} 
           />
 
+
+      {/* <FlatList
+        ref={flatListRef}
+        data={product.multimedia}
+        horizontal
+        renderItem={renderItem}
+        keyExtractor={(item, index) => index.toString()}
+        showsHorizontalScrollIndicator={false}
+        pagingEnabled
+        snapToInterval={screenWidth}
+        decelerationRate={0.9}
+        onMomentumScrollEnd={handleScroll}
+      />
+      {renderIndicator()}
+     */}
             
-         {/* <Carousel
+          {/* <Carousel
           data={product.multimedia}
           renderItem={({ item }) => (
             <Image style={styles.cardImage} source={{ uri: item.images['400x400'] }} />
@@ -276,6 +283,7 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
       </Actionsheet>
     </>
   );
+  
 };
 const styles = StyleSheet.create({
   container: {
