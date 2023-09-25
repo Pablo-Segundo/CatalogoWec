@@ -179,9 +179,7 @@ const fetchLatestData = useCallback(() => {
               <View>
                 <View style={styles.tableRow}>
                 <Text style={styles.rowText}>{item.product.name}</Text>
-    
-                {/* <Text  style={styles.rowText}>{item.product.quantity}</Text> */}
-                </View>
+              </View>
 
               <View style={styles.rowContainer}>
                   <Text style={styles.rowTextPrice}>{item.product.price} MNX </Text> 

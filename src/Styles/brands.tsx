@@ -177,11 +177,15 @@ export const Brands = ({ route, navigation }: Props) => {
                   <Text style={styles.rowText}>{item.name}</Text>
                   {/* <Text style={styles.rowTextPrice}>{item.price} MNX</Text> */}
                 </View>
+              </View>
+
+             
+               
 
                 <View style={styles.rowContainer}>
                   <Text style={styles.rowTextPrice}>{item.price} MNX </Text> 
                   <Text  style={styles.rowText}>X ( {item.quantity} )</Text>
-              </View>
+                </View>
 
               <View style={styles.rowContainer}>
               <View style={styles.quantityContainer}>
@@ -197,17 +201,17 @@ export const Brands = ({ route, navigation }: Props) => {
                 setQuantity(quantity + 1); 
               }} style={styles.quantityButton}>
                 <Text style={styles.quantityButtonText}>+</Text>
-        </TouchableOpacity>   
+                 </TouchableOpacity>   
               </View>
 
               <View style={styles.rowContainer}>
                     <TouchableOpacity style={styles.updateButton} 
-                    onPress={() => removeItemFromCart(item.product._id)}>
-                    <Icon name="trash-outline" size={30} color="#1E90FF"  />
+                    >
+                    <Icon name="create-outline" size={25} color="#ff1493" /> 
                 </TouchableOpacity>
                 </View>
               </View>
-            </View>
+          
             </View> 
           </Card>
         )}
@@ -226,16 +230,21 @@ const styles = StyleSheet.create({
   },
   rowContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+     justifyContent: 'space-between',
     marginTop: 10,
     // marginHorizontal: 20,
-    color: 'black'
+    backgroundColor: 'gray'
 
   },
   imageContainer: {
     width: 100,
     marginRight: 5,
 
+  },
+  updateButton: {
+    padding: 5,
+    borderRadius: 5,
+    backgroundColor: 'gray'
   },
   image: {
     width: 100,
@@ -249,8 +258,8 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   tableRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+     flexDirection: 'row',
+     justifyContent: 'space-between',
 
   },
   rowText: {
