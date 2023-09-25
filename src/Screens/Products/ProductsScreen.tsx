@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { RefreshControl, View} from 'react-native';
+import { RefreshControl, Text, View} from 'react-native';
 import API from '../../API/API';
 import { FlatList } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -14,6 +14,7 @@ export const ProductsScreen = ({ route, navigation }: Props) => {
   navigation.setOptions({
     title: route.params?.name,
   });
+  
   const [products, setProducts] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
@@ -50,8 +51,11 @@ export const ProductsScreen = ({ route, navigation }: Props) => {
         }
         renderItem={({ item }) => (
           <ProductCard product={item} />
+
+      
         )}
       />
+    
     </>
   );
 };

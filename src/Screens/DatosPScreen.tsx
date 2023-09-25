@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Text, StyleSheet, View,Platform, KeyboardAvoidingView, TextInput, TouchableOpacity, ImageBackground,Dimensions } from 'react-native';
+import { Text, StyleSheet, View,Platform, KeyboardAvoidingView, TextInput, TouchableOpacity, ImageBackground,Dimensions, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRoute } from '@react-navigation/native';
-import { ScrollView } from 'react-native-gesture-handler';
+
+
 
 export const DatosPScreen = () => {
   const navigation = useNavigation();
@@ -91,16 +92,17 @@ export const DatosPScreen = () => {
 
   return (
      <>
-    
+    <ScrollView>
+   
       <View style={styles.container}>
        
         
-    <View style={styles.container2}>
-    <ImageBackground  source={require('../assets/lottie/icon/marcador.png')} resizeMode="cover" style={styles.image}>
-          <View style={styles.overlay}>
-            <Text style={{color:'white',fontSize: 20,fontWeight: 'bold',}}>Agrega tu información </Text>
-          </View>
-        </ImageBackground>
+          <View style={styles.container2}>
+          <ImageBackground  source={require('../assets/lottie/icon/marcador.png')} resizeMode="cover" style={styles.image}>
+                <View style={styles.overlay}>
+                  <Text style={{color:'white',fontSize: 20,fontWeight: 'bold',}}>Agrega tu información </Text>
+                </View>
+              </ImageBackground>
       </View>
 
    
@@ -138,7 +140,7 @@ export const DatosPScreen = () => {
           }}
           />
             {errorTelefonoMessage && (
-        <Text style={styles.errorMessage}>ste campo debe tener 10 digitos.</Text>
+        <Text style={styles.errorMessage}>Este  campo debe tener 10 digitos.</Text>
       )}
 
      
@@ -177,7 +179,8 @@ export const DatosPScreen = () => {
      
     </View>
     
-  
+     
+    </ScrollView>
    
     </>
   
@@ -193,7 +196,6 @@ const styles = StyleSheet.create({
   container2: {
     width: Dimensions.get('window').height / Dimensions.get('window').width > 1.6 ? '100%' : '48%',
     justifyContent: 'center',
-    
     alignItems: 'center',
     margin: Dimensions.get('window').height / Dimensions.get('window').width > 1.6 ? 0 : 5,
     marginBottom: 5

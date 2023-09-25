@@ -11,6 +11,7 @@ import { Dimensions } from 'react-native';
 import { HeaderRight } from '../components/header/HeaderRight';
 import { Ventanauwu } from '../Screens/Products/vantanauwu';
 import { DatosPScreen } from '../Screens/DatosPScreen';
+import { Brands } from '../Styles/brands';
 
 const Stack = createNativeStackNavigator()
 export const Navigation = () => {
@@ -74,6 +75,11 @@ export const Navigation = () => {
            <Stack.Screen
         name="Datos"
         component={DatosPScreen}
+       
+      />
+            <Stack.Screen
+        name="brands"
+        component={Brands}
        
       />
 

@@ -20,7 +20,7 @@ export const Direction = () => {
   
   
   useEffect(() => {
-    const obtenerDatosGuardados = async () => {
+const obtenerDatosGuardados = async () => {
       try {
         const datosGuardados = await AsyncStorage.getItem('datos');
         if (datosGuardados) {
@@ -34,8 +34,7 @@ export const Direction = () => {
     obtenerDatosGuardados();
   }, []);
 
-  
-  const handleUpdate = () => {
+const handleUpdate = () => {
     if (selectedAddress && updatedAddressData) {
       const updatedData = datosGuardados.map((data) => {
         if (data.nombre === selectedAddress.nombre) {
@@ -66,8 +65,7 @@ export const Direction = () => {
     }
   };
 
-
-  const handleDelete = (index) => {
+const handleDelete = (index) => {
     const updatedData = [...datosGuardados];
     updatedData.splice(index, 1);
     setDatosGuardados(updatedData);
@@ -79,27 +77,6 @@ export const Direction = () => {
         console.error('Error al guardar los datos actualizados:', error);
       });
   };
-
-   
-//  const renderEmptyCart = () => {
-//   return (
-//     <View style={styles.emptyCartContainer}>
-     
-
-//       <Text style={styles.emptyCartText}>No tiene ninguna direccion guardada</Text>
-
-//       <TouchableOpacity
-//         style={styles.exploreButton}
-//         onPress={() => navigation.navigate('Home')}
-//       >
-         
-//         <Image source={require('../Navigators/assets/lottie/osuxd.png')} style={styles.exploreImage} />
-
-//         <Text style={styles.exploreButtonText}>Agregue una direccion</Text>
-//       </TouchableOpacity>
-//     </View>
-//   );
-// };
 
 const handleCardPress = (datos) => {
   setSelectedAddress(datos);
@@ -115,39 +92,21 @@ const handleCardPress = (datos) => {
 
   return(
     <>
-     
 
-   
-    
-
-
-      <View style={styles.header}>
-        <Text style={styles.headerWITHE}>Direcciones del usuario  </Text>
-        <View>
-         <TouchableOpacity  onPress={() => navigation.navigate('mapaScreen', {owner:' '})}>
-            <Card style={styles.cardcontainer}>
-              <View>
-                <Text style={styles.textgray}> Agregar una nueva direccion   </Text>
-              </View>
-            </Card>
-          </TouchableOpacity>
-        </View>
+<View>
+        <Card style={styles.cardContainer2}>
+          <Text style={{color:'black', fontSize: 20, fontWeight: 'bold'}} > Direcciones  </Text>
+        </Card>
       </View>
-     
-     
-      
-    
-
 
       {datosGuardados && datosGuardados.length > 0 ? (
-       
-
       
       <ScrollView>
 
        <View style={styles.rowContainer2}>
-      <Text style={styles.titlegray}> Seleccione o agregue una nueva dirección </Text>
+      <Text style={styles.titlegray}> Seleccione o edite su direcciónes </Text>
       </View>
+      {/* <Text style={{color:'black',}}>La direccion que eliga sera donde llegen sus compras   </Text> */}
        
         {datosGuardados.map((datos, index) => (
           
@@ -272,9 +231,32 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 16,
       },
+      cardContainer2: {
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'row',
+        borderRadius: 10,
+        padding: 10,
+        backgroundColor: '#fff',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+        marginTop: 10
+      },
+   
       input: {
         color: 'black',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        borderColor: 'gray',
+        borderWidth: 2,
+        marginTop: 10
+        
       },
       centeredContainer: {
         flex: 1,
@@ -478,15 +460,11 @@ const styles = StyleSheet.create({
         padding: 20,
         marginBottom: 15,
         marginHorizontal: 15,
+        backgroundColor: '#F0F0F0',
+        borderColor: 'gray',
+        borderWidth: 2,
+
       },
-      shoppingCartIcon: {
-        padding: 5,
-        borderRadius: 50,
-        backgroundColor: '#FFF',
-      },
-      exploreImage: {
-        width: 30,
-        height: 30,
-        marginRight: 10,
-      }
+ 
+    
 })

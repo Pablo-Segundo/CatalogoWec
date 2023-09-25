@@ -17,6 +17,7 @@ incrementQuantity: (productId: string) => void;
 decrementQuantity: (productId: string) => void;
 TotalProductsAndPrice:  (cart: CartItem[]) => void;
 countUniqueProducts: (cart: CartItem[]) => void; 
+
 };
 
 const CartInitialState: CartState = {
@@ -116,31 +117,31 @@ const CartInitialState: CartState = {
         }
       };
 //-----------------------------------------------------
-const clearCart = async () => {
-  try {
-    AsyncStorage.removeItem('cart');
-    const { totalProducts, totalPrice } = TotalProductsAndPrice([]); 
-    dispatch({
-      type: 'clearCart',
-      payload: { cart: [], errorMessage: 'Carrito vaciado', totalProducts, totalPrice },
-    });
-  } catch (error: any) {
-    console.log(error);
-  }
-};
+      const clearCart = async () => {
+        try {
+          AsyncStorage.removeItem('cart');
+          const { totalProducts, totalPrice } = TotalProductsAndPrice([]); 
+          dispatch({
+            type: 'clearCart',
+            payload: { cart: [], errorMessage: 'Carrito vaciado', totalProducts, totalPrice },
+          });
+        } catch (error: any) {
+          console.log(error);
+        }
+      };
 //---------------------------------------------
-    const countUniqueProducts = (cart: CartItem[]): number => {
-       const uniqueProductIds = new Set<string>();
-  
-       for (const item of cart) {
-       uniqueProductIds.add(item.product._id);
-      }
-  
-      return uniqueProductIds.size;
-   };
+      const countUniqueProducts = (cart: CartItem[]): number => {
+        const uniqueProductIds = new Set<string>();
+    
+        for (const item of cart) {
+        uniqueProductIds.add(item.product._id);
+        }
+    
+        return uniqueProductIds.size;
+    };
 
      //----------------------------------------
-     const incrementQuantity = async (productId: string) => {
+      const incrementQuantity = async (productId: string) => {
       try {
         const cartArray = await AsyncStorage.getItem('cart');
         let cart: any = [];
@@ -167,12 +168,8 @@ const clearCart = async () => {
         console.log(error);
       }
     };
-    
-
-  
-
-   
-    const decrementQuantity = async (productId: string) => {
+      
+     const decrementQuantity = async (productId: string) => {
       try {
         const cartArray = await AsyncStorage.getItem('cart');
         let cart: any = [];
@@ -195,13 +192,8 @@ const clearCart = async () => {
         console.log(error);
       }
     };
-    
 
-
-
-
-
-
+ 
 
     return (
   <CartContext.Provider value={{

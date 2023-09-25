@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useReducer, useContext } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, Dimensions, FlatList, Modal } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, Dimensions, FlatList, Modal,ScrollView } from 'react-native';
 import { Product } from '../interfaces/ProductsCategoryInterface';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -10,7 +10,8 @@ import { Toast } from 'react-native-toast-message/lib/src/Toast';
 import { MdError, MdCheckCircle } from 'react-icons/md';
 import { motion } from 'framer-motion';
 import { CartContext } from '../context/cart/CartContext';
-import Carousel from 'react-native-snap-carousel';
+
+
 
 interface Props {
   product: Product;
@@ -26,7 +27,6 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
   const [showModal, setShowModal] = useState(false);
   const [favorites, setFavorites] = useState([]);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [disabled, setDisabled] = useState(false);
   const [availableQuantity, setAvailableQuantity] = useState(product.quantity);
   const [isCardDisabled, setIsCardDisabled] = useState(false);
   
@@ -37,9 +37,6 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
   const [quantity, setQuantity] = useState(initialQuantity);
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const flatListRef = useRef(null);
-
-
 
   const toggleFavorite = async (product) => {
     const favoriteItem = {
@@ -74,7 +71,6 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
   const isInFavorites = () => {
     return favorites.some((item) => item._id === product._id);
  
-   
   };
 
   useEffect(() => {
@@ -117,24 +113,29 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
   }, [availableQuantity]);
 
 
-  const handleScroll = (event) => {
-    const contentOffset = event.nativeEvent.contentOffset.x;
-    const index = Math.floor(contentOffset / screenWidth);
-    setCurrentIndex(index);
-  };
 
-  const renderIndicator = () => {
+  const onViewableItemsChanged = useRef(({ viewableItems }) => {
+    if (viewableItems.length > 0) {
+      setCurrentIndex(viewableItems[0].index);
+    }
+  }).current;
+  
+  const data = product.multimedia; 
+  const indicatorData = Array.from({ length: data.length }, (_, i) => i);
+  
+  const renderDots = () => {
     return (
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        {product.multimedia.map((_, index) => (
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+        {indicatorData.map((index) => (
           <View
             key={index}
             style={{
-              width: 8,
-              height: 8,
-              borderRadius: 4,
-              backgroundColor: currentIndex === index ? 'blue' : 'gray',
-              margin: 4,
+              width: 10,
+              height: 10,
+              marginTop: 10,
+              borderRadius: 8,
+              backgroundColor: index === currentIndex ? '#FF1493' : 'gray', 
+              margin: 6,
             }}
           />
         ))}
@@ -146,12 +147,10 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
 
 
   
-
-
-
-  
   return (
+    
     <>
+       
    <TouchableOpacity
         onPress={onOpen}
         style={[styles.container, isCardDisabled && styles.disabledContainer]}
@@ -216,33 +215,20 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
 
 <Actionsheet isOpen={isOpen} onClose={onClose}>
         <Actionsheet.Content>
-        <FlatList
-            data={product.multimedia}
+         
+          <FlatList
+            data={data}
             renderItem={renderItem}
             keyExtractor={(item, index) => index.toString()}
             horizontal
             showsHorizontalScrollIndicator={false}
             pagingEnabled
-            snapToInterval={Dimensions.get('window').width} 
-            decelerationRate={0.9} 
+            snapToInterval={Dimensions.get('window').width}
+            decelerationRate={0.9}
+            onViewableItemsChanged={onViewableItemsChanged} 
           />
-
-
-      {/* <FlatList
-        ref={flatListRef}
-        data={product.multimedia}
-        horizontal
-        renderItem={renderItem}
-        keyExtractor={(item, index) => index.toString()}
-        showsHorizontalScrollIndicator={false}
-        pagingEnabled
-        snapToInterval={screenWidth}
-        decelerationRate={0.9}
-        onMomentumScrollEnd={handleScroll}
-      />
-      {renderIndicator()}
-     */}
-            
+          {renderDots()}
+          
           {/* <Carousel
           data={product.multimedia}
           renderItem={({ item }) => (
@@ -265,14 +251,16 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
 
             </TouchableOpacity>
 
-          <View style={styles.productContainer}>
+          <View style={styles.cardContainer3}>
             <Text style={styles.productCard}>{product.name}</Text>
             <Text style={styles.productName}> Disponible:  {product.quantity} </Text>
           </View>
 
-            <View style={{height: 150,}}>
+            <View style={styles.cardProduct}>
+              <ScrollView>
               <Text style={{color:'gray'}}>Descripcion</Text>
               <Text style={styles.description}>{product.description}</Text>
+              </ScrollView>
             </View>
 
             <View style={styles.quantityContainer}>
@@ -291,14 +279,8 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
               </TouchableOpacity>
       </View>
 
-            {/* <View>
-              <TouchableOpacity style={styles.buyButton}>
-                <Text style={{color:'black'}}> Agregar al carrito</Text>
-              </TouchableOpacity>
-            </View> */}
-
-                    
-            <View>
+   
+            <View style={{width: '100%', }}>
             <TouchableOpacity
               style={styles.addToCartButton}
               onPress={() => {
@@ -318,14 +300,11 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
                 }
               }}
       >
-  <Text style={styles.addToCartButtonText}>Agregar al carrito</Text>
-</TouchableOpacity>
+     <Text style={styles.addToCartButtonText2}>Agregar al carrito</Text>
+     </TouchableOpacity>
             </View>
          
-              
-            
-
-       
+          
       
          <Modal visible={showModal} transparent={true}>
             <TouchableOpacity style={styles.modalContainer} onPress={closeImageModal}>
@@ -521,6 +500,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  addToCartButtonText2: {
+    color: '#fff',
+    fontWeight: 'bold',
+    alignItems: 'center',
+    width: '100%'
+  },
+  
+
   viewFavoritesButton: {
     backgroundColor: '#ccc',
     borderRadius: 5,
@@ -544,6 +531,7 @@ const styles = StyleSheet.create({
   },
   productContainer: {
     padding: 10,
+    backgroundColor: 'gray'
   },
   Textcard: {
     fontSize: 17,
@@ -578,11 +566,40 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
+  cardProduct: {
+    height: '25%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    borderRadius: 10,
+    marginTop: 10,
+    padding: 20,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
 
-  cardContainer2:{
-    maxHeight: 90,
-    backgroundColor: 'gray',
-
+  cardContainer3: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    padding: 10,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 
   textGray: {

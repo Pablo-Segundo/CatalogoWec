@@ -71,9 +71,9 @@ export const FavoritesScreen = ({ product, navigation }: Props) => {
                  <Text style={styles.productPrice}>${item.price}MX </Text>
                  {/* <Text style={styles.productName}>{item.quantity} </Text> */}
                   <View>
-                  <TouchableOpacity style={styles.deleteButton} onPress={() => removeItemFromCart(item.productId)}>
+                  {/* <TouchableOpacity style={styles.deleteButton} onPress={() => removeItemFromCart(item.productId)}>
                   <Icon name="trash-o" size={30} color="#ff0000" />
-                </TouchableOpacity> 
+                </TouchableOpacity>  */}
                  </View>
                  <TouchableOpacity
                  style={styles.addToCartButton}

@@ -25,7 +25,7 @@ export const PaymentScreen = () => {
     const [publishableKey, setPublishableKey] = useState('');
     
     const route = useRoute();
-    // const { filteredProducts, totalPrice, selectedPaymentOption, discountProductsCart,filterdatos } = route.params;
+    const { filteredProducts, totalPrice, selectedPaymentOption, discountProductsCart,filterdatos } = route.params;
     const { confirmPayment } = useStripe();
 
 
@@ -40,7 +40,7 @@ export const PaymentScreen = () => {
         productCount += item.quantity;
       });
       setCart(parsedCart);
-      // setTotalPrice(total);
+      setTotalPrice(total);
       setTotalProducts(productCount);
     };
 
@@ -87,53 +87,100 @@ export const PaymentScreen = () => {
     >
       <View>
         <Card style={styles.cardcontent}>
-          <Text style={{color:'black'}}> Total a pagar </Text>
+          <Text style={{color:'white', fontSize:20,   fontWeight: 'bold',}}> Total a pagar </Text>
+          <Text style={{color: 'white', fontSize:20,   fontWeight: 'bold',}}>$ {totalPrice} MNX </Text>
         </Card>
+       
+  
       </View>
+
+     
    
 
   {/* <Text style={{color:'black', fontSize: 18,fontWeight: "bold",}}>Total a pagar </Text> */}
 
+<Card style={{backgroundColor:'#e6e6fa', marginVertical: 15,marginHorizontal: 10  }}>  
+
 <CardField
-      postalCodeEnabled={true}
-      placeholders={{
-        number: '4242 4242 4242 4242',
-      }}
-      cardStyle={{
-        backgroundColor: '#FFFFFF',
-        textColor: '#000000',
-      }}
-      style={{
-        width: '100%',
-        height: 50,
-        marginVertical: 30,
-      }}
-      onCardChange={(cardDetails) => {
-        console.log('cardDetails', cardDetails);
-      }}
-      onFocus={(focusedField) => {
-        console.log('focusField', focusedField);
-      }}
-    />
+  postalCodeEnabled={true}
+  placeholders={{
+    number: '4242 4242 4242 4242',
+  }}
+  cardStyle={{
+    backgroundColor: 'gray',
+    textColor: 'white',
+  }}
+  style={{
+    maxWidth: '100%',
+    height: 50,
+    marginVertical: 30,
+  }}
+  onCardChange={(cardDetails) => {
+    console.log('cardDetails', cardDetails);
+  }}
+  onFocus={(focusedField) => {
+    console.log('focusField', focusedField);
+  }}
+/>
+
+<TextInput
+  placeholder="Nombre del titular de la tarjeta"
+  onChangeText={(name) => {
+    console.log('Nombre del titular de la tarjeta:', name);
+  }}
+  style={{
+    backgroundColor: 'gray',
+    color: 'white',
+    height: 50,
+    marginVertical: 10,
+    paddingHorizontal: 10,
+    borderRadius: 5,
+    
+  }}
+/>
+
+   
+   
+    </Card> 
 
 
-   <View>
-      <CardField
+     <Card style={{marginTop: 15, marginHorizontal: 10}} >
+        <Text style={{color:'black', fontSize:20,   fontWeight: 'bold',}}>Lista de productos </Text>
+
+        <View> 
+    <Text style={styles.rowText}>Productos filtrados prueba  </Text>
+    {/* <View> 
+         {filteredProducts.map((product, index) => (
+          <Text style={styles.rowText} key={index}>{product.product_id.name} - ${product.price}</Text>
+        ))} 
+       </View> */}
+
+      <Text style={styles.rowText}>Precio total: ${totalPrice}</Text>
+      <Text style={styles.rowText}>Metodo de pago: {selectedPaymentOption}</Text>
+      <Text style={styles.rowText}>Datos filtrados : {filterdatos}</Text>
+  </View>
+        
+       </Card> 
+    
+
+
+   {/* <View>
+      <CardField 
         onCardChange={(cardDetails) => console.log('cardDetails', cardDetails)}
       />
-      <Button onPress={handlePayPress} title="Pay"   />
-   </View>
+      <Button  onPress={handlePayPress} title="Pay"   />
+   </View> */}
 
 
 
 
 
-
-
-  
-     
-
-<TouchableOpacity style={styles.buyButton} >
+<TouchableOpacity style={styles.buyButton}
+   onPress={handlePayPress}
+>
+ <CardField 
+        onCardChange={(cardDetails) => console.log('cardDetails', cardDetails)}
+      />
         <Text style={styles.buyButtonText}>Continuar</Text>
       </TouchableOpacity>
     
@@ -162,10 +209,12 @@ const styles = StyleSheet.create({
     },
     
     cardcontent: {
-      backgroundColor: '#dcdcdc',
-      paddingVertical: 12,
+      backgroundColor: '#ff1493',
+      paddingVertical: 30,
       borderRadius: 4,
       alignItems: 'center',
+      marginTop: 30,
+      marginHorizontal: 20
     },
 
     buyButtonText: {
@@ -179,5 +228,16 @@ const styles = StyleSheet.create({
       borderRadius:70,
       borderColor: '#ff1493',
     },
+    tableRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    rowText: {
+      fontSize: 14,
+      color: 'black',
+      fontWeight: 'bold',
+      marginHorizontal: 10
+    },
+
 
   });

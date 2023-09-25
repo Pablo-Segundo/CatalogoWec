@@ -20,7 +20,6 @@ interface Props {
 export const ShoppingScreen = ({product} : Props) => {
   const route = useRoute();
   const navigation = useNavigation();
-   const [quantity, setQuantity] = useState();
   // const [cart1, setCart] = useState(0);
   const toast = useToast();
   const [showModal, setShowModal] = useState(false);
@@ -34,13 +33,12 @@ export const ShoppingScreen = ({product} : Props) => {
   const {cart} = useContext(CartContext); 
   const {removeItemFromCart , clearCart, incrementQuantity, decrementQuantity, addToCart } = useContext(CartContext);
   const { totalProducts, totalPrice } = useContext(CartContext);
- 
+  const cartProduct = cart.find(item => item.product === product);
+  const initialQuantity = cartProduct ? cartProduct.quantity : 1; 
+  const [quantity, setQuantity] = useState(initialQuantity);
 
 
-  const cartShopping = async () => {
-    const storedCart = await AsyncStorage.getItem('cart');
- 
-  };
+
 
   const handleOptionSelect = (option: 'Tarjeta' | 'PagoContraEntrega') => {
     setSelectedPaymentOption(option);
@@ -61,15 +59,14 @@ export const ShoppingScreen = ({product} : Props) => {
         text2: 'Por favor, elija una opción de pago antes de continuar',
       });
     } else {
-      navigation.navigate('tarjetaScreen', {
-        filteredProducts: cart1,
+      navigation.navigate('tarjetaScreen', 
+      {
+      //   filteredProducts: cart1,
         totalPrice: totalPrice,
-        selectedPaymentOption: selectedPaymentOption,
-       
-        // discountProductsCart: discountProductsCart
-       
-      
-      });
+         selectedPaymentOption: selectedPaymentOption,
+      //  discountProductsCart: discountProductsCart
+      }
+      );
     }
   };
 
@@ -108,7 +105,6 @@ const filterdatos = async () => {
 
 useEffect(() => {
   fetchLatestData();
-  cartShopping();
   const unsubscribe = navigation.addListener('focus', fetchLatestData);
   return () => {
     unsubscribe();
@@ -141,7 +137,7 @@ const fetchLatestData = useCallback(() => {
         <TouchableOpacity  onPress={onOpen}>
         <View style={styles.viewuwu}>
             <View style={styles.cardcontainer}> 
-            <Icon name="location-outline" size={30} color="black" />
+            <Icon name="location-outline" size={30} color="white" />
             <Text style={styles.textblack}>Enviar a : 
               {datosGuardados && <Text style={styles.textgray}> {datosGuardados.nombre} , {datosGuardados.selectedAddress}  </Text>}
               </Text>
@@ -157,9 +153,16 @@ const fetchLatestData = useCallback(() => {
      
             <View style={styles.tableRow}>
               <Text style={styles.headerText}>Productos agregados ({totalProducts})</Text>
-              <TouchableOpacity style={styles.buyButton3} > 
+              {/* <TouchableOpacity style={styles.buyButton3} > 
                 <Text style={styles.headerTextWhite}  onPress={clearCart}>Vaciar </Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
+
+              <TouchableOpacity style={styles.TrashButton && styles.buyButton3} 
+                   onPress={clearCart}>
+                    <Icon name="trash-outline" size={30} color='white'  />
+                     </TouchableOpacity>
+
+
             </View>
         
         <FlatList
@@ -167,37 +170,38 @@ const fetchLatestData = useCallback(() => {
           //  <Text style={styles.rowText}>{item.product.name}</Text>
           //       <Text style={styles.rowText}>{item.product.price} </Text> 
           renderItem={({ item,  }) => (
-            <Card >
+
+            <Card style={{backgroundColor:'#f8f8ff', marginTop: 5, marginHorizontal: 10}}>
             <View style={styles.rowContainer}>
             <View style={styles.imageContainer}>
                 <Image style={styles.image} source={{ uri:item.product.multimedia[0].images['400x400'] }} />
               </View>
-              <View >
+              <View>
                 <View style={styles.tableRow}>
                 <Text style={styles.rowText}>{item.product.name}</Text>
-              
+    
                 {/* <Text  style={styles.rowText}>{item.product.quantity}</Text> */}
                 </View>
 
               <View style={styles.rowContainer}>
-              <Text style={styles.rowTextPrice}>{item.product.price} </Text> 
-              <Text  style={styles.rowText}>( {item.quantity} )</Text>
-                </View>
-
-  
+                  <Text style={styles.rowTextPrice}>{item.product.price} MNX </Text> 
+                  <Text  style={styles.rowText}>X ( {item.quantity} )</Text>
+              </View>
 
             <View style={styles.rowContainer}>
               <View style={styles.quantityContainer}>
-          <TouchableOpacity onPress={() => {decrementQuantity(item.product._id);  setQuantity(quantity - 1);  }}>
-              <Text style={styles.quantityButton}>-</Text>
-                  </TouchableOpacity>
+              <TouchableOpacity onPress={() => {
+                decrementQuantity(product);
+                setQuantity(quantity - 1); 
+              }} style={styles.quantityButton}>
+                <Text style={styles.quantityButtonText}>-</Text>
+              </TouchableOpacity>
                     <Text style={styles.quantity}>{item.quantity}</Text>
-                    <TouchableOpacity
-                          onPress={() => {incrementQuantity(item.product._id);  setQuantity(quantity - 1);}}
-                          disabled={item.quantity >= item.product.availableQuantity}>
-                        <Text style={[styles.quantityButton, item.quantity >= item.product.availableQuantity && { opacity: 0.1 }]}>
-                              +
-                        </Text>
+                    <TouchableOpacity onPress={() => {
+                incrementQuantity(product);
+                setQuantity(quantity + 1); 
+              }} style={styles.quantityButton}>
+                <Text style={styles.quantityButtonText}>+</Text>
         </TouchableOpacity>   
               </View>
 
@@ -205,16 +209,16 @@ const fetchLatestData = useCallback(() => {
                     <TouchableOpacity style={styles.updateButton} 
                     onPress={() => removeItemFromCart(item.product._id)}>
                     <Icon name="trash-outline" size={30} color="#1E90FF"  />
-                     </TouchableOpacity>
+                </TouchableOpacity>
                 </View>
-
               </View>
             </View>
             </View> 
           </Card>
           )}
         />
-          <Card>
+        
+          <Card style={{backgroundColor:'#f8f8ff'}}>
           <View style={{padding: 10, marginLeft: 5}}>
           <Text style={styles.headerText2}>Productos: {totalProducts}</Text>
         <Text style={styles.headerText2}>Total: ${totalPrice.toFixed(2)}</Text>
@@ -296,9 +300,8 @@ const fetchLatestData = useCallback(() => {
     <Text style={{ color: 'gray' }}>Selecciona tu dirección o ingresa una nueva</Text>
     <View style={styles.rowContainer}>
       <Card style={styles.cards}>
-
       <TouchableOpacity  style={{ alignItems: 'center' }} onPress={() => navigation.navigate('mapaScreen', { owner: ' ' })}>
-          <Text style={{ fontWeight: 'bold', color: 'black' }}>Agrega b direccion </Text>
+          <Text style={{ fontWeight: 'bold', color: 'black', }}>Agrega una direccion </Text>
           <Icon name="map-outline" size={25} color="#ff1493" /> 
           </TouchableOpacity>
         {/* <TouchableOpacity style={styles.buyButton} onPress={() => navigation.navigate('mapaScreen', { owner: ' ' })}>
@@ -332,6 +335,11 @@ const fetchLatestData = useCallback(() => {
         backgroundColor: '#ff69b4',
         // borderBottomLeftRadius: 50,
         // borderBottomRightRadius: 50,
+      },
+      quantityButtonText: {
+        fontSize: 13,
+        fontWeight: 'bold',
+        color: '#555',
       },
       viewuwu: {
         flexDirection: 'row',
@@ -392,6 +400,13 @@ const fetchLatestData = useCallback(() => {
         borderRadius: 5,
         marginLeft: 50
       },
+      TrashButton: {
+        padding: 10,
+        borderRadius: 5,
+        marginLeft: 50,
+        marginHorizontal: 30
+      },
+
       exploreImage: {
         width: 30,
         height: 30,
@@ -453,6 +468,9 @@ const fetchLatestData = useCallback(() => {
       },
       selectedPaymentOption: {
         backgroundColor: '#F0F0F0',
+        borderColor: '#ff1493',
+        borderWidth: 2,
+
       },
       paymentOptionText: {
         marginLeft: 10,
@@ -484,7 +502,7 @@ const fetchLatestData = useCallback(() => {
       },
    
       textblack: {
-      color: 'black',
+      color: 'white',
       
       fontSize: 18,
       },
@@ -515,7 +533,7 @@ const fetchLatestData = useCallback(() => {
         padding: 2,
       },
       textgray: {
-        color: 'black',
+        color: 'white',
         fontSize: 18,
         
       },
@@ -569,12 +587,13 @@ const fetchLatestData = useCallback(() => {
       buyButton3: {
         backgroundColor: '#ff1493',
         paddingVertical: 5,
+        paddingHorizontal: 10,
         borderRadius: 10,
-        marginHorizontal: 1,
+        marginHorizontal: 10,
         marginVertical:5,
        justifyContent: 'center',
        alignItems: 'center',
-       marginRight: 20
+       marginRight: 30
       },
       
       cardcontent: {
@@ -592,10 +611,11 @@ const fetchLatestData = useCallback(() => {
         marginTop: 10,
       },
       quantityButton: {
-        color: 'black',
-        fontSize: 20,
-        fontWeight: 'bold',
-        paddingHorizontal: 15,
+        padding: 15,
+        backgroundColor: '#eee',
+        borderRadius: 5,
+        marginHorizontal: 1
+      
       },
       quantity: {
         color: 'gray',
