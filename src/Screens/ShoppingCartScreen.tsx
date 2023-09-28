@@ -20,7 +20,7 @@ interface Props {
 export const ShoppingScreen = ({product} : Props) => {
   const route = useRoute();
   const navigation = useNavigation();
-  // const [cart1, setCart] = useState(0);
+  //  const [cart, setCart] = useState(0);
   const toast = useToast();
   const [showModal, setShowModal] = useState(false);
   const [showModal2, setShowModal2] = useState(false);
@@ -30,14 +30,26 @@ export const ShoppingScreen = ({product} : Props) => {
   const [selectedPaymentOption, setSelectedPaymentOption] = useState<'Tarjeta' | 'PagoContraEntrega' | null>(null);
 
   
-  const {cart} = useContext(CartContext); 
+  const {cart, } = useContext(CartContext); 
   const {removeItemFromCart , clearCart, incrementQuantity, decrementQuantity, addToCart } = useContext(CartContext);
   const { totalProducts, totalPrice } = useContext(CartContext);
   const cartProduct = cart.find(item => item.product === product);
   const initialQuantity = cartProduct ? cartProduct.quantity : 1; 
   const [quantity, setQuantity] = useState(initialQuantity);
 
-
+  useEffect(() => {
+   const loadCar = async () => {
+    try{
+      const dataCart = await AsyncStorage.getItem('cart');
+      if(dataCart) {
+        setCart(JSON.parse(dataCart))
+      }
+    } catch (error) {
+      console.log('erro al cargar los datos', error);
+    }
+   } 
+ loadCar();
+  })
 
 
   const handleOptionSelect = (option: 'Tarjeta' | 'PagoContraEntrega') => {
@@ -76,7 +88,6 @@ const filterdatos = async () => {
     if (storedCart) {
       const cart = JSON.parse(storedCart);
 
-      
       const regularProductsCart = cart.filter(
         (item) =>
           item.product_id.category !== '62b0d1135911da2ebfdc92c3' && item.product_id.discount === 0
@@ -168,13 +179,13 @@ const fetchLatestData = useCallback(() => {
         <FlatList
           data={cart}
           //  <Text style={styles.rowText}>{item.product.name}</Text>
-          //       <Text style={styles.rowText}>{item.product.price} </Text> 
+                // <Text style={styles.rowText}>{item.product.price} </Text> 
           renderItem={({ item,  }) => (
 
             <Card style={{backgroundColor:'#f8f8ff', marginTop: 5, marginHorizontal: 10}}>
             <View style={styles.rowContainer}>
             <View style={styles.imageContainer}>
-                <Image style={styles.image} source={{ uri:item.product.multimedia[0].images['400x400'] }} />
+             <Image style={styles.image} source={{ uri:item.product.multimedia[0].images['400x400'] }} />
               </View>
               <View>
                 <View style={styles.tableRow}>
@@ -219,7 +230,7 @@ const fetchLatestData = useCallback(() => {
           <Card style={{backgroundColor:'#f8f8ff'}}>
           <View style={{padding: 10, marginLeft: 5}}>
           <Text style={styles.headerText2}>Productos: {totalProducts}</Text>
-        <Text style={styles.headerText2}>Total: ${totalPrice.toFixed(2)}</Text>
+        <Text style={styles.headerText2}>Total: ${totalPrice.toFixed(2)} MNX</Text>
 
 
             <TextInput
@@ -229,17 +240,7 @@ const fetchLatestData = useCallback(() => {
             
             />
 
-            <Modal isOpen={showModal2} onClose={() => setShowModal2(false)}>
-          <Modal.Content maxWidth="500px">
-            <Modal.CloseButton style={styles.modalCloseButton} />
-            <Modal.Header style={styles.modalHeader}>Agregue un codigo de descuento: </Modal.Header>
-            <Modal.Body style={styles.modalBody}>
-            </Modal.Body>
-            <TouchableOpacity  style={styles.continueButton}>
-              <Text style={styles.continueButtonText}>aplicar  </Text>
-            </TouchableOpacity>
-          </Modal.Content>
-        </Modal>
+            
           </View>
           <View>
           <TouchableOpacity    onPress={() => setShowModal(true)}   style={styles.buyButton2}>

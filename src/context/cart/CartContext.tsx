@@ -1,11 +1,12 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { createContext, useReducer, } from "react";
+import { createContext, useEffect, useReducer, } from "react";
 import { Product } from "../../interfaces/ProductsCategoryInterface";
 import { CartItem, CartReducer, CartState } from "./CartReducer";
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
 
 type CartContextProps = {
 cart: CartItem[];
+ 
 success: boolean
 errorMessage: string;
 totalProducts: number; 
@@ -41,6 +42,7 @@ const CartInitialState: CartState = {
 
   
 
+    
     const addToCart = async (product: Product, quantity: number) => {
       try {
         const cartArray = await AsyncStorage.getItem('cart');
@@ -153,7 +155,6 @@ const CartInitialState: CartState = {
               cart[index].quantity++;
               await AsyncStorage.setItem('cart', JSON.stringify(cart));
     
-             
               const { totalProducts, totalPrice } = TotalProductsAndPrice(cart);
               dispatch({
                 type: 'incrementQuantity', 
@@ -193,7 +194,18 @@ const CartInitialState: CartState = {
       }
     };
 
- 
+  //     const decrementQuantity = () => {
+  //   if (quantity > 0) {
+  //     setQuantity(quantity - 1);
+  //   }
+  // };
+
+  // const incrementQuantity = () => {
+  //   if (quantity < product.quantity) {
+  //     setQuantity(quantity + 1);
+  //   }
+  // };
+
 
     return (
   <CartContext.Provider value={{

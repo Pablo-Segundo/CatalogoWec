@@ -147,10 +147,8 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
 
 
   
-  return (
-    
+  return ( 
     <>
-       
    <TouchableOpacity
         onPress={onOpen}
         style={[styles.container, isCardDisabled && styles.disabledContainer]}
@@ -174,6 +172,7 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
     <Text style={styles.textGray}>Disponible: {product.quantity}</Text>
     <Text style={styles.productPrice}>${product.price} MXN</Text>
     <View style={styles.quantityContainer}>
+      
         <TouchableOpacity onPress={() => {
           decrementQuantity(product._id);
           setQuantity(quantity - 1); 
@@ -191,7 +190,8 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
       <TouchableOpacity
         style={styles.addToCartButton}
         onPress={() => {
-          if (quantity >= 1) {
+          setQuantity(1);
+          if (quantity >= quantity) {
             addToCart(product, quantity);
             Toast.show({
               type: 'success',
@@ -229,18 +229,7 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
           />
           {renderDots()}
           
-          {/* <Carousel
-          data={product.multimedia}
-          renderItem={({ item }) => (
-            <Image style={styles.cardImage} source={{ uri: item.images['400x400'] }} />
-          )}
-          sliderWidth={600}
-          itemWidth={300}
-         
-          loop={false}
-          autoplay={false}
-          autoplayInterval={2000}
-        />  */}
+
         <TouchableOpacity onPress={() => toggleFavorite(product)} style={styles.favoriteButton2}>
               <Icon
                 name={isInFavorites() ? 'heart' : 'heart-o'}
@@ -253,7 +242,11 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
 
           <View style={styles.cardContainer3}>
             <Text style={styles.productCard}>{product.name}</Text>
-            <Text style={styles.productName}> Disponible:  {product.quantity} </Text>
+            <View style={{flexDirection:'row', }}>
+               <Text style={styles.productName}> Disponible:  {product.quantity} </Text>
+            <Text style={styles.productPrice}>${product.price} MXN</Text>
+            </View>
+           
           </View>
 
             <View style={styles.cardProduct}>
@@ -262,6 +255,7 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
               <Text style={styles.description}>{product.description}</Text>
               </ScrollView>
             </View>
+
 
             <View style={styles.quantityContainer}>
               <TouchableOpacity onPress={() => {
@@ -277,15 +271,15 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
               }} style={styles.quantityButton}>
                 <Text style={styles.quantityButtonText}>+</Text>
               </TouchableOpacity>
-      </View>
+     
 
-   
-            <View style={{width: '100%', }}>
+             
+            <View style={{width: '50%',  alignItems: 'center',  }}>
             <TouchableOpacity
               style={styles.addToCartButton}
               onPress={() => {
                 if (quantity >= 1) {
-                  addToCart(product, quantity);
+                  addToCart(product,product.quantity);
                   Toast.show({
                     type: 'success',
                     text1: 'Producto agregado',
@@ -303,7 +297,8 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
      <Text style={styles.addToCartButtonText2}>Agregar al carrito</Text>
      </TouchableOpacity>
             </View>
-         
+          </View>
+
           
       
          <Modal visible={showModal} transparent={true}>
@@ -567,7 +562,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   cardProduct: {
-    height: '25%',
+    height: '30%',
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
@@ -589,6 +584,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
+    
     borderRadius: 10,
     padding: 10,
     backgroundColor: '#fff',

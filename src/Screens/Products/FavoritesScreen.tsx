@@ -46,8 +46,6 @@ export const FavoritesScreen = ({ product, navigation }: Props) => {
       text2:'EL producto se agrego al carrito de compras ',
 
     })
-
-   
   };
  
 
@@ -56,8 +54,7 @@ export const FavoritesScreen = ({ product, navigation }: Props) => {
   
   return (
     <>
-    
-            {favorites.length > 0 ? (
+           {favorites.length > 0 ? (
            
         <FlatList
             data={favorites}

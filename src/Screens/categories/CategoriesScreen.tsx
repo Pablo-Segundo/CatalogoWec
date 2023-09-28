@@ -92,7 +92,7 @@ export const CategoriesScreen = ({ route, navigation }: Props) => {
       <View>
         {/* <Text style={{color:'black', fontSize: 18, fontWeight: 'bold'}}> Productos Agregados</Text> */}
         <Card style={styles.cardContainer}>
-          <Text style={{color:'black', fontSize: 20, fontWeight: 'bold'}} > Categorias </Text>
+          <Text style={{color:'black', fontSize: 20, fontWeight: 'bold'}} > Categorias  </Text>
         </Card>
       </View>
       <View style={{marginTop: 10}}></View>

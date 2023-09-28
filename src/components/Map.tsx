@@ -120,6 +120,24 @@ export function MapScreen() {
         />
       </View>
 
+             {/* <View style={styles.header}>
+        <View style={styles.headerinput}>
+           <GooglePlacesAutocomplete
+            placeholder='Escriba su calle plox uwu '
+            onPress={(data, details = null) => {
+              console.log(data.details);
+            }}
+            query={{
+              key:'AIzaSyDFHYFl_pImNIwTzu2YwjL5R8pH-nlWCE4',
+              language: 'es'
+            }}
+           />
+           </View>
+      </View>  */}
+
+
+
+
       {currentLocation && (
         <>
           <MapView
