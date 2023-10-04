@@ -1,23 +1,25 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { createContext, useEffect, useReducer, } from "react";
+import { createContext, useEffect, useReducer, useState, } from "react";
 import { Product } from "../../interfaces/ProductsCategoryInterface";
 import { CartItem, CartReducer, CartState } from "./CartReducer";
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
 
+
+
 type CartContextProps = {
 cart: CartItem[];
- 
 success: boolean
 errorMessage: string;
 totalProducts: number; 
 totalPrice: number;
-addToCart: (product: Product, quantity: number, name: string) => void;
+addToCart: (item: Product, quantity: number, name: string) => void;
 removeItemFromCart:(productId: string) => void;
 clearCart: (productId: string) => void;
 incrementQuantity: (productId: string) => void;
 decrementQuantity: (productId: string) => void;
 TotalProductsAndPrice:  (cart: CartItem[]) => void;
 countUniqueProducts: (cart: CartItem[]) => void; 
+UpdateColorButton: (productId: string) => void;
 
 };
 
@@ -39,9 +41,6 @@ const CartInitialState: CartState = {
       const totalPrice = cart.reduce((total: number, item: CartItem) => total + item.quantity * item.product.price, 0);
       return { totalProducts, totalPrice };
     };
-
-  
-
     
     const addToCart = async (product: Product, quantity: number) => {
       try {
@@ -143,7 +142,7 @@ const CartInitialState: CartState = {
     };
 
      //----------------------------------------
-      const incrementQuantity = async (productId: string) => {
+     const incrementQuantity = async (productId: string) => {
       try {
         const cartArray = await AsyncStorage.getItem('cart');
         let cart: any = [];
@@ -151,26 +150,27 @@ const CartInitialState: CartState = {
           cart = JSON.parse(cartArray);
           const index = cart.findIndex((item: any) => item.product._id === productId);
           if (index !== -1) {
-            if (cart[index].quantity < cart[index].product.availableQuantity) {
-              cart[index].quantity++;
-              await AsyncStorage.setItem('cart', JSON.stringify(cart));
+            const cartItem = cart[index];
+            if (cartItem.quantity >= cartItem.product.availableQuantity) {
+              console.log("Cantidad máxima alcanzada");
+              return;
+            }
+            cartItem.quantity++; 
+            await AsyncStorage.setItem('cart', JSON.stringify(cart));
+            setQuantity(cartItem.quantity);
+            const { totalProducts, totalPrice } = TotalProductsAndPrice(cart);
+            dispatch({
+              type: 'incrementQuantity',
+              payload: { cart, errorMessage: 'Cantidad incrementada', totalProducts, totalPrice },
+            });
+          }
+        }
+      } catch (error: any) {
+        console.log(error);
+      }
+    };
     
-              const { totalProducts, totalPrice } = TotalProductsAndPrice(cart);
-              dispatch({
-                type: 'incrementQuantity', 
-                payload: { cart: cart, errorMessage: 'Cantidad incrementada', totalProducts, totalPrice },
-              });
-            } else {
-              console.log('Cantidad máxima alcanzada');
-            }
-          }
-        }
-      } catch (error: any) {
-        console.log(error);
-      }
-    };
-      
-     const decrementQuantity = async (productId: string) => {
+    const decrementQuantity = async (productId: string) => {
       try {
         const cartArray = await AsyncStorage.getItem('cart');
         let cart: any = [];
@@ -178,21 +178,54 @@ const CartInitialState: CartState = {
           cart = JSON.parse(cartArray);
           const index = cart.findIndex((item: any) => item.product._id === productId);
           if (index !== -1) {
-            if (cart[index].quantity > 1) {
-              cart[index].quantity--;
-              await AsyncStorage.setItem('cart', JSON.stringify(cart));
-              const { totalProducts, totalPrice } = TotalProductsAndPrice(cart);
-              dispatch({
-                type: 'addToCart',
-                payload: { cart: cart, errorMessage: 'Cantidad decrementada', totalProducts, totalPrice },
-              });
+            const cartItem = cart[index];
+          
+            if (cartItem.quantity <= 1) {
+              console.log("Cantidad mínima alcanzada");
+              return;
             }
+    
+            cartItem.quantity--; 
+            await AsyncStorage.setItem('cart', JSON.stringify(cart));
+    
+          
+            setQuantity(cartItem.quantity);
+    
+            const { totalProducts, totalPrice } = TotalProductsAndPrice(cart);
+            dispatch({
+              type: 'decrementQuantity',
+              payload: { cart, errorMessage: 'Cantidad decrementada', totalProducts, totalPrice },
+            });
           }
         }
       } catch (error: any) {
         console.log(error);
       }
     };
+
+    const UpdateColorButton = async (productId: string) => {
+      try {
+        const cartArray = await AsyncStorage.getItem('cart');
+        let cart: any = [];
+        if (cartArray) {
+          cart = JSON.parse(cartArray);
+          const index = cart.findIndex((item: any) => item.product._id === productId);
+        if (index <=  productId ){
+          console.log("el producto ya esta en el carrito ");
+          return;
+        }
+      }
+    } catch (error: any) {
+      console.log(error);
+    }
+
+
+
+    
+  }
+
+
+
 
   //     const decrementQuantity = () => {
   //   if (quantity > 0) {
@@ -216,6 +249,7 @@ const CartInitialState: CartState = {
     decrementQuantity,
     TotalProductsAndPrice,
     countUniqueProducts,
+    UpdateColorButton,
     ...state,
     }}>
     {children}

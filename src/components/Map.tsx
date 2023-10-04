@@ -65,7 +65,7 @@ export function MapScreen() {
   };
 
   useEffect(() => {
-    // askLocationPermission();
+    askLocationPermission();
     getCurrentLocation();
   }, []);
 

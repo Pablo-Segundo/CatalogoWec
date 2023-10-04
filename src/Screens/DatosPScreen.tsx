@@ -62,7 +62,7 @@ export const DatosPScreen = () => {
     }
   };
 
-  const isValidPhoneNumber = (phone) => {
+  const isValidPhoneNumber = (phone: string) => {
 
     const regex = /^\d{10}$/;
     return regex.test(phone);
@@ -192,6 +192,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    maxWidth:'100%'
   },
   container2: {
     width: Dimensions.get('window').height / Dimensions.get('window').width > 1.6 ? '100%' : '48%',

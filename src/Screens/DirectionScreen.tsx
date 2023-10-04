@@ -89,6 +89,13 @@ const handleCardPress = (datos) => {
   setShowModal(true);
 };
 
+const handleAddressSelect = (selectedAddress) => {
+  navigation.navigate('Shopping', {
+    selectedAddress: selectedAddress,
+  });
+};
+
+
 
   return(
     <>
@@ -108,13 +115,11 @@ const handleCardPress = (datos) => {
       </View>
       {/* <Text style={{color:'black',}}>La direccion que eliga sera donde llegen sus compras   </Text> */}
        
-        {datosGuardados.map((datos, index) => (
-          
-
-             
-             
-            <TouchableOpacity  key={index} style={styles.cardcontainer}
-            onPress={() => navigation.navigate('Shopping')}>
+                {datosGuardados.map((datos, index) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.cardcontainer}
+              onPress={() => handleAddressSelect(datos)}>
               <View style={styles.rowContainer}>
                 <Icon name="user" size={20} color="#000" style={styles.icon} />
                 <Text style={styles.productname}>{datos.nombre}</Text>

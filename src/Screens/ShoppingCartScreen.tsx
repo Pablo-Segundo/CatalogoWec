@@ -37,6 +37,8 @@ export const ShoppingScreen = ({product} : Props) => {
   const initialQuantity = cartProduct ? cartProduct.quantity : 1; 
   const [quantity, setQuantity] = useState(initialQuantity);
 
+  const selectedAddress = route.params?.selectedAddress;
+
   useEffect(() => {
    const loadCar = async () => {
     try{
@@ -185,7 +187,7 @@ const fetchLatestData = useCallback(() => {
             <Card style={{backgroundColor:'#f8f8ff', marginTop: 5, marginHorizontal: 10}}>
             <View style={styles.rowContainer}>
             <View style={styles.imageContainer}>
-             <Image style={styles.image} source={{ uri:item.product.multimedia[0].images['400x400'] }} />
+              <Image style={styles.image} source={{ uri:item.product.multimedia[0].images['400x400'] }} /> 
               </View>
               <View>
                 <View style={styles.tableRow}>
@@ -197,22 +199,26 @@ const fetchLatestData = useCallback(() => {
                   <Text  style={styles.rowText}>X ( {item.quantity} )</Text>
               </View>
 
+
             <View style={styles.rowContainer}>
               <View style={styles.quantityContainer}>
               <TouchableOpacity onPress={() => {
-                decrementQuantity(product);
-                setQuantity(quantity - 1); 
+                decrementQuantity(product._id);
+               setQuantity(quantity - 1);
               }} style={styles.quantityButton}>
                 <Text style={styles.quantityButtonText}>-</Text>
               </TouchableOpacity>
                     <Text style={styles.quantity}>{item.quantity}</Text>
                     <TouchableOpacity onPress={() => {
-                incrementQuantity(product);
-                setQuantity(quantity + 1); 
+                incrementQuantity(product._id);
+                setQuantity(quantity + 1);
               }} style={styles.quantityButton}>
                 <Text style={styles.quantityButtonText}>+</Text>
         </TouchableOpacity>   
               </View>
+
+
+              
 
               <View style={styles.rowContainer}>
                     <TouchableOpacity style={styles.updateButton} 

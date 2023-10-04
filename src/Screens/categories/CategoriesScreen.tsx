@@ -5,7 +5,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import LoadingScreen from '../Products/loadintgScreen';
 import { NoInternet } from '../../components/NoInternet';
 import { Card } from 'react-native-paper';
-import { Fab,AntDesign } from 'native-base';
+import { Fab, } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 interface Props extends NativeStackScreenProps<any, any> { }
@@ -39,9 +39,7 @@ export const CategoriesScreen = ({ route, navigation }: Props) => {
       console.log(error);
     }
   };
-
-
-  
+ 
 
   useEffect(() => {
     getCategories();

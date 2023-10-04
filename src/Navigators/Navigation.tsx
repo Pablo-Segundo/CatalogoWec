@@ -11,7 +11,8 @@ import { Dimensions } from 'react-native';
 import { HeaderRight } from '../components/header/HeaderRight';
 import { Ventanauwu } from '../Screens/Products/vantanauwu';
 import { DatosPScreen } from '../Screens/DatosPScreen';
-import { Brands } from '../Styles/brands';
+//import { Brands } from '../Styles/brands';
+import { Brands } from '../Screens/Brands/Brands';
 
 const Stack = createNativeStackNavigator()
 export const Navigation = () => {
@@ -80,6 +81,11 @@ export const Navigation = () => {
             <Stack.Screen
         name="brands"
         component={Brands}
+        options={{
+          headerRight: props => {
+            return <HeaderRight />;
+          }
+        }}
        
       />
 

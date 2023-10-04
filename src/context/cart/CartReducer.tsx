@@ -72,6 +72,13 @@ export type CartAction= | {
             totalPrice: number;
         }
     } 
+    | {
+        type: 'UpdateColorButton';
+        payload: {
+            cart: CartItem[]; 
+            errorMessage: string,
+        }
+    }
 }
 
 export const CartReducer = ( state: CartState, action: CartAction): CartState =>{
@@ -140,6 +147,15 @@ export const CartReducer = ( state: CartState, action: CartAction): CartState =>
                 totalProducts: action.payload.totalProducts,
                 totalPrice: action.payload.totalPrice,
             };
+            case 'UpdateColorButton':
+                return {
+                    ...state,
+                    cart: action.payload.cart,
+                    errorMessage:  action.payload.errorMessage,
+                    success: false,
+                    totalProducts: action.payload.totalProducts,
+                    totalPrice: action.payload.totalPrice,
+                };
           
 
 
