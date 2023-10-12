@@ -15,13 +15,13 @@ export interface CartState {
     quantity: number;
   }
 
-export type CartAction= | {
+export type CartAction=  {
     type: 'addToCart';
     payload: {
         cart: CartItem[]; errorMessage: string,
         totalProducts: number;
         totalPrice: number;
-    }
+    }}
     | {   
      type: 'removeItemFromCart';
      payload: {
@@ -64,10 +64,10 @@ export type CartAction= | {
         }
     }
     | {
-        type: '';
+        type: 'loadCart';
         payload: {
             cart: CartItem[];
-            errorMessage: string,
+            errorMessage: string;
             totalProducts: number;
             totalPrice: number;
         }
@@ -79,7 +79,7 @@ export type CartAction= | {
             errorMessage: string,
         }
     }
-}
+
 
 export const CartReducer = ( state: CartState, action: CartAction): CartState =>{
     switch (action.type) {
@@ -129,7 +129,6 @@ export const CartReducer = ( state: CartState, action: CartAction): CartState =>
                  totalPrice: action.payload.totalPrice,
                     };
             case 'TotalProductsAndPrice':
-                const { totalProducts, totalPrice } = TotalProductsAndPrice (action.payload.cart);
                  return {
                    ...state,
                     cart: action.payload.cart,
@@ -138,37 +137,29 @@ export const CartReducer = ( state: CartState, action: CartAction): CartState =>
                     totalProducts: action.payload.totalProducts,
                     totalPrice: action.payload.totalPrice,
                  };
-            case 'countUniqueProducts':
-            return {
-                ...state,
-                cart: action.payload.cart,
-                errorMessage:  action.payload.errorMessage,
-                success: false,
-                totalProducts: action.payload.totalProducts,
-                totalPrice: action.payload.totalPrice,
-            };
+           
             case 'UpdateColorButton':
                 return {
                     ...state,
                     cart: action.payload.cart,
                     errorMessage:  action.payload.errorMessage,
                     success: false,
-                    totalProducts: action.payload.totalProducts,
-                    totalPrice: action.payload.totalPrice,
                 };
+            case 'loadCart':
+                    return {
+                        ...state,
+                        cart: action.payload.cart,
+                        errorMessage:  action.payload.errorMessage,
+                        success: false,
+                        totalProducts: action.payload.totalProducts,
+                        totalPrice: action.payload.totalPrice,
+                    };
           
-
-
-
 
             default:
                 return state;
          } 
 };
 
-// function TotalProductsAndPrice(cart: CartItem[]): { totalProducts: number; totalPrice: number } {
-//     const totalProducts = cart.reduce((total, item) => total + item.quantity, 0);
-//     const totalPrice = cart.reduce((total, item) => total + item.quantity * item.product.price, 0);
-//     return { totalProducts, totalPrice };
-// }
+
 

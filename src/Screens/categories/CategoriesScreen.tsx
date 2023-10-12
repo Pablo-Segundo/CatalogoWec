@@ -67,21 +67,27 @@ export const CategoriesScreen = ({ route, navigation }: Props) => {
   
     <FlatList
       data={brands}
-      horizontal={true}
+      scrollEnabled={true }
+       horizontal={true}
       keyExtractor={(item) => item._id.toString()}
       renderItem={({ item }) => (
+
+        <ScrollView horizontal={true}>
         <TouchableOpacity onPress={() => navigation.navigate('brands', item)} >
-        <View style={styles.directiorow}>
-         
-          <View style={styles.imageContainer}>
-          <Text style={{color:'black', fontSize: 16,fontWeight: 'bold'}}> -{item.name}-</Text> 
-            <ImageBackground source={{ uri: item.images['400x400'] }}  style={styles.imagebrand}>
-            </ImageBackground>  
-  
-            </View> 
+                <View style={styles.directiorow}>
+                
+                  <View style={styles.imageContainer}>
+                  <Text style={{color:'black', fontSize: 16,fontWeight: 'bold'}}> -{item.name}-</Text> 
+                    <ImageBackground source={{ uri: item.images['400x400'] }}  style={styles.imagebrand}>
+                    </ImageBackground>  
           
-          </View>
-          </TouchableOpacity>
+                    </View> 
+                  
+                  </View>
+                  </TouchableOpacity>
+       </ScrollView>
+
+        
          
           
       )}

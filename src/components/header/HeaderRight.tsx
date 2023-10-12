@@ -8,12 +8,7 @@ import { CartContext } from '../../context/cart/CartContext';
 export const HeaderRight = ({ favorites }: any) => {
     const navigation = useNavigation();
     const size = Platform.OS === 'ios' ? 30:35;
-
-    const { totalProducts, cart } = useContext(CartContext);
-
-    const uniqueProductIds = new Set(cart.map(item => item.product._id));
-    // console.log('Unique Product IDs:', uniqueProductIds);
-
+    const {  cart } = useContext(CartContext);
     return (
         <>
             {
@@ -22,13 +17,8 @@ export const HeaderRight = ({ favorites }: any) => {
                         onPress={() => navigation.navigate('Shopping')}>
                         <View style={styles.icon}>
                     <Icon name="cart-outline" size={size} color="white" />
-                    {uniqueProductIds.size > 0 && (
-                        <Text style={styles.productCount}>{uniqueProductIds.size}</Text>
-
-
-                    )}
+                        <Text style={styles.productCount}>{cart.length}</Text>
                 </View>
-
                     </TouchableOpacity>
                 </>) : (<>
 
@@ -36,10 +26,8 @@ export const HeaderRight = ({ favorites }: any) => {
                 onPress={() => navigation.navigate('Shopping')}>
                 <View style={styles.icon}>
                     <Icon name="cart-outline" size={size} color="white" />
-                    {uniqueProductIds.size > 0 && (
-                        <Text style={styles.productCount}>{uniqueProductIds.size}</Text>
+                        <Text style={styles.productCount}>{cart.length}</Text>
 
-                    )}
                 </View>
                  </TouchableOpacity>
                     

@@ -24,6 +24,7 @@ export const DatosPScreen = () => {
 
   const route = useRoute();
   const selectedAddress = route.params.selectedAddress;
+  
 
   useEffect(() => {
     const obtenerDatosGuardados = async () => {

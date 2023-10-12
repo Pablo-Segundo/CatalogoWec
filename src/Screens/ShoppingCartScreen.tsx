@@ -20,7 +20,7 @@ interface Props {
 export const ShoppingScreen = ({product} : Props) => {
   const route = useRoute();
   const navigation = useNavigation();
-  //  const [cart, setCart] = useState(0);
+  // const [cart, setCart] = useState(0);
   const toast = useToast();
   const [showModal, setShowModal] = useState(false);
   const [showModal2, setShowModal2] = useState(false);
@@ -29,36 +29,29 @@ export const ShoppingScreen = ({product} : Props) => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedPaymentOption, setSelectedPaymentOption] = useState<'Tarjeta' | 'PagoContraEntrega' | null>(null);
 
-  
-  const {cart, } = useContext(CartContext); 
-  const {removeItemFromCart , clearCart, incrementQuantity, decrementQuantity, addToCart } = useContext(CartContext);
   const { totalProducts, totalPrice } = useContext(CartContext);
+  const {cart,  removeItemFromCart, clearCart, incrementQuantity, decrementQuantity } = useContext(CartContext); 
   const cartProduct = cart.find(item => item.product === product);
   const initialQuantity = cartProduct ? cartProduct.quantity : 1; 
   const [quantity, setQuantity] = useState(initialQuantity);
 
   const selectedAddress = route.params?.selectedAddress;
 
-  useEffect(() => {
-   const loadCar = async () => {
-    try{
-      const dataCart = await AsyncStorage.getItem('cart');
-      if(dataCart) {
-        setCart(JSON.parse(dataCart))
-      }
-    } catch (error) {
-      console.log('erro al cargar los datos', error);
-    }
-   } 
- loadCar();
-  })
+ 
 
 
   const handleOptionSelect = (option: 'Tarjeta' | 'PagoContraEntrega') => {
     setSelectedPaymentOption(option);
   };
+  useEffect(() => {
+    fetchLatestData();
+    const unsubscribe = navigation.addListener('focus', fetchLatestData);
+    return () => {
+      unsubscribe();
+    };
+  }, [fetchLatestData, cart]);
   
-
+  
   const handleContinuar = () => {
     if (totalProducts === 0 || !datosGuardados) {
       Toast.show({
@@ -84,38 +77,12 @@ export const ShoppingScreen = ({product} : Props) => {
     }
   };
 
-const filterdatos = async () => {
-  try {
-    const storedCart = await AsyncStorage.getItem('cart');
-    if (storedCart) {
-      const cart = JSON.parse(storedCart);
 
-      const regularProductsCart = cart.filter(
-        (item) =>
-          item.product_id.category !== '62b0d1135911da2ebfdc92c3' && item.product_id.discount === 0
-      
-      );
-      
-      const discountProductsCart = cart.filter(
-        (item) => item.product_id.discount > 0
-
-      );
-     
-    
-      const wapizimaCanvasCart = cart.filter(
-        (item) => item.product_id.category === '62b0d1135911da2ebfdc92c3'
-      );
-
-     
-      console.log('Productos normales :', regularProductsCart);
-      console.log('Productos con descuento:', discountProductsCart);
-      console.log('Wapizima Canvas :', wapizimaCanvasCart);
-    }
-  } catch (error) {
-    console.log('Error al filtrar datos :', error);
-  }
-}
-
+  const fetchLatestData = useCallback(() => {
+    obtenerDatosGuardados();
+  }, []); 
+ 
+  
 useEffect(() => {
   fetchLatestData();
   const unsubscribe = navigation.addListener('focus', fetchLatestData);
@@ -123,6 +90,7 @@ useEffect(() => {
     unsubscribe();
   };
 }, [fetchLatestData]);
+
 
 
 const obtenerDatosGuardados = async () => {
@@ -137,10 +105,6 @@ const obtenerDatosGuardados = async () => {
     console.log('Error al obtener los datos guardados:', error);
   }
 };
-const fetchLatestData = useCallback(() => {
-  obtenerDatosGuardados();
-}, []); 
- 
   return (
     <>
       <View style={styles.header}>
@@ -155,37 +119,26 @@ const fetchLatestData = useCallback(() => {
               {datosGuardados && <Text style={styles.textgray}> {datosGuardados.nombre} , {datosGuardados.selectedAddress}  </Text>}
               </Text>
             </View>
-          {/* <Image
-            source={require('../Navigators/assets/lottie/icon/marcador.png')}
-            style={styles.imagemap}
-          /> */}
         </View>
       </TouchableOpacity>
         </View>
       </View>
-     
             <View style={styles.tableRow}>
-              <Text style={styles.headerText}>Productos agregados ({totalProducts})</Text>
-              {/* <TouchableOpacity style={styles.buyButton3} > 
-                <Text style={styles.headerTextWhite}  onPress={clearCart}>Vaciar </Text>
-              </TouchableOpacity> */}
-
+              <Text style={styles.headerText}>Productos agregados ({cart.length})</Text>
               <TouchableOpacity style={styles.TrashButton && styles.buyButton3} 
                    onPress={clearCart}>
                     <Icon name="trash-outline" size={30} color='white'  />
                      </TouchableOpacity>
 
-
             </View>
-        
         <FlatList
           data={cart}
-          //  <Text style={styles.rowText}>{item.product.name}</Text>
-                // <Text style={styles.rowText}>{item.product.price} </Text> 
+        
           renderItem={({ item,  }) => (
 
-            <Card style={{backgroundColor:'#f8f8ff', marginTop: 5, marginHorizontal: 10}}>
+            <Card style={{backgroundColor:'#f8f8ff', marginTop: 10, marginHorizontal: 10, height: 120}}>
             <View style={styles.rowContainer}>
+
             <View style={styles.imageContainer}>
               <Image style={styles.image} source={{ uri:item.product.multimedia[0].images['400x400'] }} /> 
               </View>
@@ -196,33 +149,51 @@ const fetchLatestData = useCallback(() => {
 
               <View style={styles.rowContainer}>
                   <Text style={styles.rowTextPrice}>{item.product.price} MNX </Text> 
-                  <Text  style={styles.rowText}>X ( {item.quantity} )</Text>
+                
+
+                  <Text  style={styles.rowText}>X ( {item.quantity} )</Text> 
               </View>
 
+              <View style={styles.rowContainer}>
+                  <Text style={styles.rowTextPrice}> Disponible ({item.product.quantity}) </Text> 
+                 
+              </View>
 
             <View style={styles.rowContainer}>
               <View style={styles.quantityContainer}>
-              <TouchableOpacity onPress={() => {
-                decrementQuantity(product._id);
-               setQuantity(quantity - 1);
-              }} style={styles.quantityButton}>
-                <Text style={styles.quantityButtonText}>-</Text>
-              </TouchableOpacity>
+
+              <TouchableOpacity
+                      onPress={() => {
+                        decrementQuantity(item.product._id);
+                      }}
+                      style={styles.quantityButton}
+                    >
+                      <Text style={styles.quantityButtonText}>-</Text>
+                    </TouchableOpacity>
                     <Text style={styles.quantity}>{item.quantity}</Text>
-                    <TouchableOpacity onPress={() => {
-                incrementQuantity(product._id);
-                setQuantity(quantity + 1);
-              }} style={styles.quantityButton}>
-                <Text style={styles.quantityButtonText}>+</Text>
-        </TouchableOpacity>   
+                    <TouchableOpacity
+                      onPress={() => {
+                        // Verifica si la cantidad es menor que la cantidad disponible
+                        if (item.quantity < item.product.quantity) {
+                          incrementQuantity(item.product._id);
+                        } else {
+                          Toast.show({
+                            type: 'info',
+                            text1: 'Cantidad excedida',
+                            text2: 'La cantidad seleccionada supera el stock disponible',
+                          });
+                        }
+                      }}
+                      style={styles.quantityButton}
+                    >
+                      <Text style={styles.quantityButtonText}>+</Text>
+                    </TouchableOpacity>
+                 
               </View>
-
-
-              
 
               <View style={styles.rowContainer}>
                     <TouchableOpacity style={styles.updateButton} 
-                    onPress={() => removeItemFromCart(item.product._id)}>
+                   onPress={() => removeItemFromCart(item.product._id)}>
                     <Icon name="trash-outline" size={30} color="#1E90FF"  />
                 </TouchableOpacity>
                 </View>
@@ -235,8 +206,9 @@ const fetchLatestData = useCallback(() => {
         
           <Card style={{backgroundColor:'#f8f8ff'}}>
           <View style={{padding: 10, marginLeft: 5}}>
-          <Text style={styles.headerText2}>Productos: {totalProducts}</Text>
-        <Text style={styles.headerText2}>Total: ${totalPrice.toFixed(2)} MNX</Text>
+          <Text style={styles.headerText2}>Productos: {cart.length}</Text>
+          {/* <Text style={styles.headerText2}>Total: ${calculateTotalPrice().toFixed(2)} MNX</Text> */}
+          <Text style={styles.headerText2}>Total: ${totalPrice} MNX</Text>
 
 
             <TextInput
@@ -245,8 +217,6 @@ const fetchLatestData = useCallback(() => {
               placeholderTextColor={'gray'}
             
             />
-
-            
           </View>
           <View>
           <TouchableOpacity    onPress={() => setShowModal(true)}   style={styles.buyButton2}>
@@ -256,8 +226,6 @@ const fetchLatestData = useCallback(() => {
       {/* <TouchableOpacity  style={styles.continueButton}  onPress={() => navigation.navigate('ventana')}>
             <Text style={styles.continueButtonText}> Prueba  </Text>
           </TouchableOpacity> */}
-
-      
 
       {/* <TouchableOpacity onPress={filterdatos} style={styles.buyButton2}>
         <Text style={styles.headerTextWhite}>tesssst</Text>
@@ -565,6 +533,7 @@ const fetchLatestData = useCallback(() => {
       rowText: {
         fontSize: 14,
         color: 'black',
+        fontWeight:'bold'
       },
       rowTextPrice: {
         fontSize: 14,
@@ -652,3 +621,5 @@ const fetchLatestData = useCallback(() => {
      
    
     });
+
+

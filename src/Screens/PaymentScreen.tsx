@@ -94,6 +94,20 @@ export const PaymentScreen = () => {
   
       </View>
 
+      <View style={{alignItems:'center', marginTop: 30, backgroundColor:'gray'}}>
+        <Text style={{color:'white', fontSize:20, fontWeight:'bold'}}> Tarjetas registradas </Text>
+      </View>
+
+
+      <View> 
+        <TouchableOpacity>
+          <Text> Agrege un opcion de pago </Text>
+
+
+        </TouchableOpacity>
+
+      </View>
+
      
    
 

@@ -22,6 +22,7 @@ export const FavoritesScreen = ({ product, navigation }: Props) => {
   const [favorites,setFavorites] = useState(0);
   const {removeItemFromCart , clearCart, incrementQuantity, decrementQuantity, addToCart } = useContext(CartContext);
   const toast = useToast();
+  const [quantity, setQuantity] = useState(1);
  
 
   useEffect(() => {
@@ -46,15 +47,14 @@ export const FavoritesScreen = ({ product, navigation }: Props) => {
       text2:'EL producto se agrego al carrito de compras ',
 
     })
+
+   
   };
  
-
-
-
-  
   return (
     <>
-           {favorites.length > 0 ? (
+    
+            {favorites.length > 0 ? (
            
         <FlatList
             data={favorites}
@@ -72,6 +72,55 @@ export const FavoritesScreen = ({ product, navigation }: Props) => {
                   <Icon name="trash-o" size={30} color="#ff0000" />
                 </TouchableOpacity>  */}
                  </View>
+
+
+            <View style={styles.quantityContainer}>
+                 <TouchableOpacity onPress={() => {
+                decrementQuantity(product._id);
+                 setQuantity(quantity - 1); 
+                // if(decrementQuantity <= quantity ){
+                 
+                // }
+              }} style={styles.quantityButton}>
+                <Text style={styles.quantityButtonText}>-</Text>
+              </TouchableOpacity>
+              <Text style={styles.quantity}>{quantity}</Text>
+              <TouchableOpacity onPress={() => {
+               
+                setQuantity(quantity + 1); 
+                incrementQuantity(product._id);
+                if(quantity < setQuantity){
+                 
+                  Toast.show({
+                    type: 'error',
+                    text1: 'Cantidad excedida',
+                    text2: 'La cantidad seleccionada supera el stock disponible',
+                  });
+                }
+
+
+              }} style={styles.quantityButton}>
+                <Text style={styles.quantityButtonText}>+</Text>
+              </TouchableOpacity>
+
+
+
+
+                 </View>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                  <TouchableOpacity
                  style={styles.addToCartButton}
                   onPress={() => {
@@ -121,6 +170,17 @@ const styles = StyleSheet.create({
     padding: 10,
     marginTop: 10,
     alignItems: 'center',
+  },
+  quantityButton: {
+    padding: 15,
+    backgroundColor: '#eee',
+    borderRadius: 5,
+    marginHorizontal: 1
+  },
+  quantityButtonText: {
+    fontSize: 13,
+    fontWeight: 'bold',
+    color: '#555',
   },
   cardContainer: {
     width: Dimensions.get('window').width * 0.45, 
