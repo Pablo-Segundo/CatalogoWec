@@ -11,8 +11,6 @@ import LoadingScreen from './Products/loadintgScreen';
 import { CartReducer } from '../context/cart/CartReducer';
 
 
-
-
 export const PaymentScreen = () => {
     const navigation = useNavigation();
     const [totalProducts, setTotalProducts] = useState(0);
@@ -157,7 +155,6 @@ export const PaymentScreen = () => {
    
     </Card> 
 
-
      <Card style={{marginTop: 15, marginHorizontal: 10}} >
         <Text style={{color:'black', fontSize:20,   fontWeight: 'bold',}}>Lista de productos </Text>
 
@@ -184,8 +181,6 @@ export const PaymentScreen = () => {
       />
       <Button  onPress={handlePayPress} title="Pay"   />
    </View> */}
-
-
 
 
 

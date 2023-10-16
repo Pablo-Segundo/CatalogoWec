@@ -21,7 +21,7 @@ interface Props {
 
 const screenWidth = Dimensions.get('window').width;
 
-export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) => {
+export const ProductCard = ({ product, getCartItems }: Props) => {
   // const [quantity, setQuantity] = useState(1);
   const { isOpen, onOpen, onClose } = useDisclose();
   const [showModal, setShowModal] = useState(false);
@@ -35,16 +35,9 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
   const cartProduct = cart.find(item => item.product._id === product._id);
   const initialQuantity = cartProduct ? cartProduct.quantity : 1;
   const [quantity, setQuantity] = useState(1);
-
   const [currentIndex, setCurrentIndex] = useState(0);
-
-
   
-
   const isProductInCart = cartProduct !== undefined;
-
-
-
 
 
   const toggleFavorite = async (product) => {
@@ -299,7 +292,7 @@ export const ProductCard = ({ product,updateCartCount, getCartItems }: Props) =>
 
             <View style={styles.cardProduct}>
               <ScrollView>
-              <Text style={{color:'gray'}}>Descripcion</Text>
+              <Text style={{color:'#FF1493', fontSize: 20, fontWeight:'bold'}}>Descripcion</Text>
               <Text style={styles.description}>{product.description}</Text>
               </ScrollView>
             </View>
