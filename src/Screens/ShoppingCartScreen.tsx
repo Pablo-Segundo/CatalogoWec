@@ -120,25 +120,25 @@ export const ShoppingScreen = ({product}: Props) => {
     if (coupon.trim() === '') {
       Toast.show({
         type: 'error',
-        text1: 'agregue un cupon',
-        text2: `no ha ingresado ningun codigo.`,
+        text1: 'Agregue un cupón',
+        text2: 'No ha ingresado ningún código.',
       });
       console.log('Ingresa un código de cupón válido.');
       return;
     }
     ApplyCupon(coupon);
   };
+  
 
 
   const ApplyCupon = async (coupon) => {
     try {
       const response = await API.get(`/coupons/code/${coupon}`);
-      console.log(response.status );
       if (response.status === 200) {
         const couponData = response.data;
         const discount = couponData.discountAmount;
         const discountedTotal = totalPrice - discount;
-        setTotalPrice(discountedTotal);
+        setTotalPrice(discountedTotal); 
         Toast.show({
           type: 'success',
           text1: 'Cupón aplicado',
@@ -156,12 +156,11 @@ export const ShoppingScreen = ({product}: Props) => {
       Toast.show({
         type: 'error',
         text1: 'Error al verificar el cupón',
-        text2:
-          'Ocurrió un problema al verificar el cupón. Por favor, inténtalo de nuevo más tarde.',
+        text2: 'Ocurrió un problema al verificar el cupón. Por favor, inténtalo de nuevo más tarde.',
       });
     }
   };
-
+  
   console.log(coupon);
 
   return (

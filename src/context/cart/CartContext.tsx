@@ -3,6 +3,7 @@ import { createContext, useEffect, useReducer, useState } from "react";
 import { Product } from "../../interfaces/ProductsCategoryInterface";
 import { CartItem, CartReducer, CartState } from "./CartReducer";
 import { Toast } from "react-native-toast-message/lib/src/Toast";
+import API from "../../API/API";
 
 type CartContextProps = {
   cart: CartItem[];
@@ -34,6 +35,12 @@ export const CartContext = createContext({} as CartContextProps);
 export const CartProvider = ({ children }: any) => {
   const [state, dispatch] = useReducer(CartReducer, CartInitialState);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [couponCode, setCouponCode] = useState(''); 
+  const [discount, setDiscount] = useState(0); 
+  
+
+
+
 
   useEffect(() => {
     loadCartFromStorage();
@@ -260,7 +267,6 @@ export const CartProvider = ({ children }: any) => {
     }
   };
 
-
   const loadCartFromStorage = async () => {
     try {
       const cartArray = await AsyncStorage.getItem("cart");
@@ -300,6 +306,14 @@ export const CartProvider = ({ children }: any) => {
     }
   };
 
+  
+
+  
+
+
+
+
+
   return (
     <CartContext.Provider
       value={{
@@ -311,6 +325,7 @@ export const CartProvider = ({ children }: any) => {
         countUniqueProducts,
         UpdateColorButton,
         loadCartFromStorage,
+      
         ...state,
       }}
     >
