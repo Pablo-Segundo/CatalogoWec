@@ -20,6 +20,7 @@ export const Direction = () => {
   
   
   useEffect(() => {
+    
 const obtenerDatosGuardados = async () => {
       try {
         const datosGuardados = await AsyncStorage.getItem('datos');
@@ -111,7 +112,7 @@ const handleAddressSelect = (selectedAddress) => {
       <ScrollView>
 
        <View style={styles.rowContainer2}>
-      <Text style={styles.titlegray}> Seleccione o edite su direcciónes </Text>
+      <Text style={styles.titlegray}> Seleccione o edite una direcciónes </Text>
       </View>
       {/* <Text style={{color:'black',}}>La direccion que eliga sera donde llegen sus compras   </Text> */}
        
@@ -226,6 +227,15 @@ const handleAddressSelect = (selectedAddress) => {
         </Modal.Content>
       </Modal>
 
+      {/* <Card style={{backgroundColor: '#f8f8ff'}}>
+        <TouchableOpacity
+                  style={styles.continueButton}
+                  onPress={() => handleContinuar()}>
+                  <Text style={styles.continueButtonText}>  </Text>
+        </TouchableOpacity>
+
+      </Card> */}
+
 
 
     </>
@@ -253,6 +263,20 @@ const styles = StyleSheet.create({
         shadowRadius: 3.84,
         elevation: 5,
         marginTop: 10
+      },
+      continueButton: {
+        backgroundColor: '#ff1493',
+        borderRadius: 5,
+        padding: 10,
+        alignItems: 'center',
+        marginTop: 20,
+        marginVertical: 15,
+        marginHorizontal: 20,
+      },
+      continueButtonText: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: 'bold',
       },
    
       input: {
@@ -368,7 +392,7 @@ const styles = StyleSheet.create({
         fontSize: 15 ,
       },
       titlegray: {
-        color: 'gray',
+        color: '#ff1493',
         fontSize: 20 ,
         
       },

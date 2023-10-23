@@ -5,7 +5,7 @@ import { FlatList } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import LoadingScreen from './loadintgScreen';
 import { ProductCard } from '../../components/ProductCard';
-import { NoInternet } from '../../components/NoInternet';
+import { NoInternet } from '../../components/uwuwuw';
 
 interface Props extends NativeStackScreenProps<any, any> { }
 
@@ -40,6 +40,7 @@ export const ProductsScreen = ({ route, navigation }: Props) => {
   if (isLoading) {
     return <LoadingScreen />;
   }
+
   return (
 
     <>

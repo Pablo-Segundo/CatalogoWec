@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, FlatList, Dimensions, ImageBackground, ScrollView ,} from 'react-native';
 import API from '../../API/API';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import LoadingScreen from '../Products/loadintgScreen';
-import { NoInternet } from '../../components/NoInternet';
 import { Card } from 'react-native-paper';
 import { Fab, } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { InternetComponet } from '../../components/InternetComponet';
+import { NoInternet } from '../../components/NoInternet ';
+import { NetworkModal } from '../../components/NetworkModal';
+import { NetworkContext } from '../../context/NetworkContext';
 
 interface Props extends NativeStackScreenProps<any, any> { }
 
@@ -14,6 +17,11 @@ export const CategoriesScreen = ({ route, navigation }: Props) => {
   const [categories, setCategories] = useState();
   const { height, width } = Dimensions.get('window');
   const [brands, setBrands] = useState([]);
+
+  const {isConnected} = useContext(NetworkContext)
+  const [visible, setVisible] = useState(false)
+  const [title, setTitle] = useState('')
+
 
 
   const getCategories = async () => {
@@ -28,6 +36,21 @@ export const CategoriesScreen = ({ route, navigation }: Props) => {
       console.log(error);
     }
   };
+
+  const handleFetch = () => {
+    if(isConnected){
+       setVisible(true)
+       return
+    }
+    getCategories()
+  }
+
+  useEffect(() => {
+    handleFetch();
+  }, []);
+
+
+
 
   const getBrands = async () => {
     try {
@@ -49,12 +72,55 @@ export const CategoriesScreen = ({ route, navigation }: Props) => {
   if (!categories || !brands) {
     return (
       <LoadingScreen />
-    );
+    ) 
+    // useEffect(() => {
+    //   getCategories();
+    //   getBrands();
+    // }, []);
   }
   
+
   return (
     <>
+<InternetComponet>
+
+<NetworkModal
+      visible={visible}
+      setVisible={setVisible}
+ />
+
+{/* <TouchableOpacity
+                    onPress={handleFetch}
+                    style={{
+                        width: '90%',
+                        height: 50,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: 'teal' //375027 
+                    }}
+                >
+                    <Text style={{
+                        color: 'white'
+                    }}>
+                        Get Dummy Todos
+                    </Text>
+                </TouchableOpacity>
+                <Text>
+                    Dummy to do: {title}
+                </Text> */}
+
+
     <ScrollView>
+
+    <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>Buy now!</Text>
+          <View style={styles.imgHeaderContainer} />
+        </View>
+
+
+
+
     <View>
         {/* <Text style={{color:'black', fontSize: 18, fontWeight: 'bold'}}> Productos Agregados</Text> */}
         <Card style={styles.cardContainer}>
@@ -96,7 +162,7 @@ export const CategoriesScreen = ({ route, navigation }: Props) => {
       <View>
         {/* <Text style={{color:'black', fontSize: 18, fontWeight: 'bold'}}> Productos Agregados</Text> */}
         <Card style={styles.cardContainer}>
-          <Text style={{color:'black', fontSize: 20, fontWeight: 'bold'}} > Categorias  </Text>
+          <Text style={{color:'black', fontSize: 20, fontWeight: 'bold'}} > categorías  </Text>
         </Card>
       </View>
       <View style={{marginTop: 10}}></View>
@@ -132,9 +198,32 @@ export const CategoriesScreen = ({ route, navigation }: Props) => {
           )}
         />
 
+<View>
+        {/* <Text style={{color:'black', fontSize: 18, fontWeight: 'bold'}}> Productos Agregados</Text> */}
+        <Card style={styles.cardContainer}>
+          <Text style={{color:'black', fontSize: 20, fontWeight: 'bold'}} > productos mas comprados   </Text>
+        </Card>
+      </View>
+
+      <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>Other Booking Now!</Text>
+          <View style={styles.imgHeaderContainer} />
+        </View>
+
+
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>Other Booking Now!</Text>
+          <View style={styles.imgHeaderContainer} />
+        </View>
+
+
         
         
         </ScrollView>
+
+        
+ 
+      </InternetComponet>
         </>
   );
 }
@@ -201,5 +290,24 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     marginTop: 10
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    margin: 15,
+    padding: 15,
+    backgroundColor: '#fff',
+    borderRadius: 15,
+  },
+  headerText: {
+    textAlign: 'left',
+    fontSize: 19,
+    color: 'black'
+  },
+  imgHeaderContainer: {
+    width: 71,
+    height: 95,
+    backgroundColor: '#ff1493',
   },
 });

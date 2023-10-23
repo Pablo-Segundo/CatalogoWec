@@ -18,9 +18,11 @@ import { useNavigation } from "@react-navigation/native";
 
 const Stack = createNativeStackNavigator();
 const { askLocationPermission } = usePermissions();
-const { cart } = useContext(CartContext);
+const {  cart } = useContext(CartContext);
 const navigation = useNavigation();
 const size = Platform.OS === "ios" ? 30 : 35;
+
+console.log(cart, 'uwu')
 
 const uniqueProductIds = new Set(cart.map((item) => item.product._id));
 // console.log('Unique Product IDs:', uniqueProductIds);
@@ -99,11 +101,11 @@ export const CategoriesStack = () => {
                         }}
                       >
                         <Icon name="cart-outline" size={size} color="black" />
-                        {uniqueProductIds.size > 0 && (
+                       
                           <Text style={styles.productCount2}>
-                            {uniqueProductIds.size}
+                           {cart.length}
                           </Text>
-                        )}
+                      
                       </View>
                     </TouchableOpacity>
                   </View>
@@ -134,11 +136,15 @@ const styles = StyleSheet.create({
     zIndex: 9999,
   },
   productCount2: {
-    position: "absolute",
+    position: 'absolute',
     top: -9,
     right: 13,
-    color: "black",
-    fontSize: 20,
+    backgroundColor: 'red', 
+    color: 'white', 
+    fontSize: 16, 
+    borderRadius: 50, 
+    paddingHorizontal: 8, 
+    paddingVertical: 4, 
     zIndex: 9999,
   },
 });

@@ -23,6 +23,8 @@ export const FavoritesScreen = ({ product, navigation }: Props) => {
   const {removeItemFromCart , clearCart, incrementQuantity, decrementQuantity, addToCart } = useContext(CartContext);
   const toast = useToast();
   const [quantity, setQuantity] = useState(1);
+  const [availableQuantity, setAvailableQuantity] = useState(favorites.quantity);
+
  
 
   useEffect(() => {
@@ -53,8 +55,21 @@ export const FavoritesScreen = ({ product, navigation }: Props) => {
  
   return (
     <>
+
+
+      <View>
+        {/* <Text style={{color:'black', fontSize: 18, fontWeight: 'bold'}}> Productos Agregados</Text> */}
+        <Card style={styles.cardFavorite}>
+          <Text style={{color:'#ff1493', fontSize: 20, fontWeight: 'bold'}} > Favoritos  </Text>
+        </Card>
+      </View>
+
+
+
     
             {favorites.length > 0 ? (
+
+
            
         <FlatList
             data={favorites}
@@ -66,7 +81,7 @@ export const FavoritesScreen = ({ product, navigation }: Props) => {
                 <Image style={styles.productImage} source={{ uri: item.multimedia[0].images['400x400'] }} />
                  <Text style={styles.productName} numberOfLines={1} ellipsizeMode="tail" >{item.name}</Text>
                  <Text style={styles.productPrice}>${item.price}MX </Text>
-                 {/* <Text style={styles.productName}>{item.quantity} </Text> */}
+                 <Text style={styles.productName}>{item.quantity} </Text>
                   <View>
                   {/* <TouchableOpacity style={styles.deleteButton} onPress={() => removeItemFromCart(item.productId)}>
                   <Icon name="trash-o" size={30} color="#ff0000" />
@@ -75,33 +90,29 @@ export const FavoritesScreen = ({ product, navigation }: Props) => {
 
 
             <View style={styles.quantityContainer}>
-                 <TouchableOpacity onPress={() => {
-                decrementQuantity(product._id);
-                 setQuantity(quantity - 1); 
-                // if(decrementQuantity <= quantity ){
-                 
-                // }
-              }} style={styles.quantityButton}>
-                <Text style={styles.quantityButtonText}>-</Text>
-              </TouchableOpacity>
-              <Text style={styles.quantity}>{quantity}</Text>
-              <TouchableOpacity onPress={() => {
-               
+            {/* <TouchableOpacity
+              onPress={() => {
+                decrementQuantity(item._id);
+                setQuantity(quantity - 1); 
+              }}
+              style={styles.quantityButton}
+              disabled={quantity <= 1}
+            >
+              <Text style={styles.quantityButtonText}>-</Text>
+            </TouchableOpacity>
+
+
+        <Text style={styles.quantity}>{quantity}</Text>
+        <TouchableOpacity
+              onPress={() => {
+                incrementQuantity(item._id);
                 setQuantity(quantity + 1); 
-                incrementQuantity(product._id);
-                if(quantity < setQuantity){
-                 
-                  Toast.show({
-                    type: 'error',
-                    text1: 'Cantidad excedida',
-                    text2: 'La cantidad seleccionada supera el stock disponible',
-                  });
-                }
-
-
-              }} style={styles.quantityButton}>
-                <Text style={styles.quantityButtonText}>+</Text>
-              </TouchableOpacity>
+              }}
+              style={styles.quantityButton}
+              disabled={quantity >= availableQuantity}
+            >
+              <Text style={styles.quantityButtonText}>+</Text>
+            </TouchableOpacity> */}
 
 
 
@@ -163,6 +174,24 @@ const styles = StyleSheet.create({
     backgroundColor: '#DEBDCE',
     borderBottomLeftRadius: 50,
     borderBottomRightRadius: 50,
+  },
+  cardFavorite: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    borderRadius: 10,
+    padding: 10,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    marginTop: 10
   },
   addToCartButton: {
     backgroundColor: '#ff1493',

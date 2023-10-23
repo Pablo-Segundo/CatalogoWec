@@ -19,7 +19,7 @@ import {
   useActionSheet,
 } from '@expo/react-native-action-sheet';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useDisclose, Button, Actionsheet, Modal} from 'native-base';
+import {useDisclose, Button, Actionsheet, Modal, Card} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import Geocoder from 'react-native-geocoding';
 import {Image} from 'react-native';
@@ -109,9 +109,15 @@ export function MapScreen() {
           position: 'absolute',
           alignSelf: 'center',
         }}>
-        <Text style={{color: '#ff1493'}}>
-          Seleccione su ubicacion *IMPORTANTE *
-        </Text>
+
+
+          <TouchableOpacity>
+             <Text style={{color: '#ff1493', fontSize: 20, fontWeight:'bold', }}>
+             ¿Comó funciona el mapa?
+            </Text>
+          </TouchableOpacity>
+       
+
         <TextInput
           style={styles.directionInput}
           placeholder="Escriba su calle:"
@@ -194,6 +200,12 @@ export function MapScreen() {
         </>
       )}
 
+
+
+
+
+
+
       <TouchableOpacity
         style={styles.buyButton}
         onPress={() => {
@@ -204,6 +216,15 @@ export function MapScreen() {
           <Icon name="play-outline" size={30} color="white" />
         </View>
       </TouchableOpacity>
+
+
+
+      <View >
+        <Card style={styles.containeruwu}>
+          
+        </Card>
+      </View>
+
     </>
   );
 }
@@ -354,5 +375,21 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     fontSize: 16,
+  },
+  containeruwu: {
+    position: 'absolute',
+    shadowColor: 'black',
+    shadowOpacity: 30,
+    shadowOffset: {
+      width: -1,
+      height: 3,
+    },
+    right: 30,
+    bottom: 50,
+    backgroundColor: '#ff1493',
+    borderRadius: 100,
+    width: '30%',
+    height: '10%',
+    justifyContent: 'center',
   },
 });

@@ -11,8 +11,7 @@ export const mapStyle = [
       },
     ],
   },
-  // Resto de los estilos...
-  // ...
+
   {
     featureType: 'poi',
     elementType: 'labels',

@@ -9,6 +9,7 @@ export const HeaderRight = ({ favorites }: any) => {
     const navigation = useNavigation();
     const size = Platform.OS === 'ios' ? 30:35;
     const {  cart } = useContext(CartContext);
+
     return (
         <>
             {

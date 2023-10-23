@@ -20,6 +20,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {Toast} from 'react-native-toast-message/lib/src/Toast';
 import {CartContext} from '../context/cart/CartContext';
 import API from '../API/API';
+import { InternetComponet } from '../components/InternetComponet';
 
 interface Props {
   product: Product;
@@ -38,13 +39,15 @@ export const ShoppingScreen = ({product}: Props) => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedPaymentOption, setSelectedPaymentOption] = useState<'Tarjeta' | 'PagoContraEntrega' | null>(null);
 
-  const {totalProducts, totalPrice} = useContext(CartContext);
+  const {totalProducts, totalPrice, discount} = useContext(CartContext);
   const {
     cart,
     removeItemFromCart,
     clearCart,
     incrementQuantity,
+    incrementCart,
     decrementQuantity,
+    applyCoupon,
   } = useContext(CartContext);
   const cartProduct = cart.find(item => item.product === product);
   const initialQuantity = cartProduct ? cartProduct.quantity : 1;
@@ -55,11 +58,18 @@ export const ShoppingScreen = ({product}: Props) => {
   const [coupon, setCoupon] = useState('');
   const [totalPrice1, setTotalPrice] = useState(0);
 
-  const selectedAddress = route.params?.selectedAddress;
+   const updatedData = route.params?.updatedData || {};
+   const selectedAddress = route.params?.selectedAddress;
 
   const handleOptionSelect = (option: 'Tarjeta' | 'PagoContraEntrega') => {
     setSelectedPaymentOption(option);
   };
+
+  const fetchLatestData = useCallback(() => {
+    obtenerDatosGuardados();
+  }, []); 
+  
+
   useEffect(() => {
     fetchLatestData();
     const unsubscribe = navigation.addListener('focus', fetchLatestData);
@@ -91,17 +101,30 @@ export const ShoppingScreen = ({product}: Props) => {
     }
   };
 
-  const fetchLatestData = useCallback(() => {
-    obtenerDatosGuardados();
-  }, []);
+  // const fetchLatestData = useCallback(() => {
+  //   obtenerDatosGuardados();
+  // }, []);
 
-  useEffect(() => {
-    fetchLatestData();
-    const unsubscribe = navigation.addListener('focus', fetchLatestData);
-    return () => {
-      unsubscribe();
-    };
-  }, [fetchLatestData]);
+  // useEffect(() => {
+  //   fetchLatestData();
+  //   const unsubscribe = navigation.addListener('focus', fetchLatestData);
+  //   return () => {
+  //     unsubscribe();
+  //   };
+  // }, [fetchLatestData]);
+
+  // const obtenerDatosGuardados = async () => {
+  //   try {
+  //     const updatedData = await AsyncStorage.getItem('datos');
+  //     if (updatedData) {
+  //       const datosParseados = JSON.parse(updatedData);
+  //       const ultimoDatoGuardado = datosParseados[datosParseados.length - 1];
+  //       setDatosGuardados(ultimoDatoGuardado);
+  //     }
+  //   } catch (error) {
+  //     console.log('Error al obtener los datos guardados:', error);
+  //   }
+  // };
 
   const obtenerDatosGuardados = async () => {
     try {
@@ -116,6 +139,7 @@ export const ShoppingScreen = ({product}: Props) => {
     }
   };
 
+
   const handleApplyCoupon = () => {
     if (coupon.trim() === '') {
       Toast.show({
@@ -126,56 +150,32 @@ export const ShoppingScreen = ({product}: Props) => {
       console.log('Ingresa un código de cupón válido.');
       return;
     }
-    ApplyCupon(coupon);
+    applyCoupon(coupon); 
+    setCoupon(coupon);
   };
-  
+  console.log(totalPrice, 'del context');
 
 
-  const ApplyCupon = async (coupon) => {
-    try {
-      const response = await API.get(`/coupons/code/${coupon}`);
-      if (response.status === 200) {
-        const couponData = response.data;
-        const discount = couponData.discountAmount;
-        const discountedTotal = totalPrice - discount;
-        setTotalPrice(discountedTotal); 
-        Toast.show({
-          type: 'success',
-          text1: 'Cupón aplicado',
-          text2: `Se ha aplicado un descuento de ${discount} MNX.`,
-        });
-      } else {
-        Toast.show({
-          type: 'error',
-          text1: 'Cupón inválido',
-          text2: 'El código de descuento no es válido.',
-        });
-      }
-    } catch (error) {
-      console.error('Error al verificar el cupón:', error);
-      Toast.show({
-        type: 'error',
-        text1: 'Error al verificar el cupón',
-        text2: 'Ocurrió un problema al verificar el cupón. Por favor, inténtalo de nuevo más tarde.',
-      });
-    }
-  };
   
-  console.log(coupon);
+  
+
 
   return (
     <>
+    <InternetComponet>
+
+   
       <View style={styles.header}>
         <View style={styles.directiorow}></View>
         <View>
           <TouchableOpacity onPress={onOpen}>
             <View style={styles.viewuwu}>
               <View style={styles.cardcontainer}>
-                <Icon name="location-outline" size={30} color="white" />
+                <Icon style={{marginHorizontal:10}} name="location-outline" size={30} color="white" />
                 <Text style={styles.textblack}>
-                  Enviar a :
+                  Enviar a:
                   {datosGuardados && (
-                    <Text style={styles.textgray}>{' '}{datosGuardados.nombre} , {datosGuardados.selectedAddress}{' '}
+                    <Text style={styles.textgray}>  {datosGuardados.nombre} , {datosGuardados.selectedAddress}, {datosGuardados.numeroTelefonico }
                     </Text>
                   )}
                 </Text>
@@ -186,7 +186,7 @@ export const ShoppingScreen = ({product}: Props) => {
       </View>
       <View style={styles.tableRow}>
         <Text style={styles.headerText}>
-          Productos agregados ({cart.length})
+          Productos agregados ({totalProducts})
         </Text>
         <TouchableOpacity
           style={styles.TrashButton && styles.buyButton3}
@@ -202,7 +202,7 @@ export const ShoppingScreen = ({product}: Props) => {
               backgroundColor: '#f8f8ff',
               marginTop: 10,
               marginHorizontal: 10,
-              height: 120,
+              height: 130,
             }}>
             <View style={styles.rowContainer}>
               <View style={styles.imageContainer}>
@@ -218,15 +218,16 @@ export const ShoppingScreen = ({product}: Props) => {
 
                 <View style={styles.rowContainer}>
                   <Text style={styles.rowTextPrice}>
-                    {item.product.price} MNX{' '}
+                    {item.product.price} MNX
                   </Text>
-                  <Text style={styles.rowText}>X ( {item.quantity} )</Text>
+                  <Text style={styles.rowText}>   X  </Text>
+                  <Text style={{fontSize: 16, color: '#ff1493', fontWeight: 'bold',}}> ( {item.quantity} )</Text>
                 </View>
 
                 <View style={styles.rowContainer}>
-                  <Text style={styles.rowTextPrice}>
-                    {' '}
-                    Disponible ({item.product.quantity}){' '}
+                  <Text style={styles.rowTextQuantoty}>
+                   
+                    Disponible:    ({item.product.quantity})
                   </Text>
                 </View>
                 <View style={styles.rowContainer}>
@@ -240,18 +241,17 @@ export const ShoppingScreen = ({product}: Props) => {
                     </TouchableOpacity>
                     <Text style={styles.quantity}>{item.quantity}</Text>
                     <TouchableOpacity
-                      onPress={() => {
-                        if (item.quantity < item.product.quantity) {
-                          incrementQuantity(item.product._id);
-                        } else {
-                          Toast.show({
-                            type: 'info',
-                            text1: 'Cantidad excedida',
-                            text2:
-                              'La cantidad seleccionada supera el stock disponible',
-                          });
-                        }
-                      }}
+                        onPress={() => {
+                          if (item.product.quantity > item.quantity) {
+                            incrementCart(item.product._id);
+                          } else {
+                            Toast.show({
+                              type: 'info',
+                              text1: 'Cantidad excedida',
+                              text2: 'La cantidad seleccionada supera el stock disponible',
+                            });
+                          }
+                        }}
                       style={styles.quantityButton}>
                       <Text style={styles.quantityButtonText}>+</Text>
                     </TouchableOpacity>
@@ -273,9 +273,11 @@ export const ShoppingScreen = ({product}: Props) => {
 
       <Card style={{backgroundColor: '#f8f8ff'}}>
         <View style={{padding: 10, marginLeft: 5}}>
-          <Text style={styles.headerText2}>Productos: {cart.length}</Text>
+          <Text style={styles.headerText2}>Productos: {totalProducts}</Text>
           {/* <Text style={styles.headerText2}>Total: ${calculateTotalPrice().toFixed(2)} MNX</Text> */}
           <Text style={styles.headerText2}>Total: ${totalPrice} MNX</Text>
+
+          <Text style={{color:'black', fontSize: 16, fontWeight:'bold'}}> Descuento del: {discount} % </Text>
           {/* <Text style={styles.headerText2}> precio con descuento  {discountedTotal} </Text> */}
 
           <View style={{flexDirection: 'row', }}>
@@ -286,7 +288,7 @@ export const ShoppingScreen = ({product}: Props) => {
               value={coupon}
               onChangeText={text => setCoupon(text)}
             />
-
+      
             <TouchableOpacity
               onPress={handleApplyCoupon}
               style={{
@@ -362,46 +364,49 @@ export const ShoppingScreen = ({product}: Props) => {
           <Text
             style={{
               color: '#ff1493',
-              fontSize: 16,
+              fontSize: 18,
               fontWeight: 'bold',
               flexDirection: 'column-reverse',
             }}>
             Agrega datos de dirección
           </Text>
           <Text style={{color: 'gray'}}>
-            Selecciona tu dirección o ingresa una nueva
+            *Selecciona tu dirección o ingresa una nueva*
           </Text>
           <View style={styles.rowContainer}>
-            <Card style={styles.cards}>
-              <TouchableOpacity
-                style={{alignItems: 'center'}}
-                onPress={() => navigation.navigate('mapaScreen', {owner: ' '})}>
-                <Text style={{fontWeight: 'bold', color: 'black'}}>
-                  Agrega una direccion{' '}
-                </Text>
-                <Icon name="map-outline" size={25} color="#ff1493" />
-              </TouchableOpacity>
-              {/* <TouchableOpacity style={styles.buyButton} onPress={() => navigation.navigate('mapaScreen', { owner: ' ' })}>
-          <Text> Agregar una nueva dirección  </Text>
-        </TouchableOpacity> */}
-            </Card>
 
-            <Card style={styles.cards}>
-              <View style={{alignItems: 'center'}}>
-                <TouchableOpacity
-                  style={{alignItems: 'center'}}
-                  onPress={() => navigation.navigate('Direction')}>
-                  <Text style={{fontWeight: 'bold', color: 'black'}}>
-                    Modificar direccion{' '}
-                  </Text>
-                  <Icon name="create-outline" size={25} color="#ff1493" />
-                </TouchableOpacity>
-              </View>
-            </Card>
+
+              <TouchableOpacity
+                    style={{alignItems: 'center'}}
+                    onPress={() => navigation.navigate('mapaScreen', {owner: ' '})}>
+                  <Card style={styles.cards}>
+                    <Text style={{fontWeight: 'bold', color: 'black'}}>
+                      Agrega una direccion{' '}
+                    </Text>
+                  <Icon name="map-outline" size={25} color="#ff1493" />
+                </Card>
+              </TouchableOpacity>
+
+          
+                <Card style={styles.cards}>
+                    <TouchableOpacity
+                      style={{alignItems: 'center'}}
+                      onPress={() => navigation.navigate('Direction')}>
+                      <Text style={{fontWeight: 'bold', color: 'black'}}>
+                        Modificar direccion{' '}
+                      </Text>
+                      <Icon name="create-outline" size={25} color="#ff1493" />
+                    </TouchableOpacity>
+                </Card>
+
+
+
           </View>
         </Actionsheet.Content>
       </Actionsheet>
+    </InternetComponet>
     </>
+    
   );
 };
 
@@ -430,7 +435,8 @@ const styles = StyleSheet.create({
   rowContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 20,
+    marginTop: 30,
+    marginVertical: 50
   },
   cards: {
     borderColor: 'gray',
@@ -636,8 +642,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   rowTextPrice: {
+    fontSize: 16,
+    color: '#ff1493',
+    fontWeight:'bold'
+  },
+  rowTextQuantoty: {
     fontSize: 14,
-    color: '#1E90FF',
+    color: 'black',
+    fontWeight:'bold'
   },
 
   buyButton: {

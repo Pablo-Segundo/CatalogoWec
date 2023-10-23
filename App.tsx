@@ -19,6 +19,7 @@ export default function App() {
 
       <NavigationContainer>
         <NativeBaseProvider>
+        
           <CartState>
             <Navigation />
           </CartState>

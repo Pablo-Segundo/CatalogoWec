@@ -38,7 +38,7 @@ export const ProductCard = ({ product, getCartItems }: Props) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   
   const isProductInCart = cartProduct !== undefined;
-
+  // const cartProduct = cart.find(item => item.product._id === selectedProduct._id);
 
   const toggleFavorite = async (product) => {
     const favoriteItem = {
@@ -292,12 +292,10 @@ export const ProductCard = ({ product, getCartItems }: Props) => {
 
             <View style={styles.cardProduct}>
               <ScrollView>
-              <Text style={{color:'#FF1493', fontSize: 20, fontWeight:'bold'}}>Descripcion</Text>
+              <Text style={{color:'#FF1493', fontSize: 20, fontWeight:'bold'}}>Descripcion:</Text>
               <Text style={styles.description}>{product.description}</Text>
               </ScrollView>
             </View>
-
-
 
 
             <View style={styles.quantityContainer}>
@@ -327,9 +325,6 @@ export const ProductCard = ({ product, getCartItems }: Props) => {
             </TouchableOpacity>
 
               
-             
-
-
 
             <View style={{width: '50%',  alignItems: 'center',  }}>
             <TouchableOpacity
@@ -374,8 +369,6 @@ export const ProductCard = ({ product, getCartItems }: Props) => {
           
             </View>
           </View>
-
-
 
 
          <Modal visible={showModal} transparent={true}>
@@ -537,6 +530,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     display: 'flex',
+    marginTop:15
 
   },
   quantityCard: {

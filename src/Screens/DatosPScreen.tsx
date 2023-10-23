@@ -29,7 +29,7 @@ export const DatosPScreen = () => {
   useEffect(() => {
     const obtenerDatosGuardados = async () => {
       try {
-        const nombreGuardado = await AsyncStorage.getItem('nombre');
+        const nombreGuardado = await AsyncStorage.getItem('datos');
         setDatosGuardados({
           nombre: nombreGuardado,
         });
@@ -48,7 +48,7 @@ export const DatosPScreen = () => {
       if (datosGuardados) {
         datosActualizados = JSON.parse(datosGuardados);
       }
-      const nuevosDatos = {
+      const nuevosDatos : any= {
         nombre,
         numeroTelefonico,
         referencias,
@@ -58,19 +58,23 @@ export const DatosPScreen = () => {
       await AsyncStorage.setItem('datos', JSON.stringify(datosActualizados));
       console.log('Datos guardados uwu');
       setDatosGuardados(nuevosDatos);
+      navigation.navigate('Shopping');
     } catch (error) {
       console.log('Error al guardar los datos unu:', error);
     }
   };
 
-  const isValidPhoneNumber = (phone: string) => {
 
+
+
+
+
+  const isValidPhoneNumber = (phone: string) => {
     const regex = /^\d{10}$/;
     return regex.test(phone);
   };
 
   const handleSaveData = () => {
-   
     if (!nombre || !numeroTelefonico || !selectedAddress) {
       setErrorNombre(!nombre);
       setErrorTelefono(!numeroTelefonico);
@@ -78,17 +82,12 @@ export const DatosPScreen = () => {
       setErrorTelefonoMessage('Por favor, complete todos los campos.');
       return;
     }
-
-   
     if (!isValidPhoneNumber(numeroTelefonico)) {
       setErrorTelefono(true);
       setErrorTelefonoMessage('El número de teléfono debe tener 10 dígitos.');
       return;
     }
-
-   
     guardarDatos();
-    navigation.navigate('Shopping');
   };
 
   return (
