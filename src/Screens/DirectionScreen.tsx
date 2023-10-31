@@ -116,7 +116,7 @@ const handleAddressSelect = (selectedAddress) => {
       </View>
       {/* <Text style={{color:'black',}}>La direccion que eliga sera donde llegen sus compras   </Text> */}
        
-                {datosGuardados.map((datos, index) => (
+         {datosGuardados.map((datos, index) => (
             <TouchableOpacity
               key={index}
               style={styles.cardcontainer}

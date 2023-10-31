@@ -10,18 +10,21 @@ import { InternetComponet } from '../../components/InternetComponet';
 import { NoInternet } from '../../components/NoInternet ';
 import { NetworkModal } from '../../components/NetworkModal';
 import { NetworkContext } from '../../context/NetworkContext';
+import { FloatingAction } from "react-native-floating-action";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface Props extends NativeStackScreenProps<any, any> { }
 
-export const CategoriesScreen = ({ route, navigation }: Props) => {
+export const CategoriesScreen = ({ product, route, navigation }: Props) => {
   const [categories, setCategories] = useState();
   const { height, width } = Dimensions.get('window');
   const [brands, setBrands] = useState([]);
-
   const {isConnected} = useContext(NetworkContext)
   const [visible, setVisible] = useState(false)
   const [title, setTitle] = useState('')
-
+  const [isFABActive, setIsFABActive] = useState(false);
+  // recomendaciones 
+  const [recommendations, setRecommendations] = useState([]);
 
 
   const getCategories = async () => {
@@ -49,9 +52,6 @@ export const CategoriesScreen = ({ route, navigation }: Props) => {
     handleFetch();
   }, []);
 
-
-
-
   const getBrands = async () => {
     try {
       const { data } = await API.get('/brands');
@@ -63,12 +63,10 @@ export const CategoriesScreen = ({ route, navigation }: Props) => {
     }
   };
  
-
   useEffect(() => {
     getCategories();
     getBrands();
   }, []);
-
   if (!categories || !brands) {
     return (
       <LoadingScreen />
@@ -77,12 +75,78 @@ export const CategoriesScreen = ({ route, navigation }: Props) => {
     //   getCategories();
     //   getBrands();
     // }, []);
+
+    
   }
+  const actions = [
+    {
+      text: "Accessibility",
+      icon: require("../../assets/lottie/osuxd.png"),
+      name: "bt_accessibility",
+      position: 2
+    },
+    {
+      text: "Contácto",
+      icon: require("../../assets/lottie/osuxd.png"),
+      name: "bt_language",
+      position: 1
+    },
+    {
+      text: "Location",
+      icon: require("../../assets/lottie/osuxd.png"),
+      name: "bt_room",
+      position: 3
+    },
+    {
+      text: "Video",
+      icon: require("../../assets/lottie/osuxd.png"),
+      name: "bt_videocam",
+      position: 4
+    }
+  ];
+
+  // Prueba de recomendaciones de productos 
+
+  // useEffect(() => {
+  //   getRecommendationsFromStorage();
+  // }, []);
+
+  // const getRecommendationsFromStorage = async () => {
+  //   try {
+     
+  //     const storedProducts = await AsyncStorage.getItem('storedProducts');
+  //     const products = storedProducts ? JSON.parse(storedProducts) : [];
+  //     const recommendations = generateRecommendations(products);
+  //     setRecommendations(recommendations);
+  //   } catch (error) {
+  //     console.error('Error al obtener recomendaciones: ', error);
+  //   }
+  // };
+
+  // const generateRecommendations = async () => {
+  //   try {
+    
+  //     const storedProducts = await AsyncStorage.getItem('storedProducts');
+  //     const products = storedProducts ? JSON.parse(storedProducts) : [];
+  
+  //     const recommendations = generateRecommendations(products);
+
+  //     console.log('Recomendaciones:', recommendations);
+  //   } catch (error) {
+  //     console.error('Error al obtener recomendaciones: ', error);
+  //   }
+  // }
+  
+
+
+
   
 
   return (
     <>
 <InternetComponet>
+
+
 
 <NetworkModal
       visible={visible}
@@ -128,7 +192,6 @@ export const CategoriesScreen = ({ route, navigation }: Props) => {
         </Card>
       </View>
 
-   
 
   
     <FlatList
@@ -152,12 +215,33 @@ export const CategoriesScreen = ({ route, navigation }: Props) => {
                   </View>
                   </TouchableOpacity>
        </ScrollView>
-
-        
-         
           
       )}
     />
+
+    <View>
+        {/* <Text style={{color:'black', fontSize: 18, fontWeight: 'bold'}}> Productos Agregados</Text> */}
+        <Card style={styles.cardContainer}>
+          <Text style={{color:'black', fontSize: 20, fontWeight: 'bold'}} > Tambien te puede interesar   </Text>
+        </Card>
+      </View>
+
+
+
+
+      <View>
+        <TouchableOpacity>
+          <Card style={styles.cardproducts}>
+            <Image    />
+
+                  </Card>
+        </TouchableOpacity>
+        
+      </View>
+
+
+
+
    
       <View>
         {/* <Text style={{color:'black', fontSize: 18, fontWeight: 'bold'}}> Productos Agregados</Text> */}
@@ -165,15 +249,18 @@ export const CategoriesScreen = ({ route, navigation }: Props) => {
           <Text style={{color:'black', fontSize: 20, fontWeight: 'bold'}} > categorías  </Text>
         </Card>
       </View>
+
       <View style={{marginTop: 10}}></View>
+
+
  
 
    
-      <Fab  renderInPortal={true} shadow={1} 
-      bgColor={'#ff1493'}
+      {/* <Fab  renderInPortal={true} shadow={1} 
+      bgColor={'white '}
       //onPress={() => navigation.navigate('')}
       size="sm" bottom={70} 
-      icon={  <Icon name="circle-o-notch" size={30} color="white" />} />
+      icon={  <Icon name="circle-o-notch" size={30} color="white" />} /> */}
      
 
         <FlatList
@@ -197,6 +284,10 @@ export const CategoriesScreen = ({ route, navigation }: Props) => {
             </>
           )}
         />
+      
+
+
+
 
 <View>
         {/* <Text style={{color:'black', fontSize: 18, fontWeight: 'bold'}}> Productos Agregados</Text> */}
@@ -221,9 +312,34 @@ export const CategoriesScreen = ({ route, navigation }: Props) => {
         
         </ScrollView>
 
+
+
+        {isFABActive && (
+        <View style={styles.overlayFLOAT}></View>
+      )}
+     <View style={{ position: 'absolute', bottom: 20, right: 5,  zIndex: 999 }}>
+
+          <FloatingAction
+              actions={actions}
+              buttonSize={65}
+              color="#FF1493"
+              position="right"
+             // overrideWithAction={true}
+              onOpen={()=>setIsFABActive(true)}
+              onClose={()=>setIsFABActive(false)}
+              onPressItem={name => {
+                
+                console.log(`selected button: ${name}`);
+
+            }}
+          />
+
+        </View>
+
         
  
       </InternetComponet>
+
         </>
   );
 }
@@ -235,6 +351,33 @@ const styles = StyleSheet.create({
     margin: Dimensions.get('window').height / Dimensions.get('window').width > 1.6 ? 0 : 5,
     marginBottom: 5,
   
+  },
+  cardproducts: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    borderRadius: 10,
+    padding: 20,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  
+  overlayFLOAT: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fondo oscuro semi-transparente
+    zIndex: 998, // Asegura que esté por debajo del FAB
   },
   image: {
     width: '100%',

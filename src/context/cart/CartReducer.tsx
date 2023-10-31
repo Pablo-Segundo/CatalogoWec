@@ -102,6 +102,12 @@ export type CartAction=  {
            }    
         }
 
+    
+
+ 
+
+   
+
 
 export const CartReducer = ( state: CartState, action: CartAction): CartState =>{
     switch (action.type) {

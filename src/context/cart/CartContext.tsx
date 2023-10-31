@@ -25,6 +25,7 @@ type CartContextProps = {
   CartContextProvider: (children: any) => void;
   applyCoupon: (coupon: string) => void;
   incrementCart: (productId: string) => void;
+  calculateTotalWithDiscount: () => void;
 };
 
 const CartInitialState: CartState = {
@@ -55,7 +56,7 @@ export const CartProvider = ({children}: any) => {
           const {totalProducts, totalPrice} = TotalProductsAndPrice(cart);
           setTotalProducts(totalProducts);
           setTotalPrice(totalPrice);
-          dispatch({type: 'loadCart', payload: {cart: cart}});
+          dispatch({type: 'loadCart', payload: {cart: cart, totalProducts : totalProducts , totalPrice: totalPrice ,   }});
         }
       } catch (error) {
         console.error('Error loading cart from storage:', error);
@@ -371,36 +372,33 @@ export const CartProvider = ({children}: any) => {
         text1: 'Cupón ya aplicado',
         text2: 'El cupón ya se ha aplicado a tu pedido.',
       });
-      return; 
+      return;
     }
     try {
       const response = await API.get(`/coupons/code/${coupon}`);
       if (response.status === 200) {
         const couponData = response.data.coupon;
-        const discount = couponData.discount;
-
-        const discountedTotal = (state.totalPrice * discount) / 100;
-        const finalTotal = state.totalPrice - discountedTotal;
-
-        setTotalPrice(discountedTotal);
+   
+        const totalPriceWithDiscount = calculateTotalWithDiscount(state.cart, couponData);
+  
+        setTotalPrice(totalPriceWithDiscount);
         setIsCouponApplied(true);
-
+  
         dispatch({
           type: 'applyCoupon',
           payload: {
             cart: state.cart,
             errorMessage: '',
             couponCode: coupon,
-            discountedTotal,
-            discount,
-            totalPrice: finalTotal,
+            discount: couponData.discount,
+            totalPrice: totalPriceWithDiscount,
           },
         });
-
+  
         Toast.show({
           type: 'success',
-          text1: `Cupón aplicado del: ${discount}% `,
-          text2: `Se ha aplicado un descuento de ${discountedTotal} MNX.`,
+          text1: `Cupón aplicado del: ${couponData.discount}% `,
+          text2: `Se ha aplicado un descuento de ${totalPrice.toFixed(2) - totalPriceWithDiscount.toFixed(2)} MNX.`,
         });
       } else {
         Toast.show({
@@ -414,11 +412,25 @@ export const CartProvider = ({children}: any) => {
       Toast.show({
         type: 'error',
         text1: 'Error al verificar el cupón',
-        text2:
-          'Ocurrió un problema al verificar el cupón. Por favor, inténtalo de nuevo más tarde.',
+        text2: 'Ocurrió un problema al verificar el cupón. Por favor, inténtalo de nuevo más tarde.',
       });
     }
   };
+
+  const calculateTotalWithDiscount = (cart, coupon) => {
+    let totalPrice = 0;
+    cart.forEach((item) => {
+      totalPrice += item.product.price * item.quantity;
+    });
+    if (coupon) {
+      const discount = coupon.discount;
+      const discountedTotal = (totalPrice * discount) / 100;
+      totalPrice -= discountedTotal;
+    }
+  
+    return totalPrice;
+  };
+  
 
   return (
     <CartContext.Provider
@@ -435,8 +447,7 @@ export const CartProvider = ({children}: any) => {
         couponCode,
         discount,
         incrementCart,
-      
-
+        
         ...state,
       }}>
       {children}

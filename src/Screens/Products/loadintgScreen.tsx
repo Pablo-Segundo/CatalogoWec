@@ -9,8 +9,10 @@ import { InternetComponet } from '../../components/InternetComponet';
   <InternetComponet>
 
   <View style={styles.container}>
-    <ActivityIndicator size="large" color="#0000FF" />
-    
+    <ActivityIndicator size="large" color="#ff1493" />
+      <Text style={{color:'#ff1493', fontSize: 20}}>
+      Cargando... 
+    </Text>
   </View>
 
   </InternetComponet>
@@ -21,6 +23,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    flexDirection: 'row'
     
   },
 }); 

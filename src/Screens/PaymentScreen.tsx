@@ -92,9 +92,18 @@ export const PaymentScreen = () => {
   
       </View>
 
-      <View style={{alignItems:'center', marginTop: 30, backgroundColor:'gray'}}>
-        <Text style={{color:'white', fontSize:20, fontWeight:'bold'}}> Tarjetas registradas </Text>
+
+      <View>
+        {/* <Text style={{color:'black', fontSize: 18, fontWeight: 'bold'}}> Productos Agregados</Text> */}
+        <Card style={styles.cardContainer}>
+          <Text style={{color:'black', fontSize: 20, fontWeight: 'bold'}} > Ingrese sus datos  </Text>
+        </Card>
       </View>
+
+
+      {/* <View style={{alignItems:'center', marginTop: 30, backgroundColor:'gray'}}>
+        <Text style={{color:'white', fontSize:20, fontWeight:'bold'}}> Tarjetas registradas </Text>
+      </View> */}
 
 
       <View> 
@@ -151,40 +160,16 @@ export const PaymentScreen = () => {
   }}
 />
 
-   
-   
     </Card> 
 
-     <Card style={{marginTop: 15, marginHorizontal: 10}} >
-        <Text style={{color:'black', fontSize:20,   fontWeight: 'bold',}}>Lista de productos </Text>
-
-        <View> 
-    <Text style={styles.rowText}>Productos filtrados prueba  </Text>
-    {/* <View> 
-         {filteredProducts.map((product, index) => (
-          <Text style={styles.rowText} key={index}>{product.product_id.name} - ${product.price}</Text>
-        ))} 
-       </View> */}
-
-      <Text style={styles.rowText}>Precio total: ${totalPrice}</Text>
-      <Text style={styles.rowText}>Metodo de pago: {selectedPaymentOption}</Text>
-      <Text style={styles.rowText}>Datos filtrados : {filterdatos}</Text>
-  </View>
-        
-       </Card> 
-    
-
-
-   {/* <View>
+   <View>
       <CardField 
         onCardChange={(cardDetails) => console.log('cardDetails', cardDetails)}
       />
       <Button  onPress={handlePayPress} title="Pay"   />
-   </View> */}
+   </View>
 
-
-
-<TouchableOpacity style={styles.buyButton}
+{/* <TouchableOpacity style={styles.buyButton}
    onPress={handlePayPress}
 >
  <CardField 
@@ -192,7 +177,21 @@ export const PaymentScreen = () => {
       />
         <Text style={styles.buyButtonText}>Continuar</Text>
       </TouchableOpacity>
+     */}
+
+<Card style={{marginTop: 15, marginHorizontal: 10}} >
+        <Text style={{color:'black', fontSize:20,   fontWeight: 'bold',}}>Lista de productos </Text>
+        <View> 
+            <Text style={styles.rowText}>Productos filtrados prueba  </Text>
+            <Text style={styles.rowText}>Precio total: ${totalPrice}</Text>
+            <Text style={styles.rowText}>Metodo de pago: {selectedPaymentOption}</Text>
+            <Text style={styles.rowText}>Datos filtrados : {filterdatos}</Text>
+        </View>
+       </Card> 
     
+
+
+
     </StripeProvider>
 </>
    )
@@ -215,6 +214,24 @@ const styles = StyleSheet.create({
       borderRadius: 10,
       marginTop: 50,
       marginHorizontal: 20
+    },
+    cardContainer: {
+      width: '100%',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexDirection: 'row',
+      borderRadius: 10,
+      padding: 10,
+      backgroundColor: '#fff',
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 5,
+      marginTop: 10
     },
     
     cardcontent: {

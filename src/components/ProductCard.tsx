@@ -326,7 +326,7 @@ export const ProductCard = ({ product, getCartItems }: Props) => {
 
               
 
-            <View style={{width: '50%',  alignItems: 'center',  }}>
+            <View style ={{width: '50%',  alignItems: 'center',  }}>
             <TouchableOpacity
                 style={isProductInCart ? styles.productInCartButton : styles.addToCartButton}
                 onPress={() => {

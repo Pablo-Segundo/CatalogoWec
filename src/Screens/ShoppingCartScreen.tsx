@@ -101,30 +101,7 @@ export const ShoppingScreen = ({product}: Props) => {
     }
   };
 
-  // const fetchLatestData = useCallback(() => {
-  //   obtenerDatosGuardados();
-  // }, []);
 
-  // useEffect(() => {
-  //   fetchLatestData();
-  //   const unsubscribe = navigation.addListener('focus', fetchLatestData);
-  //   return () => {
-  //     unsubscribe();
-  //   };
-  // }, [fetchLatestData]);
-
-  // const obtenerDatosGuardados = async () => {
-  //   try {
-  //     const updatedData = await AsyncStorage.getItem('datos');
-  //     if (updatedData) {
-  //       const datosParseados = JSON.parse(updatedData);
-  //       const ultimoDatoGuardado = datosParseados[datosParseados.length - 1];
-  //       setDatosGuardados(ultimoDatoGuardado);
-  //     }
-  //   } catch (error) {
-  //     console.log('Error al obtener los datos guardados:', error);
-  //   }
-  // };
 
   const obtenerDatosGuardados = async () => {
     try {
@@ -155,11 +132,6 @@ export const ShoppingScreen = ({product}: Props) => {
   };
   console.log(totalPrice, 'del context');
 
-
-  
-  
-
-
   return (
     <>
     <InternetComponet>
@@ -173,7 +145,7 @@ export const ShoppingScreen = ({product}: Props) => {
               <View style={styles.cardcontainer}>
                 <Icon style={{marginHorizontal:10}} name="location-outline" size={30} color="white" />
                 <Text style={styles.textblack}>
-                  Enviar a:
+                  Enviar a: 
                   {datosGuardados && (
                     <Text style={styles.textgray}>  {datosGuardados.nombre} , {datosGuardados.selectedAddress}, {datosGuardados.numeroTelefonico }
                     </Text>
@@ -184,6 +156,7 @@ export const ShoppingScreen = ({product}: Props) => {
           </TouchableOpacity>
         </View>
       </View>
+
       <View style={styles.tableRow}>
         <Text style={styles.headerText}>
           Productos agregados ({totalProducts})
@@ -194,6 +167,14 @@ export const ShoppingScreen = ({product}: Props) => {
           <Icon name="trash-outline" size={30} color="white" />
         </TouchableOpacity>
       </View>
+
+
+
+
+    {cart.length > 0 ? (
+
+
+   
       <FlatList
         data={cart}
         renderItem={({item}) => (
@@ -271,11 +252,29 @@ export const ShoppingScreen = ({product}: Props) => {
         )}
       />
 
+      ) : (
+        <View style={styles.emptyCartContainer}>
+            <Text style={styles.emptyCartText}>No hay productos :C  </Text>
+            <TouchableOpacity
+            style={styles.exploreButton}
+            onPress={() => navigation.navigate('Wapizima')}
+            >
+             <Image source={require('../assets/lottie/osuxd.png')} style={styles.exploreImage} /> 
+            <Text style={styles.exploreButtonText}>Explora y agregar productos  </Text>
+            </TouchableOpacity>
+      </View>
+      
+          )}
+
+
+
+
+
       <Card style={{backgroundColor: '#f8f8ff'}}>
         <View style={{padding: 10, marginLeft: 5}}>
           <Text style={styles.headerText2}>Productos: {totalProducts}</Text>
           {/* <Text style={styles.headerText2}>Total: ${calculateTotalPrice().toFixed(2)} MNX</Text> */}
-          <Text style={styles.headerText2}>Total: ${totalPrice} MNX</Text>
+          <Text style={styles.headerText2}>Total: ${totalPrice.toFixed(2)} MNX</Text>
 
           <Text style={{color:'black', fontSize: 16, fontWeight:'bold'}}> Descuento del: {discount} % </Text>
           {/* <Text style={styles.headerText2}> precio con descuento  {discountedTotal} </Text> */}
@@ -376,29 +375,43 @@ export const ShoppingScreen = ({product}: Props) => {
           <View style={styles.rowContainer}>
 
 
+            {/* <TouchableOpacity>
+              <Card style={styles.cards}>
+                 <Text style={{color:'black'}}> Hola tilin </Text>
+              </Card>
+              
+            </TouchableOpacity>
+
+           <TouchableOpacity>
+            <Card style={styles.cards}>
+              <Text style={{color:'black'}}> hola papu </Text>
+            </Card>
+           </TouchableOpacity> */}
+          
+
+
+
               <TouchableOpacity
                     style={{alignItems: 'center'}}
                     onPress={() => navigation.navigate('mapaScreen', {owner: ' '})}>
                   <Card style={styles.cards}>
                     <Text style={{fontWeight: 'bold', color: 'black'}}>
-                      Agrega una direccion{' '}
+                      Agrega una direccion
                     </Text>
-                  <Icon name="map-outline" size={25} color="#ff1493" />
+                  <Icon name="map-outline" size={30} color="#ff1493" />
                 </Card>
               </TouchableOpacity>
 
-          
-                <Card style={styles.cards}>
-                    <TouchableOpacity
-                      style={{alignItems: 'center'}}
-                      onPress={() => navigation.navigate('Direction')}>
-                      <Text style={{fontWeight: 'bold', color: 'black'}}>
-                        Modificar direccion{' '}
-                      </Text>
-                      <Icon name="create-outline" size={25} color="#ff1493" />
-                    </TouchableOpacity>
-                </Card>
-
+                <TouchableOpacity
+                            style={{alignItems: 'center'}}
+                            onPress={() => navigation.navigate('Direction')}>
+                          <Card style={styles.cards}>
+                            <Text style={{fontWeight: 'bold', color: 'black'}}>
+                              Modificar direccion
+                            </Text>
+                            <Icon name="create-outline" size={30} color="#ff1493" />
+                          </Card>
+            </TouchableOpacity>
 
 
           </View>
@@ -439,13 +452,13 @@ const styles = StyleSheet.create({
     marginVertical: 50
   },
   cards: {
-    borderColor: 'gray',
     padding: 50,
     borderRadius: 8,
-    flex: 1,
     maxHeight: 150,
     maxWidth: 200,
     marginHorizontal: 10,
+    alignItems: 'center',
+    alignContent: 'center'
   },
 
   directionInput: {

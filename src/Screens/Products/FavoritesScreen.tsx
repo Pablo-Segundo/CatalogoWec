@@ -67,7 +67,7 @@ export const FavoritesScreen = ({ product, navigation }: Props) => {
 
 
     
-            {favorites.length > 0 ? (
+     {favorites.length > 0 ? (
 
 
            
