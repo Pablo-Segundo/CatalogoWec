@@ -17,24 +17,30 @@ import { CartContext } from "../../context/cart/CartContext";
 import { useNavigation } from "@react-navigation/native";
 
 const Stack = createNativeStackNavigator();
-const { askLocationPermission } = usePermissions();
-const {  cart } = useContext(CartContext);
-const navigation = useNavigation();
-const size = Platform.OS === "ios" ? 30 : 35;
 
-console.log(cart, 'uwu')
 
-const uniqueProductIds = new Set(cart.map((item) => item.product._id));
+// console.log(cart, 'uwu')
+
+// const uniqueProductIds = new Set(cart.map((item) => item.product._id));
 // console.log('Unique Product IDs:', uniqueProductIds);
 
-useEffect(() => {
-  askLocationPermission();
-});
 
 export const CategoriesStack = () => {
+
+const { askLocationPermission } = usePermissions();
+const navigation = useNavigation();
+const size = Platform.OS === "ios" ? 30 : 35;
+const { cart } = useContext(CartContext);
+
+
+  useEffect(() => {
+    askLocationPermission();
+  }, []);
+  
+
   return (
-    <>
-      <Stack.Navigator initialRouteName="Categories">
+      <> 
+       <Stack.Navigator initialRouteName="Categories">
         <Stack.Screen
           name="Categories"
           component={CategoriesScreen}
@@ -79,7 +85,7 @@ export const CategoriesStack = () => {
                           marginVertical: Dimensions.get("window").height * .01,
                         }}
                       >
-                        Categorias
+                        Categorias 
                       </Text>
                     </View>
 
@@ -102,9 +108,7 @@ export const CategoriesStack = () => {
                       >
                         <Icon name="cart-outline" size={size} color="black" />
                        
-                          <Text style={styles.productCount2}>
-                           {cart.length}
-                          </Text>
+                          <Text style={styles.productCount2}>{cart.length}</Text>
                       
                       </View>
                     </TouchableOpacity>
@@ -114,8 +118,8 @@ export const CategoriesStack = () => {
             ),
           }}
         />
-      </Stack.Navigator>
-    </>
+      </Stack.Navigator> 
+      </>
   );
 };
 

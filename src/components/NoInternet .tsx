@@ -12,7 +12,7 @@ import {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-  
+
     height: 40,
     backgroundColor: 'red',
     padding: 5,
@@ -65,22 +65,29 @@ export const NoInternet = () => {
 
 <View style={{marginTop:100,  alignItems: 'center',
      }}>
-      <Image
+      {/* <Image
           source={require('../assets/lottie/osuxd.png')}
           style={styles.errorImage}
-        />
+        /> */}
+
+        <TouchableOpacity style={{ backgroundColor: '#ff1493',
+                      height: 50,
+                      width: 150,
+                      alignItems: 'center',}}>
+        <Text style={{color:'white', fontWeight:'bold', fontSize: 20}}> volver a intentar </Text>
+           </TouchableOpacity>
 </View>
-    
+
 
 
       </Animated.View>
 
 
-     
-     
 
-     
-      <View style={{backgroundColor:'white', marginTop: 500}}>  
+
+
+
+      <View style={{backgroundColor:'white', marginTop: 500}}>
 
       <View style={styles.errorContainer}>
         <Text style={styles.errorText}>No hay conexión a internet</Text>
@@ -91,7 +98,7 @@ export const NoInternet = () => {
         /> */}
 
         <TouchableOpacity style={styles.continueButton}>
-          <Text> volver a intentar </Text>
+          <Text style={{color:'white', fontWeight:'bold', fontSize: 20}}> volver a intentar </Text>
         </TouchableOpacity>
       </View>
 

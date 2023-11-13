@@ -101,6 +101,14 @@ export type CartAction=  {
             totalPrice: number;
            }    
         }
+    |   {
+        type: 'incrementBrandProduct';
+        payload: {
+            cart: CartItem[]; errorMessage: string,
+            totalProducts: number;
+            totalPrice: number;
+           }   
+    }   
 
     
 
@@ -203,8 +211,16 @@ export const CartReducer = ( state: CartState, action: CartAction): CartState =>
                         totalProducts: action.payload.totalProducts,
                         totalPrice: action.payload.totalPrice,
 
-                    }
-          
+                    };
+            case 'incrementBrandProduct':
+                return {
+                    ...state,
+                        cart: action.payload.cart,
+                        errorMessage:  action.payload.errorMessage,
+                        success: false,
+                        totalProducts: action.payload.totalProducts,
+                        totalPrice: action.payload.totalPrice,
+                };         
 
             default:
                 return state;

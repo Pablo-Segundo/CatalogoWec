@@ -10,7 +10,9 @@ import Lottie from 'lottie-react-native'
 import { CategoriesScreen } from '../Screens/categories/CategoriesScreen';
 import { CategoriesStack } from './stacks/CategorieStack'
 import { PedidosScreen } from '../Screens/pedidosScreen'
-
+import {HomeIA} from '../Screens/IA xdprueba/HomeIA'
+import { Home } from '../Screens/IA xdprueba/Home'
+import { Recently } from '../components/Recently'
 
 const Tab = createBottomTabNavigator()
 const AnimatedSvg = Animated.createAnimatedComponent(Svg)
@@ -30,7 +32,11 @@ export const NavigationTab = () => {
             headerStyle: { height: 90, backgroundColor: '#debdce' },
             tabBarIcon: ({ ref }: any) => <Lottie ref={ref} loop={false} source={require('../assets/lottie/home.icon.json')} style={styles.icon} />,
           }}
-          component={CategoriesStack}
+            component={CategoriesStack}
+           
+         //component={HomeIA}
+       
+
 
         />
         <Tab.Screen
@@ -41,7 +47,10 @@ export const NavigationTab = () => {
             // @ts-ignore
             tabBarIcon: ({ ref }) => <Lottie ref={ref} loop={false} source={require('../assets/lottie/upload.icon.json')} style={styles.icon} />,
           }}
-          component={PedidosScreen}
+          // component={PedidosScreen}
+            // component={HomeIA}
+            component={Recently}
+            // component={Home}
         />
       </Tab.Navigator>
 

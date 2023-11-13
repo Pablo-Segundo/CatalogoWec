@@ -11,7 +11,7 @@ import { InternetComponet } from '../../components/InternetComponet';
   <View style={styles.container}>
     <ActivityIndicator size="large" color="#ff1493" />
       <Text style={{color:'#ff1493', fontSize: 20}}>
-      Cargando... 
+        Cargando... 
     </Text>
   </View>
 

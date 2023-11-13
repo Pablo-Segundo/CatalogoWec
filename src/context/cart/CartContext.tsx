@@ -26,6 +26,7 @@ type CartContextProps = {
   applyCoupon: (coupon: string) => void;
   incrementCart: (productId: string) => void;
   calculateTotalWithDiscount: () => void;
+  incrementBrandProduct: (productId: string) => void;
 };
 
 const CartInitialState: CartState = {
@@ -53,13 +54,23 @@ export const CartProvider = ({children}: any) => {
         const cartArray = await AsyncStorage.getItem('cart');
         if (cartArray) {
           const cart = JSON.parse(cartArray);
-          const {totalProducts, totalPrice} = TotalProductsAndPrice(cart);
+          const { totalProducts, totalPrice } = TotalProductsAndPrice(cart);
           setTotalProducts(totalProducts);
           setTotalPrice(totalPrice);
-          dispatch({type: 'loadCart', payload: {cart: cart, totalProducts : totalProducts , totalPrice: totalPrice ,   }});
+          dispatch({
+            type: 'loadCart',
+            payload: { cart: cart, totalProducts: totalProducts, totalPrice: totalPrice },
+          });
+        }
+
+        const storedDiscount = await AsyncStorage.getItem('discount');
+        if (storedDiscount) {
+          const discountData = JSON.parse(storedDiscount);
+          setDiscount(discountData.discount);
+          setIsCouponApplied(discountData.isCouponApplied);
         }
       } catch (error) {
-        console.error('Error loading cart from storage:', error);
+        console.error('Error loading data from storage:', error);
       }
     };
 
@@ -374,16 +385,16 @@ export const CartProvider = ({children}: any) => {
       });
       return;
     }
+
     try {
       const response = await API.get(`/coupons/code/${coupon}`);
       if (response.status === 200) {
         const couponData = response.data.coupon;
-   
         const totalPriceWithDiscount = calculateTotalWithDiscount(state.cart, couponData);
-  
+
         setTotalPrice(totalPriceWithDiscount);
         setIsCouponApplied(true);
-  
+
         dispatch({
           type: 'applyCoupon',
           payload: {
@@ -394,7 +405,9 @@ export const CartProvider = ({children}: any) => {
             totalPrice: totalPriceWithDiscount,
           },
         });
-  
+
+        await AsyncStorage.setItem('discount', JSON.stringify({ discount: couponData.discount, isCouponApplied: true }));
+
         Toast.show({
           type: 'success',
           text1: `Cupón aplicado del: ${couponData.discount}% `,
@@ -430,6 +443,44 @@ export const CartProvider = ({children}: any) => {
   
     return totalPrice;
   };
+
+  const incrementBrandProduct = async (productId: string) => {
+    try {
+      const cartArray = await AsyncStorage.getItem('cart');
+      let cart = [];
+      if (cartArray) {
+        cart = JSON.parse(cartArray);
+        const index = cart.findIndex((item) => item.product._id === productId);
+        if (index !== -1) {
+          const cartItem = cart[index];
+  
+          if (cartItem.quantity < cartItem.product.quantity) {
+            cartItem.quantity++;
+            await AsyncStorage.setItem('cart', JSON.stringify(cart));
+            const { totalProducts, totalPrice } = TotalProductsAndPrice(cart);
+            dispatch({
+              type: 'incrementQuantity',
+              payload: {
+                cart,
+                errorMessage: 'Cantidad incrementada',
+                totalProducts,
+                totalPrice,
+              },
+            });
+          } else {
+            Toast.show({
+              type: 'info',
+              text1: 'Cantidad excedida',
+              text2: 'La cantidad seleccionada supera el stock disponible',
+            });
+          }
+        }
+      }
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+
   
 
   return (
@@ -447,6 +498,7 @@ export const CartProvider = ({children}: any) => {
         couponCode,
         discount,
         incrementCart,
+        incrementBrandProduct,
         
         ...state,
       }}>

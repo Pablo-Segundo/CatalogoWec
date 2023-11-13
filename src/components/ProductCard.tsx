@@ -100,7 +100,7 @@ export const ProductCard = ({ product, getCartItems }: Props) => {
     setShowModal(false);
   };
 
-  const renderItem = ({ item, index }) => (
+  const renderItem = ({ item, index } ) => (
     <TouchableOpacity onPress={() => openImageModal(index)}>
       <Image
         style={styles.carouselImage}
@@ -150,7 +150,6 @@ export const ProductCard = ({ product, getCartItems }: Props) => {
     );
   };
 
-
   return (
     <>
       <TouchableOpacity
@@ -162,6 +161,7 @@ export const ProductCard = ({ product, getCartItems }: Props) => {
           style={[styles.cardContainer, availableQuantity === 0 && styles.disabledCardContainer]}
         >
     <Image style={styles.productImage} source={{ uri: product.multimedia[0].images['400x400'] }} />
+
     <View style={styles.favoriteContainer}>
     <TouchableOpacity onPress={() => toggleFavorite(product)} style={styles.favoriteButton}>
               <Icon
@@ -171,6 +171,7 @@ export const ProductCard = ({ product, getCartItems }: Props) => {
               />
             </TouchableOpacity>
     </View>
+
     <Text style={styles.productName} numberOfLines={1} ellipsizeMode="tail">
     {product.name}
     </Text>
@@ -250,136 +251,115 @@ export const ProductCard = ({ product, getCartItems }: Props) => {
 
 
 <Actionsheet isOpen={isOpen} onClose={onClose}>
-        <Actionsheet.Content>
+  <Actionsheet.Content style={styles.actionsheetContent}>
+    <FlatList
+      data={data}
+      renderItem={renderItem}
+      keyExtractor={(item, index) => index.toString()}
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      pagingEnabled
+      snapToInterval={Dimensions.get('window').width}
+      decelerationRate={0.9}
+      onViewableItemsChanged={onViewableItemsChanged}
+    />
+    {renderDots()}
 
-          <FlatList
-            data={data}
-            renderItem={renderItem}
-            keyExtractor={(item, index) => index.toString()}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            pagingEnabled
-            snapToInterval={Dimensions.get('window').width}
-            decelerationRate={0.9}
-            onViewableItemsChanged={onViewableItemsChanged}
-          />
-          {renderDots()}
+    <TouchableOpacity onPress={() => toggleFavorite(product)} style={styles.favoriteButton2}>
+      <Icon
+        name={isInFavorites() ? 'heart' : 'heart-o'}
+        size={35}
+        color={isInFavorites() ? 'red' : 'gray'}
+      />
+    </TouchableOpacity>
 
+    <View style={styles.productInfoContainer}>
+      <Text style={styles.productName}>{product.name}</Text>
 
-        <TouchableOpacity onPress={() => toggleFavorite(product)} style={styles.favoriteButton2}>
-              <Icon
-                name={isInFavorites() ? 'heart' : 'heart-o'}
-                size={35}
-                color={isInFavorites() ? 'red' : 'gray'}
+      <View style={styles.priceAvailabilityContainer}>
+        <Text style={styles.productPrice}>Precio: ${product.price} MXN</Text>
+        <Text style={styles.productAvailability}>Disponible: {product.quantity}</Text>
+      </View>
+    </View>
 
-              />
+    <ScrollView style={styles.descriptionContainer}>
+      <Text style={styles.descriptionTitle}>Descripción:</Text>
+      <Text style={styles.description}>{product.description}</Text>
+    </ScrollView>
 
-            </TouchableOpacity>
+    <View style={styles.quantityContainer}>
+      <TouchableOpacity
+        onPress={() => {
+          decrementQuantity(product._id);
+          setQuantity(quantity - 1);
+        }}
+        style={styles.quantityButton}
+        disabled={quantity <= 1}
+      >
+        <Text style={styles.quantityButtonText}>-</Text>
+      </TouchableOpacity>
 
-          <View style={styles.cardContainer3}>
-            <Text style={styles.productCard}>{product.name} </Text>
+      <Text style={styles.quantity}>{quantity}</Text>
 
+      <TouchableOpacity
+        onPress={() => {
+          incrementQuantity(product._id);
+          setQuantity(quantity + 1);
+        }}
+        style={styles.quantityButton}
+        disabled={quantity >= availableQuantity}
+      >
+        <Text style={styles.quantityButtonText}>+</Text>
+      </TouchableOpacity>
+    </View>
 
+    <TouchableOpacity
+      style={isProductInCart ? styles.productInCartButton : styles.addToCartButton}
+      onPress={() => {
+        setQuantity(1);
+        if (quantity > 0 && quantity <= availableQuantity) {
+          if (!isProductInCart) {
+            addToCart(product, quantity);
+            Toast.show({
+              type: 'success',
+              text1: 'Producto agregado',
+              text2: 'El producto se agregó al carrito de compras',
+            });
+          } else {
+            Toast.show({
+              type: 'info',
+              text1: 'Producto ya en el carrito',
+              text2: 'Este producto ya está en tu carrito de compras',
+            });
+          }
+        } else if (quantity <= 0) {
+          Toast.show({
+            type: 'error',
+            text1: 'Ninguna cantidad seleccionada',
+            text2: 'Debe seleccionar al menos un producto',
+          });
+        } else {
+          Toast.show({
+            type: 'error',
+            text1: 'Cantidad excedida',
+            text2: 'La cantidad seleccionada supera el stock disponible',
+          });
+        }
+      }}
+    >
+      <Text style={styles.addToCartButtonText}>
+        {isProductInCart ? 'Producto agregado' : 'Agregar al carrito'}
+      </Text>
+    </TouchableOpacity>
 
-          </View>
+    <Modal visible={showModal} transparent={true}>
+      <TouchableOpacity style={styles.modalContainer} onPress={closeImageModal}>
+        <Image style={styles.modalImage} source={{ uri: product.multimedia[selectedImageIndex]?.images['400x400'] }} />
+      </TouchableOpacity>
+    </Modal>
+  </Actionsheet.Content>
+</Actionsheet>
 
-
-          <View>
-                <Text style={styles.productPrice}>Precio: ${product.price} MXN</Text>
-                <Text style={styles.productName}> Disponible:  {product.quantity} </Text>
-
-             </View>
-
-            <View style={styles.cardProduct}>
-              <ScrollView>
-              <Text style={{color:'#FF1493', fontSize: 20, fontWeight:'bold'}}>Descripcion:</Text>
-              <Text style={styles.description}>{product.description}</Text>
-              </ScrollView>
-            </View>
-
-
-            <View style={styles.quantityContainer}>
-
-            <TouchableOpacity
-              onPress={() => {
-                decrementQuantity(product._id);
-                setQuantity(quantity - 1); 
-              }}
-              style={styles.quantityButton}
-              disabled={quantity <= 1}
-            >
-              <Text style={styles.quantityButtonText}>-</Text>
-            </TouchableOpacity>
-
-
-        <Text style={styles.quantity}>{quantity}</Text>
-        <TouchableOpacity
-              onPress={() => {
-                incrementQuantity(product._id);
-                setQuantity(quantity + 1); 
-              }}
-              style={styles.quantityButton}
-              disabled={quantity >= availableQuantity}
-            >
-              <Text style={styles.quantityButtonText}>+</Text>
-            </TouchableOpacity>
-
-              
-
-            <View style ={{width: '50%',  alignItems: 'center',  }}>
-            <TouchableOpacity
-                style={isProductInCart ? styles.productInCartButton : styles.addToCartButton}
-                onPress={() => {
-                  setQuantity(1);
-                  if (quantity > 0 && quantity <= availableQuantity) {
-                    if (!isProductInCart) {
-                      addToCart(product, quantity );
-                      Toast.show({
-                        type: 'success',
-                        text1: 'Producto agregado',
-                        text2: 'El producto se agregó al carrito de compras',
-                      });
-                    } else {
-                      Toast.show({
-                        type: 'info',
-                        text1: 'Producto ya en el carrito',
-                        text2: 'Este producto ya está en tu carrito de compras',
-                      });
-                    }
-                  } else if (quantity <= 0) {
-                    Toast.show({
-                      type: 'error',
-                      text1: 'Ninguna cantidad seleccionada',
-                      text2: 'Debe seleccionar al menos un producto',
-                    });
-                  } else {
-                    Toast.show({
-                      type: 'error',
-                      text1: 'Cantidad excedida',
-                      text2: 'La cantidad seleccionada supera el stock disponible',
-                    });
-                  }
-                }}
-              >
-                <Text style={styles.addToCartButtonText}>
-                  {isProductInCart ? 'Producto agregado' : 'Agregar al carrito'}
-                </Text>
-              </TouchableOpacity>
-
-          
-            </View>
-          </View>
-
-
-         <Modal visible={showModal} transparent={true}>
-            <TouchableOpacity style={styles.modalContainer} onPress={closeImageModal}>
-              <Image style={styles.modalImage} source={{ uri: product.multimedia[selectedImageIndex]?.images['400x400'] }} />
-            </TouchableOpacity>
-
-          </Modal>
-
-        </Actionsheet.Content>
-      </Actionsheet>
     </>
   );
 
@@ -393,10 +373,113 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 10,
   },
+  actionsheetContent: {
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 24,
+  },
+  favoriteButton: {
+    position: 'absolute',
+    top: 16,
+    right: 16,
+    zIndex: 1,
+  },
+  productInfoContainer: {
+    marginVertical: 16,
+  },
+  
+productName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  priceAvailabilityContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+  productPrice: {
+    fontSize: 16,
+    color: '#333',
+  },
+  productAvailability: {
+    fontSize: 16,
+    color: '#333',
+  },
+  descriptionContainer: {
+    marginBottom: 16,
+  },
+  descriptionTitle: {
+    color: '#FF1493',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
   description: {
     fontSize: 16,
-    color: 'black',
+    color: '#333',
   },
+  quantityContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 16,
+  },
+  
+ 
+quantityButton: {
+    backgroundColor: '#007BFF',
+    padding: 8,
+    borderRadius: 8,
+    marginHorizontal: 8,
+  },
+  quantityButtonText: {
+    color: '#fff',
+    fontSize: 16,
+  },
+  quantity: {
+    fontSize: 18,
+  },
+  addToCartButton: {
+    backgroundColor: '#28a745',
+    padding: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+    width: '100%',
+  },
+  productInCartButton: {
+    backgroundColor: 'gray',
+    padding: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+    width: '100%',
+  },
+  addToCartButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalImage: {
+    width: '80%',
+    height: '80%',
+    resizeMode: 'contain',
+  },
+
+  ///----------------------------
+
+
+  
+  // description: {
+  //   fontSize: 16,
+  //   color: 'black',
+  // },
+
   disabledCardContainer:{
     opacity: 0.5,
   },
@@ -425,14 +508,17 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: 'bold',
   },
-  favoriteButton: {
-    padding: 5,
-    marginLeft: 20,
-  },
+  // favoriteButton: {
+  //   padding: 5,
+  //   marginLeft: 20,
+  // },
   favoriteButton2: {
-    padding: 5,
-    marginLeft: 300,
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    zIndex: 1,
   },
+
   favoriteContainer: {
     position: 'absolute',
     top: 5,
@@ -461,14 +547,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: 'center',
   },
-  productName: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    marginTop: 10,
-    color: 'black',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  // productName: {
+  //   fontSize: 15,
+  //   fontWeight: 'bold',
+  //   marginTop: 10,
+  //   color: 'black',
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  // },
   productCard: {
     fontSize: 20,
     fontWeight: 'bold',
@@ -477,12 +563,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  productPrice: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#FF1493',
-    marginTop: 5,
-  },
+  // productPrice: {
+  //   fontSize: 20,
+  //   fontWeight: 'bold',
+  //   color: '#FF1493',
+  //   marginTop: 5,
+  //   padding: 5,
+  // },
 
   buyButton: {
     backgroundColor: '#FF1493',
@@ -491,12 +578,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
 
   },
-  productInCartButton: {
-    backgroundColor: '#08FF8F',
-    borderRadius: 5,
-    padding: 10,
-    marginTop: 10,
-  },
+  // productInCartButton: {
+  //   backgroundColor: '#08FF8F',
+  //   borderRadius: 5,
+  //   padding: 10,
+  //   marginTop: 10,
+  // },
   buyButtonText: {
     color: 'white',
     fontWeight: 'bold',
@@ -526,13 +613,13 @@ const styles = StyleSheet.create({
     left: 25,
     zIndex: 1,
   },
-  quantityContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    display: 'flex',
-    marginTop:15
+  // quantityContainer: {
+  //   flexDirection: 'row',
+  //   alignItems: 'center',
+  //   display: 'flex',
+  //   marginTop:15
 
-  },
+  // },
   quantityCard: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -547,35 +634,35 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     color: 'black',
   },
-  quantityButton: {
-    padding: 15,
-    backgroundColor: '#eee',
-    borderRadius: 5,
-    marginHorizontal: 1
+  // quantityButton: {
+  //   padding: 15,
+  //   backgroundColor: '#eee',
+  //   borderRadius: 5,
+  //   marginHorizontal: 1
     
 
-  },
-  quantityButtonText: {
-    fontSize: 13,
-    fontWeight: 'bold',
-    color: '#555',
-  },
-  quantity: {
-    fontSize: 18,
-    marginHorizontal: 30,
-    color: 'black',
-  },
-  addToCartButton: {
-    backgroundColor: '#ff1493',
-    borderRadius: 5,
-    padding: 10,
-    marginTop: 10,
-  },
-  addToCartButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
+  // },
+  // quantityButtonText: {
+  //   fontSize: 13,
+  //   fontWeight: 'bold',
+  //   color: '#555',
+  // },
+  // quantity: {
+  //   fontSize: 18,
+  //   marginHorizontal: 30,
+  //   color: 'black',
+  // },
+  // addToCartButton: {
+  //   backgroundColor: '#ff1493',
+  //   borderRadius: 5,
+  //   padding: 10,
+  //   marginTop: 10,
+  // },
+  // addToCartButtonText: {
+  //   color: '#fff',
+  //   fontWeight: 'bold',
+  //   textAlign: 'center',
+  // },
   addToCartButtonText2: {
     color: '#fff',
     fontWeight: 'bold',
@@ -697,15 +784,15 @@ const styles = StyleSheet.create({
   },
 
 
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-  },
-  modalImage: {
-    width: Dimensions.get('window').width - 40,
-    height: Dimensions.get('window').height - 80,
-    resizeMode: 'contain',
-  },
+  // modalContainer: {
+  //   flex: 1,
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  //   backgroundColor: 'rgba(0, 0, 0, 0.7)',
+  // },
+  // modalImage: {
+  //   width: Dimensions.get('window').width - 40,
+  //   height: Dimensions.get('window').height - 80,
+  //   resizeMode: 'contain',
+  // },
 });

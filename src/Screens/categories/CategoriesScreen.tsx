@@ -1,52 +1,61 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, FlatList, Dimensions, ImageBackground, ScrollView ,} from 'react-native';
+import React, {useState, useEffect, useContext} from 'react';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  FlatList,
+  Dimensions,
+  ImageBackground,
+  ScrollView,
+} from 'react-native';
 import API from '../../API/API';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import LoadingScreen from '../Products/loadintgScreen';
-import { Card } from 'react-native-paper';
-import { Fab, } from 'native-base';
+import {Card} from 'react-native-paper';
+import {Fab} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { InternetComponet } from '../../components/InternetComponet';
-import { NoInternet } from '../../components/NoInternet ';
-import { NetworkModal } from '../../components/NetworkModal';
-import { NetworkContext } from '../../context/NetworkContext';
-import { FloatingAction } from "react-native-floating-action";
+import {InternetComponet} from '../../components/InternetComponet';
+import {NoInternet} from '../../components/NoInternet ';
+import {NetworkModal} from '../../components/NetworkModal';
+import {NetworkContext} from '../../context/NetworkContext';
+import {FloatingAction} from 'react-native-floating-action';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Recently} from '../../components/Recently';
 
-interface Props extends NativeStackScreenProps<any, any> { }
+interface Props extends NativeStackScreenProps<any, any> {}
 
-export const CategoriesScreen = ({ product, route, navigation }: Props) => {
+export const CategoriesScreen = ({navigation}: Props) => {
   const [categories, setCategories] = useState();
-  const { height, width } = Dimensions.get('window');
+  const {height, width} = Dimensions.get('window');
   const [brands, setBrands] = useState([]);
-  const {isConnected} = useContext(NetworkContext)
-  const [visible, setVisible] = useState(false)
-  const [title, setTitle] = useState('')
+  const {isConnected} = useContext(NetworkContext);
+  const [visible, setVisible] = useState(false);
+  const [title, setTitle] = useState('');
   const [isFABActive, setIsFABActive] = useState(false);
-  // recomendaciones 
+  // recomendaciones
   const [recommendations, setRecommendations] = useState([]);
-
 
   const getCategories = async () => {
     try {
-      const { data } = await API.get('/categories');
+      const {data} = await API.get('/categories');
       const categories = data.categories.filter(
         (category: any) => category.totalProducts > 0,
       );
       setCategories(categories);
-
     } catch (error) {
       console.log(error);
     }
   };
 
   const handleFetch = () => {
-    if(isConnected){
-       setVisible(true)
-       return
+    if (isConnected) {
+      setVisible(true);
+      return;
     }
-    getCategories()
-  }
+    getCategories();
+  };
 
   useEffect(() => {
     handleFetch();
@@ -54,106 +63,58 @@ export const CategoriesScreen = ({ product, route, navigation }: Props) => {
 
   const getBrands = async () => {
     try {
-      const { data } = await API.get('/brands');
-      const brands = data.brands
-      setBrands(brands); 
-
+      const {data} = await API.get('/brands');
+      const brands = data.brands;
+      setBrands(brands);
     } catch (error) {
       console.log(error);
     }
   };
- 
+
   useEffect(() => {
     getCategories();
     getBrands();
   }, []);
   if (!categories || !brands) {
-    return (
-      <LoadingScreen />
-    ) 
+    return <LoadingScreen />;
     // useEffect(() => {
     //   getCategories();
     //   getBrands();
     // }, []);
-
-    
   }
   const actions = [
     {
-      text: "Accessibility",
-      icon: require("../../assets/lottie/osuxd.png"),
-      name: "bt_accessibility",
-      position: 2
+      text: 'Accessibility',
+      icon: require('../../assets/lottie/osuxd.png'),
+      name: 'bt_accessibility',
+      position: 2,
     },
     {
-      text: "Contácto",
-      icon: require("../../assets/lottie/osuxd.png"),
-      name: "bt_language",
-      position: 1
+      text: 'Contácto',
+      icon: require('../../assets/lottie/osuxd.png'),
+      name: 'bt_language',
+      position: 1,
     },
     {
-      text: "Location",
-      icon: require("../../assets/lottie/osuxd.png"),
-      name: "bt_room",
-      position: 3
+      text: 'Location',
+      icon: require('../../assets/lottie/osuxd.png'),
+      name: 'bt_room',
+      position: 3,
     },
     {
-      text: "Video",
-      icon: require("../../assets/lottie/osuxd.png"),
-      name: "bt_videocam",
-      position: 4
-    }
+      text: 'Video',
+      icon: require('../../assets/lottie/osuxd.png'),
+      name: 'bt_videocam',
+      position: 4,
+    },
   ];
-
-  // Prueba de recomendaciones de productos 
-
-  // useEffect(() => {
-  //   getRecommendationsFromStorage();
-  // }, []);
-
-  // const getRecommendationsFromStorage = async () => {
-  //   try {
-     
-  //     const storedProducts = await AsyncStorage.getItem('storedProducts');
-  //     const products = storedProducts ? JSON.parse(storedProducts) : [];
-  //     const recommendations = generateRecommendations(products);
-  //     setRecommendations(recommendations);
-  //   } catch (error) {
-  //     console.error('Error al obtener recomendaciones: ', error);
-  //   }
-  // };
-
-  // const generateRecommendations = async () => {
-  //   try {
-    
-  //     const storedProducts = await AsyncStorage.getItem('storedProducts');
-  //     const products = storedProducts ? JSON.parse(storedProducts) : [];
-  
-  //     const recommendations = generateRecommendations(products);
-
-  //     console.log('Recomendaciones:', recommendations);
-  //   } catch (error) {
-  //     console.error('Error al obtener recomendaciones: ', error);
-  //   }
-  // }
-  
-
-
-
-  
 
   return (
     <>
-<InternetComponet>
+      <InternetComponet>
+        <NetworkModal visible={visible} setVisible={setVisible} />
 
-
-
-<NetworkModal
-      visible={visible}
-      setVisible={setVisible}
- />
-
-{/* <TouchableOpacity
+        {/* <TouchableOpacity
                     onPress={handleFetch}
                     style={{
                         width: '90%',
@@ -174,183 +135,160 @@ export const CategoriesScreen = ({ product, route, navigation }: Props) => {
                     Dummy to do: {title}
                 </Text> */}
 
+        <ScrollView>
+          <View style={styles.headerContainer}>
+            <Text style={styles.headerText}>Buy now!</Text>
+            <View style={styles.imgHeaderContainer} />
+          </View>
 
-    <ScrollView>
+          <View>
+            {/* <Text style={{color:'black', fontSize: 18, fontWeight: 'bold'}}> Productos Agregados</Text> */}
+            <Card style={styles.cardContainer}>
+              <Text style={{color: 'black', fontSize: 20, fontWeight: 'bold'}}>
+                {' '}
+                Marcas{' '}
+              </Text>
+            </Card>
+          </View>
 
-    <View style={styles.headerContainer}>
-          <Text style={styles.headerText}>Buy now!</Text>
-          <View style={styles.imgHeaderContainer} />
-        </View>
-
-
-
-
-    <View>
-        {/* <Text style={{color:'black', fontSize: 18, fontWeight: 'bold'}}> Productos Agregados</Text> */}
-        <Card style={styles.cardContainer}>
-          <Text style={{color:'black', fontSize: 20, fontWeight: 'bold'}} > Marcas </Text>
-        </Card>
-      </View>
-
-
-  
-    <FlatList
-      data={brands}
-      scrollEnabled={true }
-       horizontal={true}
-      keyExtractor={(item) => item._id.toString()}
-      renderItem={({ item }) => (
-
-        <ScrollView horizontal={true}>
-        <TouchableOpacity onPress={() => navigation.navigate('brands', item)} >
-                <View style={styles.directiorow}>
-                
-                  <View style={styles.imageContainer}>
-                  <Text style={{color:'black', fontSize: 16,fontWeight: 'bold'}}> -{item.name}-</Text> 
-                    <ImageBackground source={{ uri: item.images['400x400'] }}  style={styles.imagebrand}>
-                    </ImageBackground>  
-          
-                    </View> 
-                  
+          <FlatList
+            data={brands}
+            nestedScrollEnabled={true}
+            scrollEnabled={true}
+            horizontal={true}
+            keyExtractor={item => item._id.toString()}
+            renderItem={({item}) => (
+              <ScrollView horizontal={true}>
+                <TouchableOpacity
+                  style={{borderRadius: 100}}
+                  onPress={() => navigation.navigate('brands', item)}>
+                  <View style={styles.directiorow}>
+                    <View style={styles.imageContainer}>
+                      <Text
+                        style={{
+                          color: 'black',
+                          fontSize: 16,
+                          fontWeight: 'bold',
+                        }}>
+                        {' '}
+                        -{item.name}-
+                      </Text>
+                      <ImageBackground
+                        source={{uri: item.images['400x400']}}
+                        style={styles.imagebrand}></ImageBackground>
+                    </View>
                   </View>
-                  </TouchableOpacity>
-       </ScrollView>
-          
-      )}
-    />
+                </TouchableOpacity>
+              </ScrollView>
+            )}
+          />
 
-    <View>
-        {/* <Text style={{color:'black', fontSize: 18, fontWeight: 'bold'}}> Productos Agregados</Text> */}
-        <Card style={styles.cardContainer}>
-          <Text style={{color:'black', fontSize: 20, fontWeight: 'bold'}} > Tambien te puede interesar   </Text>
-        </Card>
-      </View>
+          <View>
+            <Card style={styles.cardContainer}>
+              <Text style={{color: 'black', fontSize: 20, fontWeight: 'bold'}}>
+                {' '}
+                Tambien te puede interesar{' '}
+              </Text>
+            </Card>
 
+            <TouchableOpacity>
+                 {/* <Recently/>  */}
+            </TouchableOpacity>
+          </View>
 
+          <View>
+            {/* <Text style={{color:'black', fontSize: 18, fontWeight: 'bold'}}> Productos Agregados</Text> */}
+            <Card style={styles.cardContainer}>
+              <Text style={{color: 'black', fontSize: 20, fontWeight: 'bold'}}>
+                {' '}
+                categorías{' '}
+              </Text>
+            </Card>
+          </View>
 
+          <View style={{marginTop: 10}}></View>
 
-      <View>
-        <TouchableOpacity>
-          <Card style={styles.cardproducts}>
-            <Image    />
-
-                  </Card>
-        </TouchableOpacity>
-        
-      </View>
-
-
-
-
-   
-      <View>
-        {/* <Text style={{color:'black', fontSize: 18, fontWeight: 'bold'}}> Productos Agregados</Text> */}
-        <Card style={styles.cardContainer}>
-          <Text style={{color:'black', fontSize: 20, fontWeight: 'bold'}} > categorías  </Text>
-        </Card>
-      </View>
-
-      <View style={{marginTop: 10}}></View>
-
-
- 
-
-   
-      {/* <Fab  renderInPortal={true} shadow={1} 
+          {/* <Fab  renderInPortal={true} shadow={1} 
       bgColor={'white '}
       //onPress={() => navigation.navigate('')}
       size="sm" bottom={70} 
       icon={  <Icon name="circle-o-notch" size={30} color="white" />} /> */}
-     
 
-        <FlatList
-          data={categories}
-          style={{alignSelf: 'center',width: '100%'}}
-          numColumns={height / width > 1.6 ? 1 : 2}
-          renderItem={({ item }) => (
-            <>
-           
-            <TouchableOpacity style={styles.container} onPress={() => navigation.navigate('Products', item)}>
-              <ImageBackground source={{ uri: item.imagesMobile['400x400'] }} resizeMode="cover" style={styles.image}>
-                <View style={styles.overlay}>
-                  <Text style={styles.text}>-{item.name}-</Text>
-                </View>
-              </ImageBackground>
-              
-            </TouchableOpacity>
-
-      
-
-            </>
-          )}
-        />
-      
-
-
-
-
-<View>
-        {/* <Text style={{color:'black', fontSize: 18, fontWeight: 'bold'}}> Productos Agregados</Text> */}
-        <Card style={styles.cardContainer}>
-          <Text style={{color:'black', fontSize: 20, fontWeight: 'bold'}} > productos mas comprados   </Text>
-        </Card>
-      </View>
-
-      <View style={styles.headerContainer}>
-          <Text style={styles.headerText}>Other Booking Now!</Text>
-          <View style={styles.imgHeaderContainer} />
-        </View>
-
-
-        <View style={styles.headerContainer}>
-          <Text style={styles.headerText}>Other Booking Now!</Text>
-          <View style={styles.imgHeaderContainer} />
-        </View>
-
-
-        
-        
-        </ScrollView>
-
-
-
-        {isFABActive && (
-        <View style={styles.overlayFLOAT}></View>
-      )}
-     <View style={{ position: 'absolute', bottom: 20, right: 5,  zIndex: 999 }}>
-
-          <FloatingAction
-              actions={actions}
-              buttonSize={65}
-              color="#FF1493"
-              position="right"
-             // overrideWithAction={true}
-              onOpen={()=>setIsFABActive(true)}
-              onClose={()=>setIsFABActive(false)}
-              onPressItem={name => {
-                
-                console.log(`selected button: ${name}`);
-
-            }}
+          <FlatList
+            data={categories}
+            style={{alignSelf: 'center', width: '100%'}}
+            numColumns={height / width > 1.6 ? 1 : 2}
+            renderItem={({item}) => (
+              <>
+                <TouchableOpacity
+                  style={styles.container}
+                  onPress={() => navigation.navigate('Products', item)}>
+                  <ImageBackground
+                    source={{uri: item.imagesMobile['400x400']}}
+                    resizeMode="cover"
+                    style={styles.image}>
+                    <View style={styles.overlay}>
+                      <Text style={styles.text}>-{item.name}-</Text>
+                    </View>
+                  </ImageBackground>
+                </TouchableOpacity>
+              </>
+            )}
           />
 
+          <View>
+            {/* <Text style={{color:'black', fontSize: 18, fontWeight: 'bold'}}> Productos Agregados</Text> */}
+            <Card style={styles.cardContainer}>
+              <Text style={{color: 'black', fontSize: 20, fontWeight: 'bold'}}>
+                {' '}
+                productos mas comprados{' '}
+              </Text>
+            </Card>
+          </View>
+
+          <View style={styles.headerContainer}>
+            <Text style={styles.headerText}>Other Booking Now!</Text>
+            <View style={styles.imgHeaderContainer} />
+          </View>
+
+          <View style={styles.headerContainer}>
+            <Text style={styles.headerText}>Other Booking Now!</Text>
+            <View style={styles.imgHeaderContainer} />
+          </View>
+        </ScrollView>
+
+        {isFABActive && <View style={styles.overlayFLOAT}></View>}
+        <View style={{position: 'absolute', bottom: 20, right: 5, zIndex: 999}}>
+          <FloatingAction
+            actions={actions}
+            buttonSize={65}
+            color="#FF1493"
+            position="right"
+            // overrideWithAction={true}
+            onOpen={() => setIsFABActive(true)}
+            onClose={() => setIsFABActive(false)}
+            onPressItem={name => {
+              console.log(`selected button: ${name}`);
+            }}
+          />
         </View>
-
-        
- 
       </InternetComponet>
-
-        </>
+    </>
   );
-}
+};
 const styles = StyleSheet.create({
   container: {
-    width: Dimensions.get('window').height / Dimensions.get('window').width > 1.6 ? '100%' : '48%',
+    width:
+      Dimensions.get('window').height / Dimensions.get('window').width > 1.6
+        ? '100%'
+        : '48%',
     justifyContent: 'center',
     alignItems: 'center',
-    margin: Dimensions.get('window').height / Dimensions.get('window').width > 1.6 ? 0 : 5,
+    margin:
+      Dimensions.get('window').height / Dimensions.get('window').width > 1.6
+        ? 0
+        : 5,
     marginBottom: 5,
-  
   },
   cardproducts: {
     width: '100%',
@@ -369,7 +307,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
-  
+
   overlayFLOAT: {
     position: 'absolute',
     top: 0,
@@ -390,7 +328,7 @@ const styles = StyleSheet.create({
     height: 100,
 
     resizeMode: 'cover',
-  }, 
+  },
 
   imageContainer: {
     width: 150,
@@ -398,7 +336,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     marginTop: 10,
-    marginHorizontal: 10
+    marginHorizontal: 10,
   },
   directiorow: {
     flexDirection: 'row',
@@ -412,9 +350,8 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#fff',
-    fontSize: Dimensions.get('window').height * .03,
+    fontSize: Dimensions.get('window').height * 0.03,
     fontWeight: 'bold',
-
   },
   cardContainer: {
     width: '100%',
@@ -432,7 +369,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    marginTop: 10
+    marginTop: 10,
   },
   headerContainer: {
     flexDirection: 'row',
@@ -446,7 +383,7 @@ const styles = StyleSheet.create({
   headerText: {
     textAlign: 'left',
     fontSize: 19,
-    color: 'black'
+    color: 'black',
   },
   imgHeaderContainer: {
     width: 71,

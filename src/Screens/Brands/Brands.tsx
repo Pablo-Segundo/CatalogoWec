@@ -26,43 +26,22 @@ interface Props {
 
 interface Props extends NativeStackScreenProps<any, any> {}
 
-export const Brands = ({route, navigation, product}: Props) => {
+export const Brands = ({ route, navigation }: Props) => {
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [products, setProducts] = useState([]);
-  const [selectcategory, setSelectcategory] = useState('');
+  const [selectCategory, setSelectCategory] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [limit, setLimit] = useState(5);
   const [page, setPage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
-  const {incrementQuantity, decrementQuantity, addToCart, UpdateColorButton} =
-    useContext(CartContext);
-
-  const {cart, incrementCart} = useContext(CartContext);
-
-  // const cartProduct = cart.find(item => item.product._id === item._id);
-
-  const initialQuantity = cartProduct ? cartProduct.quantity : 1;
-
-  const [quantity, setQuantity] = useState(1);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const cartProduct = cart.find(
-    item => item.product._id === selectedProduct?._id,
-  );
-  const {isOpen, onOpen, onClose} = useDisclose();
-  const [availableQuantity, setAvailableQuantity] = useState(quantity);
-  const [brands, setBrands] = useState([]);
-  const isProductInCart = cartProduct !== undefined;
-
-  const [isInCart, setIsInCart] = useState(false);
-
   const getProducts = async (_id: string, pageNumber: number = 1) => {
     try {
       setIsLoadingMore(true);
-      const {data} = await API.get(
-        `/products/category-brand-pagination/${_id}/${route.params?._id}?limit=${limit}&page=${pageNumber}`,
+      const { data } = await API.get(
+        `/products/category-brand-pagination/${_id}/${route.params?._id}?limit=${limit}&page=${pageNumber}`
       );
       const newProducts = data.products;
       if (pageNumber === 1) {
@@ -82,7 +61,7 @@ export const Brands = ({route, navigation, product}: Props) => {
 
   const getBrands = async () => {
     try {
-      const {data} = await API.get(`/categories/brand/${route.params?._id}`);
+      const { data } = await API.get(`/categories/brand/${route.params?._id}`);
       setCategories(data.categories);
       setIsLoading(false);
     } catch (error) {
@@ -91,13 +70,6 @@ export const Brands = ({route, navigation, product}: Props) => {
     }
   };
 
-  useEffect(() => {
-    if (availableQuantity === 0) {
-      setQuantity(0);
-    } else if (quantity > availableQuantity) {
-      setQuantity(availableQuantity);
-    }
-  }, [availableQuantity]);
 
   const handleCategorySelect = (_id: string) => {
     setSelectedCategory(_id);
@@ -111,18 +83,11 @@ export const Brands = ({route, navigation, product}: Props) => {
     getBrands();
   }, []);
 
-  useEffect(() => {
-    const productInCart = cart.find(
-      item => item.product._id === selectedProduct?._id,
-    );
-    setIsInCart(!!productInCart);
-  }, [selectedProduct, cart]);
-
-  useEffect(() => {
-    if (availableQuantity === 0) {
-      setIsCardDisabled(true);
-    }
-  }, [availableQuantity]);
+  // useEffect(() => {
+  //   if (availableQuantity === 0) {
+  //     setIsCardDisabled(true);
+  //   }
+  // }, [availableQuantity]);
 
   useEffect(() => {
     if (categories.length > 0) {
@@ -132,19 +97,19 @@ export const Brands = ({route, navigation, product}: Props) => {
   }, [categories]);
 
   useEffect(() => {
-    if (selectcategory) {
+    if (selectCategory) {
       setProducts([]);
       setPage(1);
       setLimit(5);
-      getProducts(selectcategory);
+      getProducts(selectCategory);
     }
-  }, [selectcategory]);
+  }, [selectCategory]);
 
   const renderFooter = () => {
     if (isLoadingMore) {
       return (
         <ActivityIndicator
-          style={{marginVertical: 50}}
+          style={{ marginVertical: 50 }}
           size="large"
           color="#ff1493"
         />
@@ -162,361 +127,349 @@ export const Brands = ({route, navigation, product}: Props) => {
 
   return (
     <>
-      <InternetComponet>
+   
+      <View>
+        <Card style={styles.cardContainer}>
+          <View>
+            <Text style={{ color: 'black', fontSize: 20, fontWeight: 'bold' }}>
+              Categorias{' '}
+            </Text>
+          </View>
+        </Card>
+      </View>
 
-        <View>
-          <Card style={styles.cardContainer}>
-            <View>
-              <Text style={{color: 'black', fontSize: 20, fontWeight: 'bold'}}>
-                Categorias{' '}
-              </Text>
-            </View>
-          </Card>
-        </View>
-
-        <View>
-
-    
-      
-          <FlatList
-            data={categories}
-            horizontal={true}
-            renderItem={({item, index}) => (
-              <View style={{marginVertical: 10}}>
-                <TouchableOpacity
-                  onPress={() => handleCategorySelect(item._id)}
-                  style={[
-                    styles.categoryCard,
-                    selectedCategory === item._id &&
-                      styles.selectedCategoryCard,
-                  ]}>
-                  <Text
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                    style={{
-                      color:
-                        selectedCategory === item._id ? '#ff1493' : 'white',
-                      fontWeight:
-                        selectedCategory === item._id ? 'bold' : 'normal',
-                      flexDirection: 'row',
-                      marginVertical: 16,
-                      borderRadius: 5,
-                      fontSize: 16,
-                    }}>
-                    {item.name}
-                  </Text>
-                </TouchableOpacity>   
-              </View>
-            )}
-          />
-        </View>
-
-    
-
-        
-  
-        {/* {products. length > 0 ? ( */}
-
+      <View>
         <FlatList
-          data={products}
-          renderItem={({item}) => (
-            <>
+          data={categories}
+          horizontal={true}
+          renderItem={({ item, index }) => (
+            <View style={{ marginVertical: 10 }}>
               <TouchableOpacity
-                onPress={() => {
-                  setSelectedProduct(item);
-                  onOpen();
-                }}>
-                <Card style={styles.cardContainer}>
-                  <View style={styles.rowContainer}>
-                    <TouchableOpacity>
-                      <View style={styles.imageContainer}>
-                        <Image
-                          style={styles.image}
-                          source={{uri: item.multimedia[0].images['400x400']}}
-                        />
-                      </View>
-                    </TouchableOpacity>
-                    <View>
-                      <View style={styles.tableRow}>
-                        <Text
-                          style={styles.rowText}
-                          numberOfLines={1}
-                          ellipsizeMode="tail">
-                          {item.name}
-                        </Text>
-                      </View>
-
-                      <View style={styles.tableRow}>
-                        <Text style={{color: '#ff1493'}}>Precio: </Text>
-                        <Text style={styles.rowTextPrice}>
-                          {' '}
-                          {item.price.toFixed(2)} MNX
-                        </Text>
-                      </View>
-
-                      <View style={styles.tableRow}>
-                        <Text style={styles.rowText}>Disponible:</Text>
-                        <Text style={styles.rowText2}>({item.quantity})</Text>
-                      </View>
-                      <View style={styles.rowContainer}>
-                        <View style={styles.quantityContainer}>
-                          <TouchableOpacity
-                            onPress={() => {
-                              decrementQuantity(selectedProduct._id);
-                              setQuantity(quantity - 1);
-                            }}
-                            style={styles.quantityButton}
-                            disabled={quantity <= 1}>
-                            <Text style={styles.quantityButtonText}>-</Text>
-                          </TouchableOpacity>
-
-                          <Text style={styles.quantity}>{quantity}</Text>
-                          <TouchableOpacity
-                            onPress={() => {
-                              if (item.product.quantity > item.quantity) {
-                                incrementCart(item.product._id);
-                              } else {
-                                Toast.show({
-                                  type: 'info',
-                                  text1: 'Cantidad excedida',
-                                  text2:
-                                    'La cantidad seleccionada supera el stock disponible',
-                                });
-                              }
-                            }}
-                            style={styles.quantityButton}
-                            disabled={quantity >= availableQuantity}>
-                            <Text style={styles.quantityButtonText}>+</Text>
-                          </TouchableOpacity>
-                        </View>
-
-                        <View style={styles.tableRowrigh}>
-                          <TouchableOpacity
-                            style={
-                              cart.some(
-                                cartItem => cartItem.product._id === item._id,
-                              )
-                                ? styles.productInCartButton
-                                : styles.addToCartBrands
-                            }
-                            onPress={() => {
-                              setQuantity(1);
-                              if (
-                                quantity > 0 &&
-                                quantity <= availableQuantity
-                              ) {
-                                if (!isProductInCart) {
-                                  addToCart(item, quantity);
-                                  Toast.show({
-                                    type: 'success',
-                                    text1: 'Producto agregado',
-                                    text2:
-                                      'El producto se agregó al carrito de compras',
-                                  });
-                                } else {
-                                  Toast.show({
-                                    type: 'info',
-                                    text1: 'Producto ya en el carrito',
-                                    text2:
-                                      'Este producto ya está en tu carrito de compras',
-                                  });
-                                }
-                              } else if (quantity <= 0) {
-                                Toast.show({
-                                  type: 'error',
-                                  text1: 'Ninguna cantidad seleccionada',
-                                  text2:
-                                    'Debe seleccionar al menos un producto',
-                                });
-                              } else {
-                                Toast.show({
-                                  type: 'error',
-                                  text1: 'Cantidad excedida',
-                                  text2:
-                                    'La cantidad seleccionada supera el stock disponible',
-                                });
-                              }
-                            }}>
-                            <Icon
-                              style={{marginHorizontal: 10}}
-                              name="cart"
-                              size={30}
-                              color="white"
-                            />
-                            {/* <Text style={styles.addToCartButtonText}>
-                                {cart.some(cartItem => cartItem.product._id === item._id) ? 'Agregado' : 'Agregar'}
-                              </Text> */}
-                          </TouchableOpacity>
-                        </View>
-                      </View>
-                    </View>
-                  </View>
-                </Card>
+                onPress={() => handleCategorySelect(item._id)}
+                style={[
+                  styles.categoryCard,
+                  selectedCategory === item._id && styles.selectedCategoryCard,
+                ]}>
+                <Text
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                  style={{
+                    color: selectedCategory === item._id ? '#ff1493' : 'white',
+                    fontWeight: selectedCategory === item._id ? 'bold' : 'normal',
+                    flexDirection: 'row',
+                    marginVertical: 16,
+                    borderRadius: 5,
+                    fontSize: 16,
+                  }}>
+                  {item.name}
+                </Text>
               </TouchableOpacity>
-            </>
+            </View>
           )}
-          onEndReached={masdatos}
-          onEndReachedThreshold={0.1}
-          ListFooterComponent={renderFooter}
         />
+      </View>
 
-        {/* // ) : (
-        //   <View style={styles.emptyCartContainer}>
-        //       <Text style={styles.emptyCartText}>No hay productos :C  </Text>
-        //       <TouchableOpacity
-        //       style={styles.exploreButton}
-        //       onPress={() => navigation.navigate('Wapizima')}
-        //       >
-        //       <Image source={require('../../assets/lottie/osuxd.png')} style={styles.exploreImage} /> 
-        //       <Text style={styles.exploreButtonText}>Explora y agregar productos  </Text>
-        //       </TouchableOpacity>
-        // </View>
+      <FlatList
+        data={products}
+        renderItem={({ item }) => <CardProduct item={item}/>
+      }
+        onEndReached={masdatos}
+        onEndReachedThreshold={0.1}
+        ListFooterComponent={renderFooter}
+      />
 
-        //     )} */}
+      </>
+   
+  );
+};
+ 
+function CardProduct({item}:{item:Product}){
+  const {
+    incrementQuantity,
+    decrementQuantity,
+    addToCart,
+    incrementBrandProduct,
+    incrementCart,
+  } = useContext(CartContext);
 
+  const { cart } = useContext(CartContext);
+  const [quantity, setQuantity] = useState(1);  
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const { isOpen, onOpen, onClose } = useDisclose();
+  const [availableQuantity, setAvailableQuantity] = useState(1);
+  const isProductInCart = selectedProduct
+    ? cart.some((cartItem) => cartItem.product._id === selectedProduct._id)
+    : false;
+  return (
+    <>
+      <TouchableOpacity
+        onPress={() => {
+          setSelectedProduct(item);
+          onOpen();
+        }}>
+        <Card style={styles.cardContainer}>
+          <View style={styles.rowContainer}>
+            <TouchableOpacity>
+              <View style={styles.imageContainer}>
+                <Image
+                  style={styles.image}
+                  source={{ uri: item.multimedia[0].images['400x400'] }}
+                />
+              </View>
+            </TouchableOpacity>
+            <View>
+              <View style={styles.tableRow}>
+                <Text
+                  style={styles.rowText}
+                  numberOfLines={1}
+                  ellipsizeMode="tail">
+                  {item.name}
+                </Text>
+              </View>
+              <View style={styles.tableRow}>
+                <Text style={{ color: '#ff1493' }}>Precio: </Text>
+                <Text style={styles.rowTextPrice}>
+                  {' '}
+                  {item.price.toFixed(2)} MNX
+                </Text>
+              </View>
+              <View style={styles.tableRow}>
+                <Text style={styles.rowText}>Disponible:</Text>
+                <Text style={styles.rowText2}>({item.quantity})</Text>
+              </View>
+              <View style={styles.rowContainer}>
+                <View style={styles.quantityContainer}>
 
-        <Actionsheet isOpen={isOpen} onClose={onClose} bg="transparent">
-          <Actionsheet.Content>
-            {selectedProduct && (
-              <View style={styles.cardContainer3}>
-                <Card style={styles.cardContaineru}>
-                  <Image
-                    style={styles.image2}
-                    source={{
-                      uri: selectedProduct.multimedia[0].images['400x400'],
+                  <TouchableOpacity
+                    onPress={() => {
+                      if( quantity > 0)
+                    
+                      setQuantity(quantity - 1);
                     }}
-                  />
-                </Card>
-                <View style={styles.cardContainer3}>
-                  <Text
-                    style={{color: 'black', fontSize: 25, fontWeight: 'bold'}}>
-                    {selectedProduct.name}
-                  </Text>
-                </View>
-                <View style={{marginTop: 50}}>
-                  <Text
-                    style={{
-                      color: '#ff1493',
-                      fontSize: 22,
-                      fontWeight: 'bold',
-                    }}>
-                    Precio: {selectedProduct.price.toFixed(2)} MNX
-                  </Text>
-                  <Text
-                    style={{color: 'black', fontSize: 16, fontWeight: 'bold'}}>
-                    Disponible: {selectedProduct.quantity}
-                  </Text>
-                </View>
+                    style={styles.quantityButton}
+                    disabled={quantity <= 1}>
+                    <Text style={styles.quantityButtonText}>-</Text>
+                  </TouchableOpacity>
 
-                <View style={styles.cardContainer}>
-                  <Text
-                    style={{color: 'black', fontSize: 14, fontWeight: 'bold'}}>
-                    Descripcion: ({selectedProduct.description}){' '}
-                  </Text>
-                </View>
+                  <Text style={styles.quantity}>{quantity}</Text>
+                  
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (item.quantity > quantity)
+                      setQuantity(quantity + 1)
+                      
+               
+                      // if (item.quantity > item.quantity) {
+                      //   incrementBrandProduct(item._id);
+                      // } else {
+                      //   Toast.show({
+                      //     type: 'info',
+                      //     text1: 'Cantidad excedida',
+                      //     text2:
+                      //       'La cantidad seleccionada supera el stock disponible',
+                      //   });
+                      // }
+                    }}
+                    style={styles.quantityButton}
+                  >
+                    <Text style={styles.quantityButtonText}>+</Text>
+                  </TouchableOpacity>
 
-                <View>
-                  <View style={styles.quantityContainer}>
-                    <TouchableOpacity
-                      onPress={() => {
-                        decrementQuantity(selectedProduct._id);
-                        setQuantity(quantity - 1);
-                      }}
-                      style={styles.quantityButton}>
-                      <Text style={styles.quantityButtonText}>-</Text>
-                    </TouchableOpacity>
-                    <Text style={styles.quantity}>{quantity}</Text>
-                    <TouchableOpacity
-                      onPress={() => {
-                        if (
-                          selectedProduct.quantity > selectedProduct.quantity
-                        ) {
-                          incrementCart(selectedProduct._id);
+                </View>
+                <View style={styles.tableRowrigh}>
+                  <TouchableOpacity
+                    style={
+                      cart.some(
+                        (cartItem) => cartItem.product._id === item._id
+                      )
+                        ? styles.productInCartButton
+                        : styles.addToCartBrands
+                    }
+                    onPress={() => {
+                      setQuantity(1);
+                      if (quantity > 0 && quantity <= availableQuantity) {
+                        if (!isProductInCart) {
+                          addToCart(item, quantity, );
+                          Toast.show({
+                            type: 'success',
+                            text1: 'Producto agregado',
+                            text2:
+                              'El producto se agregó al carrito de compras',
+                          });
                         } else {
                           Toast.show({
                             type: 'info',
+                            text1: 'Producto ya en el carrito',
+                            text2:
+                              'Este producto ya está en tu carrito de compras',
+                          });
+                        }
+                      } else if (quantity <= 0) {
+                        Toast.show({
+                          type: 'error',
+                          text1: 'Ninguna cantidad seleccionada',
+                          text2: 'Debe seleccionar al menos un producto',
+                        });
+                      } else {
+                        Toast.show({
+                          type: 'error',
+                          text1: 'Cantidad excedida',
+                          text2:
+                            'La cantidad seleccionada supera el stock disponible',
+                        });
+                      }
+                    }}>
+                    <Icon
+                      style={{ marginHorizontal: 10 }}
+                      name="cart"
+                      size={30}
+                      color="white"
+                    />
+                    {/* <Text style={styles.addToCartButtonText}>
+                        {cart.some(
+                          (cartItem) => cartItem.product._id === item._id
+                        )
+                          ? 'Agregado'
+                          : 'Agregar'}
+                      </Text> */}
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </View>
+        </Card>
+      </TouchableOpacity>
+      
+      <Actionsheet isOpen={isOpen} onClose={onClose} bg="transparent">
+        <Actionsheet.Content>
+          {selectedProduct && (
+            <View style={styles.cardContainer3}>
+              <Card style={styles.cardContaineru}>
+                <Image
+                  style={styles.image2}
+                  source={{
+                    uri: selectedProduct.multimedia[0].images['400x400'],
+                  }}
+                />
+              </Card>
+              <View style={styles.cardContainer3}>
+                <Text style={{ color: 'black', fontSize: 25, fontWeight: 'bold' }}>
+                  {selectedProduct.name}
+                </Text>
+              </View>
+              <View style={{ marginTop: 50 }}>
+                <Text
+                  style={{
+                    color: '#ff1493',
+                    fontSize: 22,
+                    fontWeight: 'bold',
+                  }}>
+                  Precio: {selectedProduct.price.toFixed(2)} MNX
+                </Text>
+                <Text
+                  style={{ color: 'black', fontSize: 16, fontWeight: 'bold' }}>
+                  Disponible: {selectedProduct.quantity}
+                </Text>
+              </View>
+              <View style={styles.cardContainer}>
+                <Text
+                  style={{ color: 'black', fontSize: 14, fontWeight: 'bold' }}>
+                  Descripcion: ({selectedProduct.description}){' '}
+                </Text>
+              </View>
+              <View>
+                <View style={styles.quantityContainer}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      decrementQuantity(selectedProduct._id);
+                      setQuantity(quantity - 1);
+                    }}
+                    style={styles.quantityButton}>
+                    <Text style={styles.quantityButtonText}>-</Text>
+                  </TouchableOpacity>
+                  <Text style={styles.quantity}>{quantity}</Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (
+                        selectedProduct.quantity > selectedProduct.quantity
+                      ) {
+                        incrementBrandProduct(selectedProduct.brandId);
+                      } else {
+                        Toast.show({
+                          type: 'info',
+                          text1: 'Cantidad excedida',
+                          text2:
+                            'La cantidad seleccionada supera el stock disponible',
+                        });
+                      }
+                    }}
+                    style={styles.quantityButton}>
+                    <Text style={styles.quantityButtonText}>+</Text>
+                  </TouchableOpacity>
+                  <View style={{ alignItems: 'center', marginHorizontal: 30 }}>
+                    <TouchableOpacity
+                      style={
+                        cart.some(
+                          (cartItem) =>
+                            cartItem.product._id === selectedProduct._id
+                        )
+                          ? styles.productInCartBrands
+                          : styles.addToCartButton
+                      }
+                      onPress={() => {
+                        setQuantity(1);
+                        if (quantity > 0 && quantity <= availableQuantity) {
+                          if (!isProductInCart) {
+                            addToCart(selectedProduct, quantity);
+                            Toast.show({
+                              type: 'success',
+                              text1: 'Producto agregado',
+                              text2:
+                                'El producto se agregó al carrito de compras',
+                            });
+                          } else {
+                            Toast.show({
+                              type: 'info',
+                              text1: 'Producto ya en el carrito',
+                              text2:
+                                'Este producto ya está en tu carrito de compras',
+                            });
+                          }
+                        } else if (quantity <= 0) {
+                          Toast.show({
+                            type: 'error',
+                            text1: 'Ninguna cantidad seleccionada',
+                            text2: 'Debe seleccionar al menos un producto',
+                          });
+                        } else {
+                          Toast.show({
+                            type: 'error',
                             text1: 'Cantidad excedida',
                             text2:
                               'La cantidad seleccionada supera el stock disponible',
                           });
                         }
-                      }}
-                      style={styles.quantityButton}>
-                      <Text style={styles.quantityButtonText}>+</Text>
+                      }}>
+                      <Text style={styles.addToCartButtonText}>
+                        {cart.some(
+                          (cartItem) =>
+                            cartItem.product._id === selectedProduct._id
+                        )
+                          ? 'Producto agregado'
+                          : 'Agregar al carrito'}
+                      </Text>
                     </TouchableOpacity>
-
-                    <View style={{ alignItems: 'center', marginHorizontal: 30}}>
-                      <TouchableOpacity
-                        style={
-                          cart.some(
-                            cartItem =>
-                              cartItem.product._id === selectedProduct._id,
-                          )
-                            ? styles.productInCartBrands
-                            : styles.addToCartButton
-                        }
-                        onPress={() => {
-                          setQuantity(1);
-                          if (quantity > 0 && quantity <= availableQuantity) {
-                            if (!isProductInCart) {
-                              addToCart(selectedProduct, quantity);
-                              Toast.show({
-                                type: 'success',
-                                text1: 'Producto agregado',
-                                text2:
-                                  'El producto se agregó al carrito de compras',
-                              });
-                            } else {
-                              Toast.show({
-                                type: 'info',
-                                text1: 'Producto ya en el carrito',
-                                text2:
-                                  'Este producto ya está en tu carrito de compras',
-                              });
-                            }
-                          } else if (quantity <= 0) {
-                            Toast.show({
-                              type: 'error',
-                              text1: 'Ninguna cantidad seleccionada',
-                              text2: 'Debe seleccionar al menos un producto',
-                            });
-                          } else {
-                            Toast.show({
-                              type: 'error',
-                              text1: 'Cantidad excedida',
-                              text2:
-                                'La cantidad seleccionada supera el stock disponible',
-                            });
-                          }
-                        }}>
-                        <Text style={styles.addToCartButtonText}>
-                          {cart.some(
-                            cartItem =>
-                              cartItem.product._id === selectedProduct._id,
-                          )
-                            ? 'Producto agregado'
-                            : 'Agregar al carrito'}
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
                   </View>
                 </View>
               </View>
-            )}
-          </Actionsheet.Content>
-        </Actionsheet>
-
-
-
-
-
-
-
-
-      </InternetComponet>
+            </View>
+          )}
+        </Actionsheet.Content>
+      </Actionsheet>
     </>
-  );
-};
+  )
+}
+
 
 const styles = StyleSheet.create({
   container: {

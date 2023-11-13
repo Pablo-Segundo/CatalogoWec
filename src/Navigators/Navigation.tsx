@@ -13,6 +13,9 @@ import { Ventanauwu } from '../Screens/Products/vantanauwu';
 import { DatosPScreen } from '../Screens/DatosPScreen';
 //import { Brands } from '../Styles/brands';
 import { Brands } from '../Screens/Brands/Brands';
+import { Recently } from '../components/Recently';
+
+
 
 const Stack = createNativeStackNavigator()
 export const Navigation = () => {
@@ -76,6 +79,11 @@ export const Navigation = () => {
            <Stack.Screen
         name="Datos"
         component={DatosPScreen}
+       
+      />
+            <Stack.Screen
+        name="Recently"
+        component={Recently}
        
       />
             <Stack.Screen
