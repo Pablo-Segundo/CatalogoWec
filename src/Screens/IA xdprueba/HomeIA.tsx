@@ -8,7 +8,8 @@ export const HomeIA = () => {
   const [fadeIn, setFadeIn] = useState(new Animated.Value(0));
   const [isAnimated, setIsAnimate] = useState(false);
   const [text, setText] = useState('Hola! bienvenido a ');
-  const [text2, setText2] = useState('Wapizima app xd (no hay nombre)');
+  const [text2, setText2] = useState('Catalogo Web xd (no hay nombre)');
+  const [text3, setText3] = useState('xdE')
   const [image, setImage] = useState(require('../../assets/lottie/osuxd.png'));
   const navigation = useNavigation();
 
@@ -32,7 +33,10 @@ export const HomeIA = () => {
     // Cuando el usuario toca la pantalla, cambia el texto y la imagen
     setText('Mi nombre es: ');
     setText2('wapiUwU');
-    setImage(require('../../assets/lottie/mexico.png')); // Cambia a la nueva imagen
+    setText3('hola pap8  ');
+    
+
+    setImage(require('../../assets/lottie/REM.png')); // Cambia a la nueva imagen
   };
 
   useEffect(() => {
@@ -88,6 +92,21 @@ export const HomeIA = () => {
       
       </View>
     </TouchableWithoutFeedback>
+
+    <View style={{alignContent:'center', alignItems:'center'}}>
+          <Text style={{color:'black'}}> Quiere serguir de manera Manual o Asistida </Text>
+        <View style={{flexDirection:'row', marginHorizontal: 50 }}>  
+          <TouchableOpacity style={{backgroundColor:'gray', }}>
+            <Text> Si </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={{backgroundColor:'gray', }}>
+            <Text> No </Text>
+          </TouchableOpacity>
+        </View>
+
+        </View>
+
     <View>
         <Text style={styles.touchToContinue}>(Toque para continuar)</Text>
     </View>

@@ -17,6 +17,7 @@ import {useToast, Modal, useDisclose, Row, Actionsheet} from 'native-base';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faCreditCard, faMoneyBill} from '@fortawesome/free-solid-svg-icons';
 import Icon from 'react-native-vector-icons/Ionicons';
+
 import {Toast} from 'react-native-toast-message/lib/src/Toast';
 import {CartContext} from '../context/cart/CartContext';
 import API from '../API/API';
@@ -371,7 +372,7 @@ export const ShoppingScreen = ({product}: Props) => {
                 fontWeight: 'bold',
                 flexDirection: 'column-reverse',
               }}>
-              Agrega datos de dirección
+              Ingresa datos de dirección
             </Text>
             <Text style={{color: 'gray'}}>
               *Selecciona tu dirección o ingresa una nueva*
@@ -380,7 +381,11 @@ export const ShoppingScreen = ({product}: Props) => {
      
               <TouchableOpacity
                 style={{alignItems: 'center'}}
-                onPress={() => navigation.navigate('mapaScreen', {owner: ' '})}>
+                onPress={() =>{
+
+                  onClose(); navigation.navigate('mapaScreen', {owner: ' '})}
+                } 
+                >
                 <Card style={styles.cards}>
                   <Text style={{fontWeight: 'bold', color: 'black'}}>
                     Agrega una direccion
@@ -391,12 +396,16 @@ export const ShoppingScreen = ({product}: Props) => {
 
               <TouchableOpacity
                 style={{alignItems: 'center'}}
-                onPress={() => navigation.navigate('Direction')}>
+                onPress={() =>{
+                  onClose();
+                  navigation.navigate('Direction')}
+                } 
+                >
                 <Card style={styles.cards}>
                   <Text style={{fontWeight: 'bold', color: 'black'}}>
                     Modificar direccion
                   </Text>
-                  <Icon name="create-outline" size={30} color="#ff1493" />
+                  <Icon style={{alignItems:'center', justifyContent: 'center'}} name="create-outline" size={30} color="#ff1493" />
                 </Card>
               </TouchableOpacity>
             </View>

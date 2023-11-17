@@ -11,7 +11,8 @@ import { CategoriesScreen } from '../Screens/categories/CategoriesScreen';
 import { CategoriesStack } from './stacks/CategorieStack'
 import { PedidosScreen } from '../Screens/pedidosScreen'
 import {HomeIA} from '../Screens/IA xdprueba/HomeIA'
-import { Home } from '../Screens/IA xdprueba/Home'
+import { PaymentForm } from '../Screens/IA xdprueba/Home'
+
 import { Recently } from '../components/Recently'
 
 const Tab = createBottomTabNavigator()
@@ -36,7 +37,7 @@ export const NavigationTab = () => {
            
          //component={HomeIA}
        
-
+         PaymentForm
 
         />
         <Tab.Screen
@@ -48,9 +49,9 @@ export const NavigationTab = () => {
             tabBarIcon: ({ ref }) => <Lottie ref={ref} loop={false} source={require('../assets/lottie/upload.icon.json')} style={styles.icon} />,
           }}
           // component={PedidosScreen}
-            // component={HomeIA}
-            component={Recently}
-            // component={Home}
+             component={HomeIA}
+            // // component={Recently}
+            //  component={PaymentForm}
         />
       </Tab.Navigator>
 

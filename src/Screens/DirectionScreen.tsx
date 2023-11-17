@@ -103,7 +103,7 @@ const handleAddressSelect = (selectedAddress) => {
 
 <View>
         <Card style={styles.cardContainer2}>
-          <Text style={{color:'black', fontSize: 20, fontWeight: 'bold'}} > Direcciones  </Text>
+          <Text style={{color:'black', fontSize: 20, fontWeight: 'bold'}} > Direcciones guardads  </Text>
         </Card>
       </View>
 
@@ -111,9 +111,7 @@ const handleAddressSelect = (selectedAddress) => {
       
       <ScrollView>
 
-       <View style={styles.rowContainer2}>
-      <Text style={styles.titlegray}> Seleccione o edite una direcciónes </Text>
-      </View>
+
       {/* <Text style={{color:'black',}}>La direccion que eliga sera donde llegen sus compras   </Text> */}
        
          {datosGuardados.map((datos, index) => (
@@ -167,6 +165,7 @@ const handleAddressSelect = (selectedAddress) => {
           <Modal.CloseButton />
           <Modal.Header>Actualizar Dirección</Modal.Header>
           <Modal.Body>
+          <Text style={{color:'#ff1493'}}> Nombre: </Text>
             <TextInput
               style={styles.input}
               value={updatedAddressData?.nombre}
@@ -179,6 +178,7 @@ const handleAddressSelect = (selectedAddress) => {
               }
               placeholder="Nombre"
             />
+            <Text style={{color:'#ff1493', marginTop: 10}}> DIreccin de la calle: </Text>
             <TextInput
               style={styles.input}
               value={updatedAddressData?.selectedAddress}
@@ -191,6 +191,7 @@ const handleAddressSelect = (selectedAddress) => {
               }
               placeholder="Calle"
             />
+            <Text style={{color:'#ff1493', marginTop: 10}}> Numero telefonico: </Text>
             <TextInput
               style={styles.input}
               keyboardType="numeric"
@@ -204,7 +205,7 @@ const handleAddressSelect = (selectedAddress) => {
               }
               placeholder="Número telefónico"
             />
-           
+            <Text style={{color:'#ff1493', marginTop: 10}}> Referencias: </Text>
             <TextInput
               style={styles.input}
               value={updatedAddressData?.referencias}
@@ -222,21 +223,10 @@ const handleAddressSelect = (selectedAddress) => {
               <Text style={styles.headerWITHE}> Actualizar Datos</Text>
              </TouchableOpacity>
 
-            {/* <Button onPress={handleUpdate} style={styles.buyButton}>Actualizar Datos</Button> */}
+  
           </Modal.Footer>
         </Modal.Content>
       </Modal>
-
-      {/* <Card style={{backgroundColor: '#f8f8ff'}}>
-        <TouchableOpacity
-                  style={styles.continueButton}
-                  onPress={() => handleContinuar()}>
-                  <Text style={styles.continueButtonText}>  </Text>
-        </TouchableOpacity>
-
-      </Card> */}
-
-
 
     </>
   );
@@ -488,6 +478,7 @@ const styles = StyleSheet.create({
       cardcontainer: {
         padding: 20,
         marginBottom: 15,
+        marginTop: 10,
         marginHorizontal: 15,
         backgroundColor: '#F0F0F0',
         borderColor: 'gray',

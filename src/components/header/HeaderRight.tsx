@@ -3,6 +3,7 @@ import React, { useContext } from 'react';
 import { View, StyleSheet, TouchableOpacity, Platform, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { CartContext } from '../../context/cart/CartContext';
+import {favorites} from '../../Screens/Products/FavoritesScreen';
 
 
 export const HeaderRight = ({ favorites }: any) => {

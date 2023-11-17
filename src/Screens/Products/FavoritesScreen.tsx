@@ -81,55 +81,17 @@ export const FavoritesScreen = ({ product, navigation }: Props) => {
                 <Image style={styles.productImage} source={{ uri: item.multimedia[0].images['400x400'] }} />
                  <Text style={styles.productName} numberOfLines={1} ellipsizeMode="tail" >{item.name}</Text>
                  <Text style={styles.productPrice}>${item.price}MX </Text>
-                 <Text style={styles.productName}>{item.quantity} </Text>
+             
                   <View>
-                  {/* <TouchableOpacity style={styles.deleteButton} onPress={() => removeItemFromCart(item.productId)}>
-                  <Icon name="trash-o" size={30} color="#ff0000" />
-                </TouchableOpacity>  */}
                  </View>
 
 
             <View style={styles.quantityContainer}>
-            {/* <TouchableOpacity
-              onPress={() => {
-                decrementQuantity(item._id);
-                setQuantity(quantity - 1); 
-              }}
-              style={styles.quantityButton}
-              disabled={quantity <= 1}
-            >
-              <Text style={styles.quantityButtonText}>-</Text>
-            </TouchableOpacity>
-
-
-        <Text style={styles.quantity}>{quantity}</Text>
-        <TouchableOpacity
-              onPress={() => {
-                incrementQuantity(item._id);
-                setQuantity(quantity + 1); 
-              }}
-              style={styles.quantityButton}
-              disabled={quantity >= availableQuantity}
-            >
-              <Text style={styles.quantityButtonText}>+</Text>
-            </TouchableOpacity> */}
 
 
 
 
                  </View>
-
-
-
-
-
-
-
-
-
-
-
-
 
 
                  <TouchableOpacity

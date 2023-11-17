@@ -22,30 +22,24 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDisclose, Button, Actionsheet, Modal, Card} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import Geocoder from 'react-native-geocoding';
-import {Image} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {usePermissions} from '../hook/usePermission';
-import LoadingScreen from '../Screens/Products/loadintgScreen';
+
 
 export function MapScreen() {
   const {isOpen, onOpen, onClose} = useDisclose();
   const navigation = useNavigation();
-  const [nombre, setNombre] = useState('');
-  const [numeroTelefonico, setNumeroTelefonico] = useState('');
-  const [referencias, setReferencias] = useState('');
+ 
   const [selectedAddress, setSelectedAddress] = useState('');
   const [currentLocation, setCurrentLocation] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [isMarkerDraggable, setIsMarkerDraggable] = useState(false);
-  const [datosGuardados, setDatosGuardados] = useState(null);
 
-  const [errorNombre, setErrorNombre] = useState(false);
-  const [errorTelefono, setErrorTelefono] = useState(false);
-  const [errorDireccion, setErrorDireccion] = useState(false);
-  const [errorTelefonoMessage, setErrorTelefonoMessage] = useState('');
+
+ 
   const {askLocationPermission} = usePermissions();
 
-  const [showModal, setShowModal] = useState(false);
+ 
 
   const getCurrentLocation = () => {
     Geocoder.init('AIzaSyDFHYFl_pImNIwTzu2YwjL5R8pH-nlWCE4');

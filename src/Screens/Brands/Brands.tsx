@@ -118,12 +118,35 @@ export const Brands = ({ route, navigation }: Props) => {
     return null;
   };
 
+  // const masdatos = () => {
+  //   if (!isLoadingMore && products.length >= 5) {
+  //     const nextPage = Math.ceil(products.length / limit) + 1;
+  //     getProducts(selectedCategory, nextPage);
+  //   }
+  // };
   const masdatos = () => {
     if (!isLoadingMore && products.length >= 5) {
-      const nextPage = Math.ceil(products.length / limit) + 1;
-      getProducts(selectedCategory, nextPage);
+        const nextPage = Math.ceil(products.length / limit) + 1;
+        getProducts(selectedCategory, nextPage);
+        const selectedProduct = products.find((product) => product._id === selectedCategory);
+
+        if (selectedProduct && quantity > 0 && quantity <= selectedProduct.quantity) {
+            addToCart(selectedProduct, quantity);
+            Toast.show({
+                type: 'success',
+                text1: 'Producto agregado',
+                text2: 'El producto se agregó al carrito de compras',
+            });
+        } else {
+            Toast.show({
+                type: 'info',
+                text1: 'Cantidad excedida',
+                text2: 'La cantidad seleccionada supera el stock disponible',
+            });
+        }
     }
-  };
+};
+
 
   return (
     <>
@@ -188,8 +211,9 @@ function CardProduct({item}:{item:Product}){
     incrementQuantity,
     decrementQuantity,
     addToCart,
-    incrementBrandProduct,
+    
     incrementCart,
+    incrementBrandProduct
   } = useContext(CartContext);
 
   const { cart } = useContext(CartContext);
@@ -240,43 +264,40 @@ function CardProduct({item}:{item:Product}){
               <View style={styles.rowContainer}>
                 <View style={styles.quantityContainer}>
 
-                  <TouchableOpacity
+                <TouchableOpacity
                     onPress={() => {
-                      if( quantity > 0)
-                    
-                      setQuantity(quantity - 1);
+                        if (quantity > 1) {
+                            setQuantity(quantity - 1);
+                        }
                     }}
                     style={styles.quantityButton}
                     disabled={quantity <= 1}>
                     <Text style={styles.quantityButtonText}>-</Text>
-                  </TouchableOpacity>
+                </TouchableOpacity>
 
-                  <Text style={styles.quantity}>{quantity}</Text>
-                  
-                  <TouchableOpacity
-                    onPress={() => {
-                      if (item.quantity > quantity)
-                      setQuantity(quantity + 1)
-                      
-               
-                      // if (item.quantity > item.quantity) {
-                      //   incrementBrandProduct(item._id);
-                      // } else {
-                      //   Toast.show({
-                      //     type: 'info',
-                      //     text1: 'Cantidad excedida',
-                      //     text2:
-                      //       'La cantidad seleccionada supera el stock disponible',
-                      //   });
-                      // }
-                    }}
-                    style={styles.quantityButton}
-                  >
-                    <Text style={styles.quantityButtonText}>+</Text>
-                  </TouchableOpacity>
+                <Text style={styles.quantity}>{quantity}</Text>
+
+            <TouchableOpacity
+                  onPress={() => {
+                    if (quantity < item.quantity) {
+                      setQuantity(quantity + 1);
+                    } else {
+                      Toast.show({
+                        type: 'info',
+                        text1: 'Cantidad excedida',
+                        text2: 'La cantidad seleccionada supera el stock disponible',
+                      });
+                    }
+                  }}
+                  style={styles.quantityButton}>
+                  <Text style={styles.quantityButtonText}>+</Text>
+        </TouchableOpacity>
+
+
 
                 </View>
                 <View style={styles.tableRowrigh}>
+                  
                   <TouchableOpacity
                     style={
                       cart.some(
@@ -289,7 +310,7 @@ function CardProduct({item}:{item:Product}){
                       setQuantity(1);
                       if (quantity > 0 && quantity <= availableQuantity) {
                         if (!isProductInCart) {
-                          addToCart(item, quantity, );
+                          incrementBrandProduct(item, quantity, );
                           Toast.show({
                             type: 'success',
                             text1: 'Producto agregado',
@@ -325,20 +346,16 @@ function CardProduct({item}:{item:Product}){
                       size={30}
                       color="white"
                     />
-                    {/* <Text style={styles.addToCartButtonText}>
-                        {cart.some(
-                          (cartItem) => cartItem.product._id === item._id
-                        )
-                          ? 'Agregado'
-                          : 'Agregar'}
-                      </Text> */}
                   </TouchableOpacity>
+                  
                 </View>
               </View>
             </View>
           </View>
         </Card>
       </TouchableOpacity>
+
+      
       
       <Actionsheet isOpen={isOpen} onClose={onClose} bg="transparent">
         <Actionsheet.Content>
@@ -379,33 +396,34 @@ function CardProduct({item}:{item:Product}){
               </View>
               <View>
                 <View style={styles.quantityContainer}>
-                  <TouchableOpacity
+                <TouchableOpacity
                     onPress={() => {
-                      decrementQuantity(selectedProduct._id);
+                      if( quantity > 0)
+                    
                       setQuantity(quantity - 1);
                     }}
-                    style={styles.quantityButton}>
+                    style={styles.quantityButton}
+                    disabled={quantity <= 1}>
                     <Text style={styles.quantityButtonText}>-</Text>
                   </TouchableOpacity>
+                  
                   <Text style={styles.quantity}>{quantity}</Text>
                   <TouchableOpacity
-                    onPress={() => {
-                      if (
-                        selectedProduct.quantity > selectedProduct.quantity
-                      ) {
-                        incrementBrandProduct(selectedProduct.brandId);
-                      } else {
-                        Toast.show({
-                          type: 'info',
-                          text1: 'Cantidad excedida',
-                          text2:
-                            'La cantidad seleccionada supera el stock disponible',
-                        });
-                      }
-                    }}
-                    style={styles.quantityButton}>
-                    <Text style={styles.quantityButtonText}>+</Text>
-                  </TouchableOpacity>
+                      onPress={() => {
+                        if (quantity < item.quantity) {
+                          setQuantity(quantity + 1);
+                        } else {
+                          Toast.show({
+                            type: 'info',
+                            text1: 'Cantidad excedida',
+                            text2: 'La cantidad seleccionada supera el stock disponible',
+                          });
+                        }
+                      }}
+                      style={styles.quantityButton}>
+                      <Text style={styles.quantityButtonText}>+</Text>
+                    </TouchableOpacity>
+
                   <View style={{ alignItems: 'center', marginHorizontal: 30 }}>
                     <TouchableOpacity
                       style={
@@ -420,7 +438,8 @@ function CardProduct({item}:{item:Product}){
                         setQuantity(1);
                         if (quantity > 0 && quantity <= availableQuantity) {
                           if (!isProductInCart) {
-                            addToCart(selectedProduct, quantity);
+                            incrementBrandProduct(selectedProduct, quantity);
+
                             Toast.show({
                               type: 'success',
                               text1: 'Producto agregado',

@@ -14,15 +14,12 @@ import API from '../../API/API';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import LoadingScreen from '../Products/loadintgScreen';
 import {Card} from 'react-native-paper';
-import {Fab} from 'native-base';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import {InternetComponet} from '../../components/InternetComponet';
 import {NoInternet} from '../../components/NoInternet ';
 import {NetworkModal} from '../../components/NetworkModal';
 import {NetworkContext} from '../../context/NetworkContext';
 import {FloatingAction} from 'react-native-floating-action';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Recently} from '../../components/Recently';
+
 
 interface Props extends NativeStackScreenProps<any, any> {}
 
@@ -34,6 +31,7 @@ export const CategoriesScreen = ({navigation}: Props) => {
   const [visible, setVisible] = useState(false);
   const [title, setTitle] = useState('');
   const [isFABActive, setIsFABActive] = useState(false);
+  
   // recomendaciones
   const [recommendations, setRecommendations] = useState([]);
 
@@ -208,11 +206,6 @@ export const CategoriesScreen = ({navigation}: Props) => {
 
           <View style={{marginTop: 10}}></View>
 
-          {/* <Fab  renderInPortal={true} shadow={1} 
-      bgColor={'white '}
-      //onPress={() => navigation.navigate('')}
-      size="sm" bottom={70} 
-      icon={  <Icon name="circle-o-notch" size={30} color="white" />} /> */}
 
           <FlatList
             data={categories}

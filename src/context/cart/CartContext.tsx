@@ -444,18 +444,20 @@ export const CartProvider = ({children}: any) => {
     return totalPrice;
   };
 
-  const incrementBrandProduct = async (productId: string) => {
+  const incrementBrandProduct = async (product: Product, quantity: number) => {
     try {
       const cartArray = await AsyncStorage.getItem('cart');
       let cart = [];
       if (cartArray) {
         cart = JSON.parse(cartArray);
-        const index = cart.findIndex((item) => item.product._id === productId);
+        const index = cart.findIndex(
+          (item) => item.product._id === product._id
+        );
         if (index !== -1) {
           const cartItem = cart[index];
   
-          if (cartItem.quantity < cartItem.product.quantity) {
-            cartItem.quantity++;
+          if (cartItem.quantity + quantity <= cartItem.product.quantity) {
+            cartItem.quantity += quantity;
             await AsyncStorage.setItem('cart', JSON.stringify(cart));
             const { totalProducts, totalPrice } = TotalProductsAndPrice(cart);
             dispatch({
@@ -480,6 +482,8 @@ export const CartProvider = ({children}: any) => {
       console.log(error);
     }
   };
+  
+  
 
   
 
