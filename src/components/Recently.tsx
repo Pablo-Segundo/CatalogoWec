@@ -26,7 +26,9 @@ export const Recently = () => {
         style={{ margin: 10, padding: 10, borderWidth: 1, borderColor: '#ddd' }}
       >
 
-
+<View>
+  <Text> uwu</Text>
+</View>
 
         <View style={styles.imageContainer}>
            <Image style={styles.image}  source={{ uri: item.multimedia[0].images['400x400'] }}  />
