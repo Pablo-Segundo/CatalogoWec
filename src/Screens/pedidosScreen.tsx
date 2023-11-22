@@ -28,7 +28,7 @@ export const PedidosScreen = () => {
         </View>  
 
 
-        <View style={styles.emptyCartContainer}>
+        {/* <View style={styles.emptyCartContainer}>
           <Text style={styles.emptyCartText} >Empieza a comprar   </Text>
 
           <TouchableOpacity>
@@ -37,31 +37,25 @@ export const PedidosScreen = () => {
 
           </TouchableOpacity>
 
-        </View>
-
-
-
-
-        {/* <View style={styles.containertext}>
-            <Text style={styles.textblack}> Tus compras  </Text>
-       </View> */}
-
+        </View> */}
 
 
 
 
 
        <View>
-        <Text> </Text>
+     
 
 
 
        </View>
 
-       {/* <Card>
+       <Card style={{backgroundColor:'gray', marginTop: 40}}>
          <Text style={{color:'black'}}>No. de pedido </Text>
+         <Text> Entregado</Text>
+
         
-       </Card> */}
+       </Card>
 
        
 

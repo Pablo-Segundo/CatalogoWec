@@ -189,6 +189,7 @@ export const ShoppingScreen = ({product}: Props) => {
                       }}
                     />
                   </View>
+                  
                   <View>
                     <View style={styles.tableRow}>
                       <Text style={styles.rowText}>{item.product.name}</Text>

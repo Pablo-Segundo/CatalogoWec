@@ -211,7 +211,6 @@ function CardProduct({item}:{item:Product}){
     incrementQuantity,
     decrementQuantity,
     addToCart,
-    
     incrementCart,
     incrementBrandProduct
   } = useContext(CartContext);
@@ -310,7 +309,7 @@ function CardProduct({item}:{item:Product}){
                       setQuantity(1);
                       if (quantity > 0 && quantity <= availableQuantity) {
                         if (!isProductInCart) {
-                          incrementBrandProduct(item, quantity, );
+                          addToCart(item, quantity, );
                           Toast.show({
                             type: 'success',
                             text1: 'Producto agregado',

@@ -3,7 +3,7 @@ import { View,FlatList, RefreshControl, ActivityIndicator } from "react-native";
 import LoadingScreen from "./loadintgScreen";
 import API from "../../API/API";
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { NoInternet } from '../../components/uwuwuw';
+import { NoInternet } from '../../components/Recommendations';
 import { Brands } from "../Brands/Brands";
 import { CartContext } from "../../context/cart/CartContext";
 import { Actionsheet, useDisclose } from 'native-base';

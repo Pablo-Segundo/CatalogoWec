@@ -19,6 +19,7 @@ import {NoInternet} from '../../components/NoInternet ';
 import {NetworkModal} from '../../components/NetworkModal';
 import {NetworkContext} from '../../context/NetworkContext';
 import {FloatingAction} from 'react-native-floating-action';
+import { Recently } from '../../components/Recently';
 
 
 interface Props extends NativeStackScreenProps<any, any> {}
@@ -190,7 +191,7 @@ export const CategoriesScreen = ({navigation}: Props) => {
             </Card>
 
             <TouchableOpacity>
-                 {/* <Recently/>  */}
+                 <Recently/> 
             </TouchableOpacity>
           </View>
 

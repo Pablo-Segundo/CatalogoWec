@@ -5,7 +5,7 @@ import { FlatList } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import LoadingScreen from './loadintgScreen';
 import { ProductCard } from '../../components/ProductCard';
-import { NoInternet } from '../../components/uwuwuw';
+import { NoInternet } from '../../components/Recommendations';
 
 interface Props extends NativeStackScreenProps<any, any> { }
 

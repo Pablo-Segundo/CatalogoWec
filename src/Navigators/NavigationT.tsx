@@ -48,8 +48,8 @@ export const NavigationTab = () => {
             // @ts-ignore
             tabBarIcon: ({ ref }) => <Lottie ref={ref} loop={false} source={require('../assets/lottie/upload.icon.json')} style={styles.icon} />,
           }}
-          // component={PedidosScreen}
-             component={HomeIA}
+          component={PedidosScreen}
+            //  component={HomeIA}
             // // component={Recently}
             //  component={PaymentForm}
         />
