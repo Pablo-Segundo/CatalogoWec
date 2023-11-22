@@ -27,7 +27,7 @@ export const Recently = () => {
       >
 
 <View>
-  <Text> uwu</Text>
+  <Text> uwu2</Text>
 </View>
 
         <View style={styles.imageContainer}>
