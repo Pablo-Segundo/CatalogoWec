@@ -135,10 +135,10 @@ export const CategoriesScreen = ({navigation}: Props) => {
                 </Text> */}
 
         <ScrollView>
-          <View style={styles.headerContainer}>
+          {/* <View style={styles.headerContainer}>
             <Text style={styles.headerText}>Buy now!</Text>
             <View style={styles.imgHeaderContainer} />
-          </View>
+          </View> */}
 
           <View>
             {/* <Text style={{color:'black', fontSize: 18, fontWeight: 'bold'}}> Productos Agregados</Text> */}
@@ -344,7 +344,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#fff',
-    fontSize: Dimensions.get('window').height * 0.03,
+     fontSize: Dimensions.get('window').height * 0.03,
     fontWeight: 'bold',
   },
   cardContainer: {

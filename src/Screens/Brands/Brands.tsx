@@ -671,7 +671,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: 'black',
     marginRight: 50,
-    fontWeight: 'bold',
+   
   },
   rowText2: {
     fontSize: 15,

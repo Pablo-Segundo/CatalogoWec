@@ -14,7 +14,7 @@ import {HomeIA} from '../Screens/IA xdprueba/HomeIA'
 import { PaymentForm } from '../Screens/IA xdprueba/Home'
 
 import { Recently } from '../components/Recently'
-
+import {Ventanauwu} from '../Screens/Products/vantanauwu'
 const Tab = createBottomTabNavigator()
 const AnimatedSvg = Animated.createAnimatedComponent(Svg)
 

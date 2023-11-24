@@ -156,11 +156,11 @@ export const Ventanauwu = () => {
         alignItems: 'center',
       },
       container: {
-        width: Dimensions.get('window').height / Dimensions.get('window').width > 1.6 ? '100%' : '48%',
+         width: Dimensions.get('window').height / Dimensions.get('window').width > 1.6 ? '100%' : '48%',
         justifyContent: 'center',
         marginTop: 70,
         alignItems: 'center',
-        margin: Dimensions.get('window').height / Dimensions.get('window').width > 1.6 ? 0 : 5,
+         margin: Dimensions.get('window').height / Dimensions.get('window').width > 1.6 ? 0 : 5,
         marginBottom: 5
       },
       image: {
