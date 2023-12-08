@@ -39,8 +39,14 @@
 	<string>Necesito saber tu ubicaciòn</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Necesito saber tu ubicaciòn</string>
+
+	<!-- <key>NSLocationWhenInUseUsageDescription</key>
+	<string>Necesito saber tu ubicaciòn</string> -->
+
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Necesito saber tu ubicaciòn</string>
+<string>Descripción de por qué tu aplicación necesita acceso a la ubicación</string>
+
+
 	<key>NSCameraUsageDescription</key>
 <string>Access camera</string>
 <key>NSPhotoLibraryUsageDescription</key>
@@ -79,4 +85,6 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 </dict>
+
+
 </plist>

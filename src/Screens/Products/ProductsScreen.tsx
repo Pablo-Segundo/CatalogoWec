@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { RefreshControl, Text, View} from 'react-native';
+import { Image, RefreshControl, StyleSheet, Text, View} from 'react-native';
 import API from '../../API/API';
 import { FlatList } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import LoadingScreen from './loadintgScreen';
+import LoadingScreen from '../../components/loadintgScreen';
 import { ProductCard } from '../../components/ProductCard';
 import { NoInternet } from '../../components/Recommendations';
 
@@ -40,6 +40,17 @@ export const ProductsScreen = ({ route, navigation }: Props) => {
   if (isLoading) {
     return <LoadingScreen />;
   }
+  // if (products.length === 0) {
+  //   return (
+  //     <View style={styles.noProductsContainer}>
+  //       <Image
+  //         source={require('../../assets/lottie/osuxd.png')} 
+  //         style={styles.noProductsImage}
+  //       />
+  //       <Text style={styles.noProductsText}>Tenemos problemas. No hay productos disponibles.</Text>
+  //     </View>
+  //   );
+  // }
 
   return (
 
@@ -60,3 +71,19 @@ export const ProductsScreen = ({ route, navigation }: Props) => {
     </>
   );
 };
+const styles = StyleSheet.create({
+  noProductsContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noProductsImage: {
+    width: 150,
+    height: 150,
+    marginBottom: 20,
+  },
+  noProductsText: {
+    fontSize: 16,
+    textAlign: 'center',
+  },
+});

@@ -19,6 +19,7 @@ import {Toast} from 'react-native-toast-message/lib/src/Toast';
 import {Actionsheet, useDisclose} from 'native-base';
 import {InternetComponet} from '../../components/InternetComponet';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { ProductCard } from '../../components/ProductCard';
 
 interface Props {
   product: Product;
@@ -194,7 +195,12 @@ export const Brands = ({ route, navigation }: Props) => {
 
       <FlatList
         data={products}
-        renderItem={({ item }) => <CardProduct item={item}/>
+        //  numColumns={2}
+        renderItem={({ item }) =>
+        
+        //  <ProductCard product={item}/>
+         <CardProduct item={item}/>
+
       }
         onEndReached={masdatos}
         onEndReachedThreshold={0.1}

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { View,FlatList, RefreshControl, ActivityIndicator } from "react-native";
-import LoadingScreen from "./loadintgScreen";
+import LoadingScreen from "../../components/loadintgScreen";
 import API from "../../API/API";
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { NoInternet } from '../../components/Recommendations';

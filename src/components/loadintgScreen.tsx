@@ -1,9 +1,20 @@
 import React from 'react';
 import { View, ActivityIndicator, StyleSheet, Text } from 'react-native';
-import { InternetComponet } from '../../components/InternetComponet';
+import { InternetComponet } from './InternetComponet';
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withTiming,
+} from 'react-native-reanimated';
 
+
+const duration = 2000;
+const easing = Easing.bezier(0.25, -0.5, 0.25, 1);
 
  const LoadingScreen: React.FC = () => (
+ 
 
 
   <InternetComponet>
@@ -23,7 +34,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    zIndex: 999
     
   },
 }); 

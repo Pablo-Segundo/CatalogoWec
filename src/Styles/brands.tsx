@@ -6,7 +6,7 @@ import { Card } from 'react-native-paper';
 import { CartContext } from '../context/cart/CartContext';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
 import Icon from 'react-native-vector-icons/Ionicons';
-import LoadingScreen from '../Screens/Products/loadintgScreen';
+import LoadingScreen from '../components/loadintgScreen';
 import { Actionsheet, useDisclose } from 'native-base';
 import { Product } from '../interfaces/ProductsCategoryInterface';
 

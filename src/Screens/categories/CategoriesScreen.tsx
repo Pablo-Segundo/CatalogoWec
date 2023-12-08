@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   View,
   Text,
@@ -9,36 +9,45 @@ import {
   Dimensions,
   ImageBackground,
   ScrollView,
+  TextInput,
+  SectionList,
 } from 'react-native';
 import API from '../../API/API';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import LoadingScreen from '../Products/loadintgScreen';
-import {Card} from 'react-native-paper';
-import {InternetComponet} from '../../components/InternetComponet';
-import {NoInternet} from '../../components/NoInternet ';
-import {NetworkModal} from '../../components/NetworkModal';
-import {NetworkContext} from '../../context/NetworkContext';
-import {FloatingAction} from 'react-native-floating-action';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import LoadingScreen from '../../components/loadintgScreen';
+import { Card, Searchbar, } from 'react-native-paper';
+import { InternetComponet } from '../../components/InternetComponet';
+import { NetworkModal } from '../../components/NetworkModal';
+import { NetworkContext } from '../../context/NetworkConect/NetworkContext';
+import { FloatingAction } from 'react-native-floating-action';
 import { Recently } from '../../components/Recently';
+import { TutorialOverlay } from '../../components/tutosReact/tutoScreen';
+import { SearchBar } from '../../components/searchBar';
+import Icon from 'react-native-vector-icons/AntDesign';
+import { ProductContext } from '../../context/Product/ProductContext';
 
 
-interface Props extends NativeStackScreenProps<any, any> {}
+interface Props extends NativeStackScreenProps<any, any> { }
 
-export const CategoriesScreen = ({navigation}: Props) => {
+export const CategoriesScreen = ({ navigation }: Props) => {
   const [categories, setCategories] = useState();
-  const {height, width} = Dimensions.get('window');
+  const { height, width } = Dimensions.get('window');
   const [brands, setBrands] = useState([]);
-  const {isConnected} = useContext(NetworkContext);
+  const { isConnected } = useContext(NetworkContext);
   const [visible, setVisible] = useState(false);
   const [title, setTitle] = useState('');
   const [isFABActive, setIsFABActive] = useState(false);
-  
+  const [serchbar, setSerchbar] = useState('');
+  const [tutorialVisible, setTutorialVisible] = useState(true);
+
+  const { getIndexProducts, products } = useContext(ProductContext);
+
   // recomendaciones
   const [recommendations, setRecommendations] = useState([]);
 
   const getCategories = async () => {
     try {
-      const {data} = await API.get('/categories');
+      const { data } = await API.get('/categories');
       const categories = data.categories.filter(
         (category: any) => category.totalProducts > 0,
       );
@@ -58,11 +67,12 @@ export const CategoriesScreen = ({navigation}: Props) => {
 
   useEffect(() => {
     handleFetch();
+    // getIndexProducts();
   }, []);
 
   const getBrands = async () => {
     try {
-      const {data} = await API.get('/brands');
+      const { data } = await API.get('/brands');
       const brands = data.brands;
       setBrands(brands);
     } catch (error) {
@@ -73,6 +83,7 @@ export const CategoriesScreen = ({navigation}: Props) => {
   useEffect(() => {
     getCategories();
     getBrands();
+   
   }, []);
   if (!categories || !brands) {
     return <LoadingScreen />;
@@ -108,6 +119,15 @@ export const CategoriesScreen = ({navigation}: Props) => {
     },
   ];
 
+  const handleSearch = () => {
+  };
+
+  const handleTutorialPress = () => {
+    setTutorialVisible(false);
+    // Puedes realizar acciones adicionales después de que el usuario presiona OK.
+  };
+
+
   return (
     <>
       <InternetComponet>
@@ -134,16 +154,33 @@ export const CategoriesScreen = ({navigation}: Props) => {
                     Dummy to do: {title}
                 </Text> */}
 
-        <ScrollView>
-          {/* <View style={styles.headerContainer}>
-            <Text style={styles.headerText}>Buy now!</Text>
-            <View style={styles.imgHeaderContainer} />
-          </View> */}
+        <ScrollView
+        // bounces={false}
+        >
+          <View>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Search')}>
+              <Card style={styles.cardContainer2  }>
+                <View style={{ flexDirection: 'row', justifyContent:'space-between'}}>
+                  <Icon name="search1" size={30} color="#000" />
+                  <Text style={{ color: 'gray',marginVertical:5  }}> buscar un producto</Text>
+                </View>
+              </Card>
+              {/* <Searchbar placeholder='buscar' value={' '} ></Searchbar> */}
+            </TouchableOpacity>
+
+          </View>
+
+
+          {/* <SearchBar navigation={navigation} /> */}
+
+
+
 
           <View>
             {/* <Text style={{color:'black', fontSize: 18, fontWeight: 'bold'}}> Productos Agregados</Text> */}
             <Card style={styles.cardContainer}>
-              <Text style={{color: 'black', fontSize: 20, fontWeight: 'bold'}}>
+              <Text style={{ color: 'black', fontSize: 20, fontWeight: 'bold' }}>
                 {' '}
                 Marcas{' '}
               </Text>
@@ -155,70 +192,81 @@ export const CategoriesScreen = ({navigation}: Props) => {
             nestedScrollEnabled={true}
             scrollEnabled={true}
             horizontal={true}
-            keyExtractor={item => item._id.toString()}
-            renderItem={({item}) => (
-              <ScrollView horizontal={true}>
-                <TouchableOpacity
-                  style={{borderRadius: 100}}
-                  onPress={() => navigation.navigate('brands', item)}>
-                  <View style={styles.directiorow}>
-                    <View style={styles.imageContainer}>
-                      <Text
-                        style={{
-                          color: 'black',
-                          fontSize: 16,
-                          fontWeight: 'bold',
-                        }}>
-                        {' '}
-                        -{item.name}-
-                      </Text>
-                      <ImageBackground
-                        source={{uri: item.images['400x400']}}
-                        style={styles.imagebrand}></ImageBackground>
-                    </View>
+            keyExtractor={(item) => item._id.toString()}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={{ borderRadius: 100 }}
+                onPress={() => navigation.navigate('brands', item)}>
+                <View style={styles.directiorow}>
+                  <View style={styles.imageContainer}>
+                    <Text
+                      style={{
+                        color: 'black',
+                        fontSize: 16,
+                        fontWeight: 'bold',
+                      }}>
+                      {' '}
+                      -{item.name}-
+                    </Text>
+                    <ImageBackground
+                      source={{ uri: item.images['400x400'] }}
+                      style={styles.imagebrand}></ImageBackground>
                   </View>
-                </TouchableOpacity>
-              </ScrollView>
+                </View>
+              </TouchableOpacity>
             )}
           />
 
+
           <View>
             <Card style={styles.cardContainer}>
-              <Text style={{color: 'black', fontSize: 20, fontWeight: 'bold'}}>
+              <Text style={{ color: 'black', fontSize: 20, fontWeight: 'bold' }}>
                 {' '}
                 Tambien te puede interesar{' '}
               </Text>
             </Card>
 
-            <TouchableOpacity>
-                 <Recently/> 
+            {/* <View>
+              <SectionList
+               sections={[
+              
+                { type: 'IndexProducts', data: [{ products }] },
+              ]}
+              />
+              
+            </View> */}
+
+
+
+           <TouchableOpacity>
+              <Recently />
             </TouchableOpacity>
           </View>
 
           <View>
             {/* <Text style={{color:'black', fontSize: 18, fontWeight: 'bold'}}> Productos Agregados</Text> */}
             <Card style={styles.cardContainer}>
-              <Text style={{color: 'black', fontSize: 20, fontWeight: 'bold'}}>
+              <Text style={{ color: 'black', fontSize: 20, fontWeight: 'bold' }}>
                 {' '}
                 categorías{' '}
               </Text>
             </Card>
           </View>
 
-          <View style={{marginTop: 10}}></View>
+          <View style={{ marginTop: 10 }}></View>
 
 
           <FlatList
             data={categories}
-            style={{alignSelf: 'center', width: '100%'}}
+            style={{ alignSelf: 'center', width: '100%' }}
             numColumns={height / width > 1.6 ? 1 : 2}
-            renderItem={({item}) => (
+            renderItem={({ item }) => (
               <>
                 <TouchableOpacity
                   style={styles.container}
                   onPress={() => navigation.navigate('Products', item)}>
                   <ImageBackground
-                    source={{uri: item.imagesMobile['400x400']}}
+                    source={{ uri: item.imagesMobile['400x400'] }}
                     resizeMode="cover"
                     style={styles.image}>
                     <View style={styles.overlay}>
@@ -229,30 +277,10 @@ export const CategoriesScreen = ({navigation}: Props) => {
               </>
             )}
           />
-
-          <View>
-            {/* <Text style={{color:'black', fontSize: 18, fontWeight: 'bold'}}> Productos Agregados</Text> */}
-            <Card style={styles.cardContainer}>
-              <Text style={{color: 'black', fontSize: 20, fontWeight: 'bold'}}>
-                {' '}
-                productos mas comprados{' '}
-              </Text>
-            </Card>
-          </View>
-
-          <View style={styles.headerContainer}>
-            <Text style={styles.headerText}>Other Booking Now!</Text>
-            <View style={styles.imgHeaderContainer} />
-          </View>
-
-          <View style={styles.headerContainer}>
-            <Text style={styles.headerText}>Other Booking Now!</Text>
-            <View style={styles.imgHeaderContainer} />
-          </View>
         </ScrollView>
 
         {isFABActive && <View style={styles.overlayFLOAT}></View>}
-        <View style={{position: 'absolute', bottom: 20, right: 5, zIndex: 999}}>
+        <View style={{ position: 'absolute', bottom: 20, right: 5, zIndex: 999 }}>
           <FloatingAction
             actions={actions}
             buttonSize={65}
@@ -266,10 +294,16 @@ export const CategoriesScreen = ({navigation}: Props) => {
             }}
           />
         </View>
+
+        <View>
+          {/* Resto de tu contenido de pantalla */}
+          {tutorialVisible && <TutorialOverlay onPress={handleTutorialPress} />}
+        </View>
       </InternetComponet>
     </>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     width:
@@ -344,7 +378,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#fff',
-     fontSize: Dimensions.get('window').height * 0.03,
+    fontSize: Dimensions.get('window').height * 0.03,
     fontWeight: 'bold',
   },
   cardContainer: {
@@ -365,6 +399,22 @@ const styles = StyleSheet.create({
     elevation: 5,
     marginTop: 10,
   },
+  cardContainer2: {
+    width: '100%',
+    flexDirection: 'row',
+    borderRadius: 10,
+    padding: 10,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    marginTop: 15,
+  },
   headerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -383,5 +433,28 @@ const styles = StyleSheet.create({
     width: 71,
     height: 95,
     backgroundColor: '#ff1493',
+  },
+  directionInput: {
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 8,
+    marginHorizontal: 5,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    fontSize: 16,
+    backgroundColor: 'white',
+    color: 'black',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    width: '100%',
+    minWidth: '98%',
+    maxWidth: '98%',
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    marginTop: 10
   },
 });

@@ -15,6 +15,8 @@ import { PaymentForm } from '../Screens/IA xdprueba/Home'
 
 import { Recently } from '../components/Recently'
 import {Ventanauwu} from '../Screens/Products/vantanauwu'
+import { pruebauwu } from '../Styles/pruebauwu'
+import { pruebasanimacion } from '../Styles/pruebasanimacion'
 const Tab = createBottomTabNavigator()
 const AnimatedSvg = Animated.createAnimatedComponent(Svg)
 
@@ -37,7 +39,7 @@ export const NavigationTab = () => {
            
          //component={HomeIA}
        
-         PaymentForm
+        //  PaymentForm
 
         />
         <Tab.Screen
@@ -48,8 +50,8 @@ export const NavigationTab = () => {
             // @ts-ignore
             tabBarIcon: ({ ref }) => <Lottie ref={ref} loop={false} source={require('../assets/lottie/upload.icon.json')} style={styles.icon} />,
           }}
-          component={PedidosScreen}
-            //  component={HomeIA}
+          // component={pruebasanimacion}
+              component={HomeIA}
             // // component={Recently}
             //  component={PaymentForm}
         />

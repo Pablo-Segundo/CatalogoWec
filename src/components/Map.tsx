@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   StyleSheet,
   View,
@@ -7,63 +7,71 @@ import {
   TouchableOpacity,
   Text,
   TextInput,
-  KeyboardAvoidingView,
-  ScrollView,
 } from 'react-native';
-import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
-import {mapStyle} from '../Styles/mapStyle';
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
-import {request, PERMISSIONS} from 'react-native-permissions';
-import {
-  ActionSheetProvider,
-  useActionSheet,
-} from '@expo/react-native-action-sheet';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useDisclose, Button, Actionsheet, Modal, Card} from 'native-base';
-import {useNavigation} from '@react-navigation/native';
+
+import { useDisclose, Button, Actionsheet, Modal, Card } from 'native-base';
+import { useNavigation } from '@react-navigation/native';
 import Geocoder from 'react-native-geocoding';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {usePermissions} from '../hook/usePermission';
+import { usePermissions } from '../hook/usePermission';
+import LoadingScreen from './loadintgScreen';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Marker as MemoizedMarker } from 'react-native-maps';
 
 
 export function MapScreen() {
-  const {isOpen, onOpen, onClose} = useDisclose();
+  const { isOpen, onOpen, onClose } = useDisclose();
   const navigation = useNavigation();
- 
   const [selectedAddress, setSelectedAddress] = useState('');
+  const [isMarkerDraggable, setIsMarkerDraggable] = useState(false);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
-  const [isMarkerDraggable, setIsMarkerDraggable] = useState(false);
+  const MapView = React.lazy(() => import('react-native-maps'));
+  const { askLocationPermission } = usePermissions();
 
 
- 
-  const {askLocationPermission} = usePermissions();
+  useEffect(() => {
+    const askLocationPermissionAsync = async () => {
+      await askLocationPermission();
+      getCurrentLocation();
+    };
+    askLocationPermissionAsync();
+  }, []);
 
- 
+  useEffect(() => {
+    const loadMapState = async () => {
+      const cachedMapState = await AsyncStorage.getItem('mapState');
+      if (cachedMapState) {
+       
+        setCurrentLocation(JSON.parse(cachedMapState));
+      } else {
+     
+        getCurrentLocation();
+      }
+    };
+  
+    loadMapState();
+  }, []);
+  
 
   const getCurrentLocation = () => {
     Geocoder.init('AIzaSyDFHYFl_pImNIwTzu2YwjL5R8pH-nlWCE4');
     Geolocation.getCurrentPosition(
       position => {
-        const {latitude, longitude} = position.coords;
+        const { latitude, longitude } = position.coords;
         console.log(position);
-
-        setCurrentLocation({latitude, longitude});
+        setCurrentLocation({ latitude, longitude });
       },
       error => {
         console.log(error.message);
       },
-   
-      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
     );
   };
-
-  useEffect(() => {
-    askLocationPermission();
-    getCurrentLocation();
-  }, []);
-
-  const handleMapPress = async coordinate => {
+  const handleMapPress = async (coordinate: React.SetStateAction<null>) => {
     try {
       const response = await Geocoder.from(
         coordinate.latitude,
@@ -76,14 +84,13 @@ export function MapScreen() {
       console.log('Error retrieving address:', error);
     }
   };
-
   const handleAddressChange = async text => {
     setSelectedAddress(text);
     try {
       const response = await Geocoder.from(text);
       if (response.results.length > 0) {
-        const {lat, lng} = response.results[0].geometry.location;
-        setCurrentLocation({latitude: lat, longitude: lng});
+        const { lat, lng } = response.results[0].geometry.location;
+        setCurrentLocation({ latitude: lat, longitude: lng });
       }
     } catch (error) {
       console.log('Error retrieving coordinates:', error);
@@ -95,7 +102,7 @@ export function MapScreen() {
 
   return (
     <>
-     
+
       <View
         style={{
           zIndex: 1,
@@ -105,12 +112,12 @@ export function MapScreen() {
         }}>
 
 
-          <TouchableOpacity>
-             <Text style={{color: '#ff1493', fontSize: 20, fontWeight:'bold', }}>
-             ¿Comó funciona el mapa?
-            </Text>
-          </TouchableOpacity>
-       
+        <TouchableOpacity>
+          <Text style={{ color: '#ff1493', fontSize: 20, fontWeight: 'bold', }}>
+            ¿Comó funciona el mapa?
+          </Text>
+        </TouchableOpacity>
+
 
         <TextInput
           style={styles.directionInput}
@@ -120,26 +127,12 @@ export function MapScreen() {
         />
       </View>
 
-             {/* <View style={styles.header}>
-        <View style={styles.headerinput}>
-           <GooglePlacesAutocomplete
-            placeholder='Escriba su calle plox uwu '
-            onPress={(data, details = null) => {
-              console.log(data.details);
-            }}
-            query={{
-              key:'AIzaSyDFHYFl_pImNIwTzu2YwjL5R8pH-nlWCE4',
-              language: 'es'
-            }}
-           />
-           </View>
-      </View>  */}
-
-
 
 
       {currentLocation && (
         <>
+        <React.Suspense fallback={<LoadingScreen />}> 
+
           <MapView
             provider={
               Platform.OS == 'android'
@@ -161,7 +154,7 @@ export function MapScreen() {
               longitudeDelta: 0.003,
             }}
             onPress={e => handleMapPress(e.nativeEvent.coordinate)}>
-            {currentLocation && (
+            {/* {currentLocation && (
               <Marker
                 coordinate={{
                   latitude: currentLocation.latitude,
@@ -171,9 +164,20 @@ export function MapScreen() {
                 description="Ubicacion aproximada  "
                 draggable
               />
-            )}
+            )} */}
             {selectedLocation && (
-              <Marker
+              // <Marker
+              //   coordinate={{
+              //     latitude: selectedLocation.latitude,
+              //     longitude: selectedLocation.longitude,
+              //   }}
+              //   title="Nueva ubicación"
+              //   pinColor="#ff1493"
+              //   description="Ubicación seleccionada"
+              //   draggable={isMarkerDraggable}
+              //   onDragEnd={handleMarkerDrag}
+              // />
+              <MemoizedMarker
                 coordinate={{
                   latitude: selectedLocation.latitude,
                   longitude: selectedLocation.longitude,
@@ -185,7 +189,8 @@ export function MapScreen() {
                 onDragEnd={handleMarkerDrag}
               />
             )}
-          </MapView>
+           </MapView>
+          </React.Suspense>
 
           <Actionsheet
             isOpen={isOpen}
@@ -193,19 +198,12 @@ export function MapScreen() {
             size="100%"></Actionsheet>
         </>
       )}
-
-
-
-
-
-
-
       <TouchableOpacity
         style={styles.buyButton}
         onPress={() => {
-          navigation.navigate('Datos', {selectedAddress: selectedAddress});
+          navigation.navigate('Datos', { selectedAddress: selectedAddress });
         }}>
-        <View style={{flexDirection: 'row'}}>
+        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
           <Text style={styles.buttonText}> continuar</Text>
           <Icon name="play-outline" size={30} color="white" />
         </View>
@@ -215,7 +213,7 @@ export function MapScreen() {
 
       <View >
         <Card style={styles.containeruwu}>
-          
+
         </Card>
       </View>
 
@@ -303,7 +301,7 @@ const styles = StyleSheet.create({
 
   header: {
     padding: 15,
-    backgroundColor: '#debdce',
+    backgroundColor: 'black',
     zIndex: 9999,
   },
   headerinput: {

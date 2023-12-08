@@ -7,17 +7,26 @@ const AnimatedText = Animated.createAnimatedComponent(Text);
 export const HomeIA = () => {
   const [fadeIn, setFadeIn] = useState(new Animated.Value(0));
   const [isAnimated, setIsAnimate] = useState(false);
-  const [text, setText] = useState('Hola! bienvenido a ');
-  const [text2, setText2] = useState('Catalogo Web xd (no hay nombre)');
-  const [text3, setText3] = useState('xdE')
+  const [textIndex, setTextIndex] = useState(0);
+  const [texts, setTexts] = useState([
+    'Hola! bienvenido a',
+    'Catalogo Web xd (no hay nombre)',
+    'y estoy para ayudarte ',
+    'uwu',
+    'Más frases...',
+    'Como quieres comprar manual o automatica',
+  ]);
   const [image, setImage] = useState(require('../../assets/lottie/osuxd.png'));
+    
+    
+   
   const navigation = useNavigation();
 
   useEffect(() => {
     if (!isAnimated) {
       Animated.timing(fadeIn, {
         toValue: 1,
-        duration: 3000,
+        duration: 2000,
         useNativeDriver: true,
       }).start(() => {
         setIsAnimate(true);
@@ -30,13 +39,14 @@ export const HomeIA = () => {
   const avatarAnim = useRef(new Animated.Value(-1000)).current;
 
   const handleTouch = () => {
-    // Cuando el usuario toca la pantalla, cambia el texto y la imagen
-    setText('Mi nombre es: ');
-    setText2('wapiUwU');
-    setText3('hola pap8  ');
-    
-
-    setImage(require('../../assets/lottie/REM.png')); // Cambia a la nueva imagen
+    if (textIndex < texts.length - 1) {
+      // Si hay más frases, actualiza el texto con la siguiente frase
+      setTextIndex(textIndex + 1);
+    } else {
+      // Si es la última frase, muestra los botones para continuar manual o asistido
+      // Puedes implementar lógica adicional aquí según la elección del usuario
+      console.log('Mostrar botones para elegir continuar manual o asistido');
+    }
   };
 
   useEffect(() => {
@@ -55,78 +65,60 @@ export const HomeIA = () => {
 
   return (
     <>
-  
-    <TouchableWithoutFeedback onPress={handleTouch}>
-      <View style={styles.container}>
-        <Animated.View
-          style={{
-            transform: [{ translateY: avatarAnim }],
-            alignItems: 'flex-end',
-          }}
-        >
-          <Image
-            source={image} 
-            style={{ width: 100, height: 100 }}
-          />
-        </Animated.View>
 
-        <View style={styles.textContainer}>
-          <AnimatedText style={{
-            fontSize: 20,
-            marginBottom: 10,
-            color: 'gray',
-            opacity: fadeIn,
-          }}>
-            {text}
-          </AnimatedText>
+      <TouchableWithoutFeedback onPress={handleTouch}>
+        <View style={styles.container}>
+          <Animated.View
+            style={{
+              transform: [{ translateX: avatarAnim }],
+              alignItems: 'flex-end',
+            }}
+          >
+            <Image
+              source={image}
+              style={{ width: 100, height: 100 }}
+            />
+          </Animated.View>
 
-          <AnimatedText style={{
-            fontSize: 20,
-            marginBottom: 10,
-            color: '#ff1493',
-            opacity: fadeIn,
-          }}>
-            {text2}
-          </AnimatedText>
+          <View style={styles.textContainer}>
+            <AnimatedText style={{
+              fontSize: 20,
+              marginBottom: 10,
+              color: 'gray',
+              opacity: fadeIn,
+            }}>
+              {texts[textIndex]}
+            </AnimatedText>
+          </View>
         </View>
-      
+      </TouchableWithoutFeedback>
+
+      <View style={{ alignContent: 'center', alignItems: 'center',  justifyContent: 'space-between'  }}>
+        {textIndex === texts.length - 1 && (
+          <View style={{ flexDirection: 'row', }}>
+          
+              
+               <TouchableOpacity style={{ backgroundColor: 'gray',  }}>
+              <Text> Manual </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={{ backgroundColor: 'gray',  }}>
+              <Text> Asistido </Text>
+            </TouchableOpacity>
+            
+          
+          </View>
+        )}
       </View>
-    </TouchableWithoutFeedback>
 
-    <View style={{alignContent:'center', alignItems:'center'}}>
-          <Text style={{color:'black'}}> Quiere serguir de manera Manual o Asistida </Text>
-        <View style={{flexDirection:'row', marginHorizontal: 50 }}>  
-          <TouchableOpacity style={{backgroundColor:'gray', }}>
-            <Text> Si </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={{backgroundColor:'gray', }}>
-            <Text> No </Text>
-          </TouchableOpacity>
-        </View>
-
-        </View>
-
-    <View>
+      <View>
         <Text style={styles.touchToContinue}>(Toque para continuar)</Text>
-    </View>
+      </View>
     </>
   );
 };
 
-
 const styles = StyleSheet.create({
-  emptyCartContainer: {
-
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  touchToContinue: {
-    fontSize: 16,
-    color: 'gray',
-    textAlign: 'center',
-    marginVertical:60
-  },
   container: {
     flex: 1,
     flexDirection: 'row',
@@ -139,49 +131,10 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: 20,
   },
-  greetingBox: {
-   marginVertical: 50,
-    top: 10,
-    right: 10,
-    backgroundColor: 'rgba(255, 0, 0, 0.7)',
-    borderRadius: 5,
-    padding: 10,
-  },
-  greetingText: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
-  exploreImage: {
-    width: 30,
-    height: 30,
-    marginRight: 10,
-  },
-  input: {
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 5,
-    color: 'black',
-  },
-  emptyCartText: {
-    fontSize: 30,
-    marginBottom: 20,
+  touchToContinue: {
+    fontSize: 16,
     color: 'gray',
-  },
-  exploreButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#F0F0F0',
-    paddingVertical: 20,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-  },
-
-  exploreButtonText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'gray',
+    textAlign: 'center',
+    marginVertical: 60
   },
 });
-
-

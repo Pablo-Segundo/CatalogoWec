@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback, useContext} from 'react';
+import React, { useEffect, useState, useCallback, useContext } from 'react';
 import {
   View,
   Text,
@@ -8,39 +8,44 @@ import {
   TextInput,
   Image,
 } from 'react-native';
-import {Product} from '../interfaces/ProductsCategoryInterface';
-import {useNavigation} from '@react-navigation/native';
-import {useRoute} from '@react-navigation/native';
+import { Product } from '../interfaces/ProductsCategoryInterface';
+import { useNavigation } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Card, Button} from 'react-native-paper';
-import {useToast, Modal, useDisclose, Row, Actionsheet} from 'native-base';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faCreditCard, faMoneyBill} from '@fortawesome/free-solid-svg-icons';
+import { Card, Button } from 'react-native-paper';
+import { useToast, Modal, useDisclose, Row, Actionsheet } from 'native-base';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faCreditCard, faMoneyBill } from '@fortawesome/free-solid-svg-icons';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import {Toast} from 'react-native-toast-message/lib/src/Toast';
-import {CartContext} from '../context/cart/CartContext';
+
+
+
+
+
+import { Toast } from 'react-native-toast-message/lib/src/Toast';
+import { CartContext } from '../context/cart/CartContext';
 import API from '../API/API';
-import {InternetComponet} from '../components/InternetComponet';
+import { InternetComponet } from '../components/InternetComponet';
 
 interface Props {
   product: Product;
   route: any;
 }
 
-export const ShoppingScreen = ({product}: Props) => {
+export const ShoppingScreen = ({ product }: Props) => {
   const route = useRoute();
   const navigation = useNavigation();
   // const [cart, setCart] = useState(0);
   const toast = useToast();
   const [showModal, setShowModal] = useState(false);
   const [showModal2, setShowModal2] = useState(false);
-  const {isOpen, onOpen, onClose} = useDisclose();
+  const { isOpen, onOpen, onClose } = useDisclose();
   const [datosGuardados, setDatosGuardados] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedPaymentOption, setSelectedPaymentOption] = useState<'Tarjeta' | 'PagoContraEntrega' | null>(null);
 
-  const {totalProducts, totalPrice, discount} = useContext(CartContext);
+  const { totalProducts, totalPrice, discount } = useContext(CartContext);
   const {
     cart,
     removeItemFromCart,
@@ -90,9 +95,10 @@ export const ShoppingScreen = ({product}: Props) => {
     } else {
       navigation.navigate('tarjetaScreen', {
         //   filteredProducts: cart1,
+        cart: cart,
         totalPrice: totalPrice,
         selectedPaymentOption: selectedPaymentOption,
-        //  discountProductsCart: discountProductsCart
+        //discountProductsCart: discountProductsCart
       });
     }
   };
@@ -135,7 +141,7 @@ export const ShoppingScreen = ({product}: Props) => {
               <View style={styles.viewuwu}>
                 <View style={styles.cardcontainer}>
                   <Icon
-                    style={{marginHorizontal: 10}}
+                    style={{ marginHorizontal: 10 }}
                     name="location-outline"
                     size={30}
                     color="white"
@@ -165,14 +171,14 @@ export const ShoppingScreen = ({product}: Props) => {
             style={styles.TrashButton && styles.buyButton3}
             onPress={clearCart}>
             {/* <Icon name="trash-outline" size={30} color="white" /> */}
-            <Text style={{color:'#fff', fontWeight:'bold'}}> Vaciar</Text>
+            <Text style={{ color: '#fff', fontWeight: 'bold' }}> Vaciar</Text>
           </TouchableOpacity>
         </View>
 
         {cart.length > 0 ? (
           <FlatList
             data={cart}
-            renderItem={({item}) => (
+            renderItem={({ item }) => (
               <Card
                 style={{
                   backgroundColor: '#f8f8ff',
@@ -189,7 +195,7 @@ export const ShoppingScreen = ({product}: Props) => {
                       }}
                     />
                   </View>
-                  
+
                   <View>
                     <View style={styles.tableRow}>
                       <Text style={styles.rowText}>{item.product.name}</Text>
@@ -228,7 +234,7 @@ export const ShoppingScreen = ({product}: Props) => {
                         <Text style={styles.quantity}>{item.quantity}</Text>
                         <TouchableOpacity
                           onPress={() => {
-                        
+
                             if (item.product.quantity > item.quantity) {
                               incrementCart(item.product._id);
                             } else {
@@ -280,89 +286,86 @@ export const ShoppingScreen = ({product}: Props) => {
         )}
 
 
-<Card style={{ backgroundColor: '#f8f8ff', padding: 10, margin: 10 }}>
-  <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-    <Text style={styles.headerText2}>Productos: {totalProducts}</Text>
-    <Text style={styles.headerText2}>Total: ${totalPrice.toFixed(2)} MNX</Text>
-  </View>
+        <Card style={{ backgroundColor: '#f8f8ff', padding: 10, margin: 10 }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text style={styles.headerText2}>Productos: {totalProducts}</Text>
+            <Text style={styles.headerText2}>Total: ${totalPrice.toFixed(2)} MNX</Text>
+          </View>
 
-  <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-  <Text style={styles.headerText2}>Descuento del: {discount} % </Text>
-  </View>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text style={styles.headerText2}>Descuento del: {discount} % </Text>
+          </View>
 
-  <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10, width: '100%' }}>
-  <TextInput
-    style={{ ...styles.input, flex: 1 }}
-    placeholderTextColor="gray"
-    placeholder="Código de cupón"
-    value={coupon}
-    onChangeText={text => setCoupon(text)}
-  />
-  <TouchableOpacity
-    onPress={handleApplyCoupon}
-    style={{ ...styles.applyButton, marginLeft: 10, width: 100 }}>
-    <Text style={styles.applyButtonText}>Aplicar</Text>
-  </TouchableOpacity>
-</View>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10, width: '100%' }}>
+            <TextInput
+              style={{ ...styles.input, flex: 1 }}
+              placeholderTextColor="gray"
+              placeholder="Código de cupón"
+              value={coupon}
+              onChangeText={text => setCoupon(text)}
+            />
+            <TouchableOpacity
+              onPress={handleApplyCoupon}
+              style={{ ...styles.applyButton, marginLeft: 10, width: 100 }}>
+              <Text style={styles.applyButtonText}>Aplicar</Text>
+            </TouchableOpacity>
+          </View>
 
 
-  <View>
+          <View>
+            <TouchableOpacity
+              onPress={() => setShowModal(true)}
+              style={styles.buyButton2}>
+              <Text style={styles.headerTextWhite}>Continuar</Text>
+            </TouchableOpacity>
+
+            <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+  <Modal.Content maxWidth="500px">
+    <Modal.CloseButton style={styles.modalCloseButton} />
+    <Modal.Header style={styles.modalHeader}>
+      Método de pago
+    </Modal.Header>
+    <Modal.Body style={styles.modalBody}>
+      <TouchableOpacity
+        style={[
+          styles.paymentOption,
+          selectedPaymentOption === 'Tarjeta' && styles.selectedPaymentOption,
+        ]}
+        onPress={() => handleOptionSelect('Tarjeta')}>
+        <FontAwesomeIcon icon={faCreditCard} size={25} color="#000" />
+        <Text style={styles.paymentOptionText}>Tarjeta</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[
+          styles.paymentOption,
+          selectedPaymentOption === 'PagoContraEntrega' &&
+            styles.selectedPaymentOption,
+        ]}
+        onPress={() => handleOptionSelect('PagoContraEntrega')}>
+        <FontAwesomeIcon icon={faMoneyBill} size={25} color="#000" />
+        <Text style={styles.paymentOptionText}>Pago Contra entrega</Text>
+      </TouchableOpacity>
+    </Modal.Body>
+
     <TouchableOpacity
-      onPress={() => setShowModal(true)}
-      style={styles.buyButton2}>
-      <Text style={styles.headerTextWhite}>Continuar</Text>
+      onPress={() => {
+        // Agrega la lógica que necesitas al presionar "Continuar"
+        handleContinuar();
+
+        // Cierra el modal
+        setShowModal(false);
+      }}
+      style={styles.continueButton}
+    >
+      <Text style={styles.continueButtonText}>Continuar</Text>
     </TouchableOpacity>
+  </Modal.Content>
+</Modal>
 
-    <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-              <Modal.Content maxWidth="500px">
-                <Modal.CloseButton style={styles.modalCloseButton} />
-                <Modal.Header style={styles.modalHeader}>
-                  Método de pago
-                </Modal.Header>
-                <Modal.Body style={styles.modalBody}>
-                  <TouchableOpacity
-                    style={[
-                      styles.paymentOption,
-                      selectedPaymentOption === 'Tarjeta' &&
-                        styles.selectedPaymentOption,
-                    ]}
-                    onPress={() => handleOptionSelect('Tarjeta')}>
-                    <FontAwesomeIcon
-                      icon={faCreditCard}
-                      size={25}
-                      color="#000"
-                    />
-                    <Text style={styles.paymentOptionText}>Tarjeta</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[
-                      styles.paymentOption,
-                      selectedPaymentOption === 'PagoContraEntrega' &&
-                        styles.selectedPaymentOption,
-                    ]}
-                    onPress={() => handleOptionSelect('PagoContraEntrega')}>
-                    <FontAwesomeIcon
-                      icon={faMoneyBill}
-                      size={25}
-                      color="#000"
-                    />
-                    <Text style={styles.paymentOptionText}>
-                      Pago Contra entrega{' '}
-                    </Text>
-                  </TouchableOpacity>
-                </Modal.Body>
 
-                <TouchableOpacity
-                  style={styles.continueButton}
-                  onPress={() => handleContinuar()}>
-                  <Text style={styles.continueButtonText}> Continuar </Text>
-                </TouchableOpacity>
-              </Modal.Content>
-    </Modal>
 
-  
-  </View>
-</Card>
+          </View>
+        </Card>
 
         <Actionsheet isOpen={isOpen} onClose={onClose}>
           <Actionsheet.Content>
@@ -375,20 +378,21 @@ export const ShoppingScreen = ({product}: Props) => {
               }}>
               Ingresa datos de dirección
             </Text>
-            <Text style={{color: 'gray'}}>
+            <Text style={{ color: 'gray' }}>
               *Selecciona tu dirección o ingresa una nueva*
             </Text>
             <View style={styles.rowContainer}>
-     
-              <TouchableOpacity
-                style={{alignItems: 'center'}}
-                onPress={() =>{
 
-                  onClose(); navigation.navigate('mapaScreen', {owner: ' '})}
-                } 
-                >
+              <TouchableOpacity
+                style={{ alignItems: 'center' }}
+                onPress={() => {
+
+                  onClose(); navigation.navigate('mapaScreen', { owner: ' ' })
+                }
+                }
+              >
                 <Card style={styles.cards}>
-                  <Text style={{fontWeight: 'bold', color: 'black'}}>
+                  <Text style={{ fontWeight: 'bold', color: 'black' }}>
                     Agrega una direccion
                   </Text>
                   <Icon name="map-outline" size={30} color="#ff1493" />
@@ -396,17 +400,18 @@ export const ShoppingScreen = ({product}: Props) => {
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={{alignItems: 'center'}}
-                onPress={() =>{
+                style={{ alignItems: 'center' }}
+                onPress={() => {
                   onClose();
-                  navigation.navigate('Direction')}
-                } 
-                >
+                  navigation.navigate('Direction')
+                }
+                }
+              >
                 <Card style={styles.cards}>
-                  <Text style={{fontWeight: 'bold', color: 'black'}}>
+                  <Text style={{ fontWeight: 'bold', color: 'black' }}>
                     Modificar direccion
                   </Text>
-                  <Icon style={{alignItems:'center', justifyContent: 'center'}} name="create-outline" size={30} color="#ff1493" />
+                  <Icon style={{ alignItems: 'center', justifyContent: 'center' }} name="create-outline" size={30} color="#ff1493" />
                 </Card>
               </TouchableOpacity>
             </View>
@@ -456,7 +461,7 @@ const styles = StyleSheet.create({
 
   rowContainer: {
     flexDirection: 'row',
-   
+
     marginTop: 30,
     marginVertical: 50,
   },

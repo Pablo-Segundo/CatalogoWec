@@ -1,18 +1,32 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Product } from "../interfaces/ProductsCategoryInterface";
+import React, { useContext, useEffect, useState } from "react"; 
+ import { Product } from "../interfaces/ProductsCategoryInterface";
 import { CartContext } from "../context/cart/CartContext";
 import { FlatList, Text, View, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { Card } from "react-native-paper";
+import { ProductContext } from "../context/Product/ProductContext";
+import { ProductsList } from "./ProductsList";
+import { Heading, SectionList } from "native-base";
+import { RefreshControl } from "react-native-gesture-handler";
+
+import { ProductCard } from "./ProductCard";
+
 
 export const Recently = () => {
   const { cart, addToCart, loadCartFromStorage } = useContext(CartContext);
   const [recentlyViewed, setRecentlyViewed] = useState<Product[]>([]);
+  const { getIndexProducts, products } = useContext(ProductContext);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
+    // getIndexProducts();
     setRecentlyViewed(cart.map((cartItem) => cartItem.product));
     // Puedes llamar a un servicio de recomendación aquí para obtener productos recomendados
     // y luego actualizar el estado de `recommendedProducts`.
   }, [cart]);
+
+  // useEffect(() => {
+  //   getIndexProducts();
+  // }, []);
 
   const renderProductItem = ({ item }: { item: Product }) => (
     <Card style={styles.cardContainer}>
@@ -52,6 +66,38 @@ export const Recently = () => {
   );
 
   return (
+    <>
+
+{/* <View>
+      <SectionList
+        sections={[
+          { type: 'IndexProducts', data: products },
+        ]}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => {
+              setRefreshing(true);
+              getIndexProducts();
+              setRefreshing(false);
+            }}
+          />
+        }
+        renderItem={({ item, section }) => {
+          if (section.type === 'IndexProducts') {
+            return (
+              <ProductCard product={item} navigation={navigation} route={route} />
+            );
+          }
+          return null;
+        }}
+        keyExtractor={(item) => item._id}
+      />
+    </View> */}
+
+
+
+
     <View>
       {recentlyViewed.length > 0 ? (
         <FlatList
@@ -64,6 +110,7 @@ export const Recently = () => {
         <Text style={styles.noProductsText}>No has visto ningún producto recientemente.</Text>
       )}
     </View>
+    </>
   );
 };
 
