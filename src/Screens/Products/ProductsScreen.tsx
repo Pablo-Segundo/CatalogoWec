@@ -5,7 +5,7 @@ import { FlatList } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import LoadingScreen from '../../components/loadintgScreen';
 import { ProductCard } from '../../components/ProductCard';
-import { NoInternet } from '../../components/Recommendations';
+import { NoInternet } from '../../components/internetcomp/NoInternet ';
 
 interface Props extends NativeStackScreenProps<any, any> { }
 
@@ -61,7 +61,7 @@ export const ProductsScreen = ({ route, navigation }: Props) => {
         refreshControl={
           <RefreshControl refreshing={isLoading} onRefresh={getProducts} />
         }
-        renderItem={({ item }) => (
+        renderItem={({ item }: any) => (
           <ProductCard product={item} />
 
       

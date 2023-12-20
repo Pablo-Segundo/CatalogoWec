@@ -154,7 +154,7 @@ export function MapScreen() {
               longitudeDelta: 0.003,
             }}
             onPress={e => handleMapPress(e.nativeEvent.coordinate)}>
-            {/* {currentLocation && (
+            {currentLocation && (
               <Marker
                 coordinate={{
                   latitude: currentLocation.latitude,
@@ -164,20 +164,9 @@ export function MapScreen() {
                 description="Ubicacion aproximada  "
                 draggable
               />
-            )} */}
+            )}
             {selectedLocation && (
-              // <Marker
-              //   coordinate={{
-              //     latitude: selectedLocation.latitude,
-              //     longitude: selectedLocation.longitude,
-              //   }}
-              //   title="Nueva ubicación"
-              //   pinColor="#ff1493"
-              //   description="Ubicación seleccionada"
-              //   draggable={isMarkerDraggable}
-              //   onDragEnd={handleMarkerDrag}
-              // />
-              <MemoizedMarker
+              <Marker
                 coordinate={{
                   latitude: selectedLocation.latitude,
                   longitude: selectedLocation.longitude,
@@ -188,6 +177,17 @@ export function MapScreen() {
                 draggable={isMarkerDraggable}
                 onDragEnd={handleMarkerDrag}
               />
+              // <MemoizedMarker
+              //   coordinate={{
+              //     latitude: selectedLocation.latitude,
+              //     longitude: selectedLocation.longitude,
+              //   }}
+              //   title="Nueva ubicación"
+              //   pinColor="#ff1493"
+              //   description="Ubicación seleccionada"
+              //   draggable={isMarkerDraggable}
+              //   onDragEnd={handleMarkerDrag}
+              // />
             )}
            </MapView>
           </React.Suspense>

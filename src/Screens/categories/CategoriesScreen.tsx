@@ -16,16 +16,20 @@ import API from '../../API/API';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import LoadingScreen from '../../components/loadintgScreen';
 import { Card, Searchbar, } from 'react-native-paper';
-import { InternetComponet } from '../../components/InternetComponet';
-import { NetworkModal } from '../../components/NetworkModal';
+import { InternetComponet } from '../../components/internetcomp/InternetComponet';
+import { NetworkModal } from '../../components/internetcomp/NetworkModal';
 import { NetworkContext } from '../../context/NetworkConect/NetworkContext';
 import { FloatingAction } from 'react-native-floating-action';
 import { Recently } from '../../components/Recently';
 import { TutorialOverlay } from '../../components/tutosReact/tutoScreen';
 import { SearchBar } from '../../components/searchBar';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { ProductContext } from '../../context/Product/ProductContext';
 
+import { Box, Heading } from 'native-base';
+import { ProductCard } from '../../components/ProductCard';
+import { ProductContext } from '../../context/Product/ProductContext';
+import { IndexProducts } from '../../components/IndexProducts';
+import { FirstScreen } from '../../components/FirstScreen';
 
 interface Props extends NativeStackScreenProps<any, any> { }
 
@@ -54,6 +58,7 @@ export const CategoriesScreen = ({ navigation }: Props) => {
       setCategories(categories);
     } catch (error) {
       console.log(error);
+   
     }
   };
 
@@ -65,10 +70,15 @@ export const CategoriesScreen = ({ navigation }: Props) => {
     getCategories();
   };
 
+  //  useEffect(() => {
+  //   getIndexProducts();
+  //  console.log(typeof getIndexProducts  )
+  // }, []);
+
   useEffect(() => {
     handleFetch();
-    // getIndexProducts();
   }, []);
+
 
   const getBrands = async () => {
     try {
@@ -83,14 +93,11 @@ export const CategoriesScreen = ({ navigation }: Props) => {
   useEffect(() => {
     getCategories();
     getBrands();
-   
+
   }, []);
   if (!categories || !brands) {
     return <LoadingScreen />;
-    // useEffect(() => {
-    //   getCategories();
-    //   getBrands();
-    // }, []);
+    
   }
   const actions = [
     {
@@ -105,18 +112,8 @@ export const CategoriesScreen = ({ navigation }: Props) => {
       name: 'bt_language',
       position: 1,
     },
-    {
-      text: 'Location',
-      icon: require('../../assets/lottie/osuxd.png'),
-      name: 'bt_room',
-      position: 3,
-    },
-    {
-      text: 'Video',
-      icon: require('../../assets/lottie/osuxd.png'),
-      name: 'bt_videocam',
-      position: 4,
-    },
+
+
   ];
 
   const handleSearch = () => {
@@ -127,55 +124,42 @@ export const CategoriesScreen = ({ navigation }: Props) => {
     // Puedes realizar acciones adicionales después de que el usuario presiona OK.
   };
 
+  // const handleRefresh = async () => {
+  //   setRefreshing(true);
+
+  //   await getBrands();
+  //   await getCategories();
+  //   await getIndexProducts();
+
+  //   setRefreshing(false);
+  // };
+
+  // if (loading) {
+  //   return <LoadingScreen />;
+  // }
+
+
 
   return (
     <>
+      
       <InternetComponet>
         <NetworkModal visible={visible} setVisible={setVisible} />
-
-        {/* <TouchableOpacity
-                    onPress={handleFetch}
-                    style={{
-                        width: '90%',
-                        height: 50,
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        backgroundColor: 'teal' //375027 
-                    }}
-                >
-                    <Text style={{
-                        color: 'white'
-                    }}>
-                        Get Dummy Todos
-                    </Text>
-                </TouchableOpacity>
-                <Text>
-                    Dummy to do: {title}
-                </Text> */}
-
         <ScrollView
         // bounces={false}
         >
           <View>
             <TouchableOpacity
               onPress={() => navigation.navigate('Search')}>
-              <Card style={styles.cardContainer2  }>
-                <View style={{ flexDirection: 'row', justifyContent:'space-between'}}>
+              <Card style={styles.cardContainer2}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                   <Icon name="search1" size={30} color="#000" />
-                  <Text style={{ color: 'gray',marginVertical:5  }}> buscar un producto</Text>
+                  <Text style={{ color: 'gray', marginVertical: 5 }}> buscar un producto</Text>
                 </View>
               </Card>
-              {/* <Searchbar placeholder='buscar' value={' '} ></Searchbar> */}
             </TouchableOpacity>
 
           </View>
-
-
-          {/* <SearchBar navigation={navigation} /> */}
-
-
-
 
           <View>
             {/* <Text style={{color:'black', fontSize: 18, fontWeight: 'bold'}}> Productos Agregados</Text> */}
@@ -225,22 +209,15 @@ export const CategoriesScreen = ({ navigation }: Props) => {
                 Tambien te puede interesar{' '}
               </Text>
             </Card>
-
-            {/* <View>
-              <SectionList
-               sections={[
-              
-                { type: 'IndexProducts', data: [{ products }] },
-              ]}
-              />
-              
-            </View> */}
-
-
-
-           <TouchableOpacity>
-              <Recently />
-            </TouchableOpacity>
+     <Card>
+      <View>
+            {/* <Recently />  */}
+               <IndexProducts   />
+           </View>
+     </Card>
+           
+                
+            
           </View>
 
           <View>
@@ -277,6 +254,12 @@ export const CategoriesScreen = ({ navigation }: Props) => {
               </>
             )}
           />
+          {categories.length === 0 && (
+            <Text style={{color:'black'}}>
+              Por el momento no hay datos que mostrar.
+            </Text>
+          )}
+          
         </ScrollView>
 
         {isFABActive && <View style={styles.overlayFLOAT}></View>}
@@ -300,6 +283,12 @@ export const CategoriesScreen = ({ navigation }: Props) => {
           {tutorialVisible && <TutorialOverlay onPress={handleTutorialPress} />}
         </View>
       </InternetComponet>
+
+ 
+<View>
+   <FirstScreen/>
+</View>
+     
     </>
   );
 };

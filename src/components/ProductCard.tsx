@@ -216,6 +216,7 @@ export const ProductCard = ({ product, getCartItems }: Props) => {
                 if (!isProductInCart) {
                   addToCart(product, quantity);
                   Toast.show({
+                   
                     type: 'success',
                     text1: 'Producto agregado',
                     text2: 'El producto se agregó al carrito de compras',

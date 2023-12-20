@@ -50,7 +50,7 @@ type ProductContextProps = {
   
     const getIndexProducts = async () => {
       try {
-        const { data } = await API.get<ProductsResponse>('/products/index/mobile');
+        const { data } = await API.get('/products/index/mobile');
         dispatch({
           type: 'getAllProducts',
           payload: data.products,
@@ -59,11 +59,11 @@ type ProductContextProps = {
         dispatch({
           type: 'addError',
           payload:
-            error.response.data.message ||
-            'No se encontró ninguna oferta disponible',
+            error.response?.data.message || 'No se encontró ninguna oferta disponible',
         });
       }
     };
+  
   
     const getProduct = async (productId: string) => {
       

@@ -15,6 +15,7 @@ import { DatosPScreen } from '../Screens/DatosPScreen';
 import { Brands } from '../Screens/Brands/Brands';
 import { Recently } from '../components/Recently';
 import { SearchScreen } from '../Screens/SearchScreen';
+import { ProductsIndex } from '../Screens/Products/ProductsIndex';
 
 
 
@@ -39,6 +40,7 @@ export const Navigation = () => {
         component={NavigationTab}
         options={{
           headerShown: false,
+          
 
         }}
       />
@@ -67,12 +69,28 @@ export const Navigation = () => {
       <Stack.Screen
         name="Direction"
         component={Direction}
+        options={{
+          headerShown: true,
+          animation: 'slide_from_bottom',
+        }}
       />
       <Stack.Screen
         name="mapaScreen"
         component={MapScreen}
-
+        options={{
+          headerShown: true,
+          animation: 'slide_from_bottom',
+        }}
       />
+         <Stack.Screen
+        name="indexProducts"
+        component={ProductsIndex}
+        options={{
+          headerShown: true,
+          animation: 'slide_from_bottom',
+        }}
+      />
+
       <Stack.Screen
         name="tarjetaScreen"
         component={PaymentScreen}

@@ -1,7 +1,7 @@
 import React, {useState, useContext, useEffect} from "react";
 import {Text, View} from "react-native";
 import NetInfo from "@react-native-community/netinfo";
-import { NetworkContext } from "../context/NetworkConect/NetworkContext";
+import { NetworkContext } from "../../context/NetworkConect/NetworkContext";
 import { NoInternet } from "./NoInternet ";
 
 

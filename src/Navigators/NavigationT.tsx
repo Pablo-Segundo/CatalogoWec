@@ -17,6 +17,10 @@ import { Recently } from '../components/Recently'
 import {Ventanauwu} from '../Screens/Products/vantanauwu'
 import { pruebauwu } from '../Styles/pruebauwu'
 import { pruebasanimacion } from '../Styles/pruebasanimacion'
+import { IndexProducts } from '../components/IndexProducts'
+import { ProductsIndex } from '../Screens/Products/ProductsIndex'
+
+
 const Tab = createBottomTabNavigator()
 const AnimatedSvg = Animated.createAnimatedComponent(Svg)
 
@@ -50,8 +54,8 @@ export const NavigationTab = () => {
             // @ts-ignore
             tabBarIcon: ({ ref }) => <Lottie ref={ref} loop={false} source={require('../assets/lottie/upload.icon.json')} style={styles.icon} />,
           }}
-          // component={pruebasanimacion}
-              component={HomeIA}
+           component={ProductsIndex}
+              // component={IndexProducts}
             // // component={Recently}
             //  component={PaymentForm}
         />

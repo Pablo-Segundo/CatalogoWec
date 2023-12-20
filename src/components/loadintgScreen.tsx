@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, ActivityIndicator, StyleSheet, Text } from 'react-native';
-import { InternetComponet } from './InternetComponet';
+import { InternetComponet } from './internetcomp/InternetComponet';
 import Animated, {
   Easing,
   useAnimatedStyle,

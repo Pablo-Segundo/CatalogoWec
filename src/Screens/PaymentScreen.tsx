@@ -133,7 +133,9 @@ export const PaymentScreen = () => {
 
         <View style={{ marginVertical: 25 }}>
           <CreditCardInput
+          
             onChange={handleCreditCardChange}
+
             requiresName // Asegúrate de que el formulario incluya el campo de nombre
           />
           {/* O, si prefieres la versión Lite */}

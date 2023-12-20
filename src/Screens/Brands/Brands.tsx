@@ -17,7 +17,7 @@ import {Product} from '../../interfaces/ProductsCategoryInterface';
 import {CartContext} from '../../context/cart/CartContext';
 import {Toast} from 'react-native-toast-message/lib/src/Toast';
 import {Actionsheet, useDisclose} from 'native-base';
-import {InternetComponet} from '../../components/InternetComponet';
+import {InternetComponet} from '../../components/internetcomp/InternetComponet';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { ProductCard } from '../../components/ProductCard';
 
@@ -195,11 +195,11 @@ export const Brands = ({ route, navigation }: Props) => {
 
       <FlatList
         data={products}
-        //  numColumns={2}
+       numColumns={2}
         renderItem={({ item }) =>
         
-        //  <ProductCard product={item}/>
-         <CardProduct item={item}/>
+          <ProductCard product={item}/>
+        // <CardProduct item={item}/>
 
       }
         onEndReached={masdatos}

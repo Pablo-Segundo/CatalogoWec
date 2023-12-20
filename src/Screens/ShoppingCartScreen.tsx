@@ -26,7 +26,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
 import { CartContext } from '../context/cart/CartContext';
 import API from '../API/API';
-import { InternetComponet } from '../components/InternetComponet';
+import { InternetComponet } from '../components/internetcomp/InternetComponet';
 
 interface Props {
   product: Product;
