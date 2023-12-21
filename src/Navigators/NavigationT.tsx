@@ -54,7 +54,7 @@ export const NavigationTab = () => {
             // @ts-ignore
             tabBarIcon: ({ ref }) => <Lottie ref={ref} loop={false} source={require('../assets/lottie/upload.icon.json')} style={styles.icon} />,
           }}
-           component={ProductsIndex}
+           component={PedidosScreen}
               // component={IndexProducts}
             // // component={Recently}
             //  component={PaymentForm}
