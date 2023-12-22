@@ -15,13 +15,13 @@ import {
 import API from '../../API/API';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import LoadingScreen from '../../components/loadintgScreen';
-import { Card, Searchbar, } from 'react-native-paper';
+import { Button, Card, Searchbar, } from 'react-native-paper';
 import { InternetComponet } from '../../components/internetcomp/InternetComponet';
 import { NetworkModal } from '../../components/internetcomp/NetworkModal';
 import { NetworkContext } from '../../context/NetworkConect/NetworkContext';
 import { FloatingAction } from 'react-native-floating-action';
 import { Recently } from '../../components/Recently';
-import { TutorialOverlay } from '../../components/tutosReact/tutoScreen';
+import { TutoScreen } from '../../components/tutosReact/tutoScreen';
 import { SearchBar } from '../../components/searchBar';
 import Icon from 'react-native-vector-icons/AntDesign';
 
@@ -31,9 +31,12 @@ import { ProductContext } from '../../context/Product/ProductContext';
 import { IndexProducts } from '../../components/IndexProducts';
 import { FirstScreen } from '../../components/FirstScreen';
 
-interface Props extends NativeStackScreenProps<any, any> { }
+import { AppTourView, AppTourSequence } from 'react-native-copilot';
+npm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilot
+interface Props extends NativeStackScreenProps<ñ´dsfmaklfgdn sks dfl,mnnakdsklf bnasjklnfbj sz<jkadjhfbjkdefjkwbdfhjbjkadsfjbfdsjkbldsabjknfkbdndksabjkfbknfsamn,emn, jk
+adljmndfaklsdndf kasn adflsjkdnur klzsdjn klf asdf nasdklf klnnajs dgsjkal,dbjln asm,df
 
-export const CategoriesScreen = ({ navigation }: Props) => {
+export const CategoriesScreen = ({ navigation, start }: Props) => {
   const [categories, setCategories] = useState();
   const { height, width } = Dimensions.get('window');
   const [brands, setBrands] = useState([]);
@@ -124,6 +127,10 @@ export const CategoriesScreen = ({ navigation }: Props) => {
     // Puedes realizar acciones adicionales después de que el usuario presiona OK.
   };
 
+  function start(): void {
+    throw new Error('Function not implemented.');
+  }
+
   // const handleRefresh = async () => {
   //   setRefreshing(true);
 
@@ -138,12 +145,49 @@ export const CategoriesScreen = ({ navigation }: Props) => {
   //   return <LoadingScreen />;
   // }
 
+  const handleStart = () => {
+    const tourSteps = [
+      {
+        targetView: 'button1',
+        title: 'Paso 1',
+        description: 'Este es el botón 1',
+        outerCircleColor: '#3498db',
+        innerCircleColor: '#3498db',
+        targetRadius: 40,
+        titleTextSize: 24,
+        descriptionTextSize: 16,
+      },
+    ];
+
+    const tourSequence = new AppTourSequence();
+    tourSteps.forEach(step => tourSequence.addStep(step));
+
+    start(tourSequence);
+  };
+
 
 
   return (
     <>
       
       <InternetComponet>
+      <View style={styles.container2}>
+      <TouchableOpacity
+        style={styles.button2}
+        onPress={handleStart}
+        testID="button1"
+      >
+        <Text style={styles.buttonText2}>Botón 1</Text>
+      </TouchableOpacity>
+
+      <AppTourView />
+    </View>
+
+    <View>
+    <Button title="Start tutorial" onPress={() => start()} />
+    </View>
+  
+
         <NetworkModal visible={visible} setVisible={setVisible} />
         <ScrollView
         // bounces={false}
@@ -278,10 +322,7 @@ export const CategoriesScreen = ({ navigation }: Props) => {
           />
         </View>
 
-        <View>
-          {/* Resto de tu contenido de pantalla */}
-          {tutorialVisible && <TutorialOverlay onPress={handleTutorialPress} />}
-        </View>
+      
       </InternetComponet>
 
  
@@ -307,6 +348,24 @@ const styles = StyleSheet.create({
         : 5,
     marginBottom: 5,
   },
+
+  container2: {
+    flex:1,
+    justifyContent:'center',
+    alignItems:'center'
+  },
+  button2: {
+    backgroundColor: '#3498db',
+    padding: 15,
+    borderRadius: 5,
+  },
+  buttonText2: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+
+
   cardproducts: {
     width: '100%',
     alignItems: 'center',

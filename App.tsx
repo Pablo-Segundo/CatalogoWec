@@ -4,7 +4,7 @@ import { Navigation } from './src/Navigators/Navigation';
 import { NativeBaseProvider } from 'native-base';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
 import { CartState } from './src/context/cart/CartState';
-
+import { CopilotProvider } from "react-native-copilot";
 
 
 export default function App() {
@@ -18,15 +18,19 @@ export default function App() {
     > */}
 
 
+        <CopilotProvider overlay='svg'>
       <NavigationContainer>
+
         <NativeBaseProvider>
         
           <CartState>
             <Navigation />
           </CartState>
-            
+
+
         </NativeBaseProvider>
       </NavigationContainer>
+        </CopilotProvider>
       <Toast />
 
       {/* <TarjetaScreen/> */}
