@@ -71,6 +71,10 @@ export function MapScreen() {
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
     );
   };
+
+
+
+  
   const handleMapPress = async (coordinate: React.SetStateAction<null>) => {
     try {
       const response = await Geocoder.from(

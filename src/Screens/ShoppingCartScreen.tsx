@@ -320,47 +320,47 @@ export const ShoppingScreen = ({ product }: Props) => {
             </TouchableOpacity>
 
             <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-  <Modal.Content maxWidth="500px">
-    <Modal.CloseButton style={styles.modalCloseButton} />
-    <Modal.Header style={styles.modalHeader}>
-      Método de pago
-    </Modal.Header>
-    <Modal.Body style={styles.modalBody}>
-      <TouchableOpacity
-        style={[
-          styles.paymentOption,
-          selectedPaymentOption === 'Tarjeta' && styles.selectedPaymentOption,
-        ]}
-        onPress={() => handleOptionSelect('Tarjeta')}>
-        <FontAwesomeIcon icon={faCreditCard} size={25} color="#000" />
-        <Text style={styles.paymentOptionText}>Tarjeta</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[
-          styles.paymentOption,
-          selectedPaymentOption === 'PagoContraEntrega' &&
-            styles.selectedPaymentOption,
-        ]}
-        onPress={() => handleOptionSelect('PagoContraEntrega')}>
-        <FontAwesomeIcon icon={faMoneyBill} size={25} color="#000" />
-        <Text style={styles.paymentOptionText}>Pago Contra entrega</Text>
-      </TouchableOpacity>
-    </Modal.Body>
+              <Modal.Content maxWidth="500px">
+                <Modal.CloseButton style={styles.modalCloseButton} />
+                <Modal.Header style={styles.modalHeader}>
+                  Método de pago
+                </Modal.Header>
+                <Modal.Body style={styles.modalBody}>
+                  <TouchableOpacity
+                    style={[
+                      styles.paymentOption,
+                      selectedPaymentOption === 'Tarjeta' && styles.selectedPaymentOption,
+                    ]}
+                    onPress={() => handleOptionSelect('Tarjeta')}>
+                    <FontAwesomeIcon icon={faCreditCard} size={25} color="#000" />
+                    <Text style={styles.paymentOptionText}>Tarjeta</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[
+                      styles.paymentOption,
+                      selectedPaymentOption === 'PagoContraEntrega' &&
+                      styles.selectedPaymentOption,
+                    ]}
+                    onPress={() => handleOptionSelect('PagoContraEntrega')}>
+                    <FontAwesomeIcon icon={faMoneyBill} size={25} color="#000" />
+                    <Text style={styles.paymentOptionText}>Pago Contra entrega</Text>
+                  </TouchableOpacity>
+                </Modal.Body>
 
-    <TouchableOpacity
-      onPress={() => {
-        // Agrega la lógica que necesitas al presionar "Continuar"
-        handleContinuar();
+                <TouchableOpacity
+                  onPress={() => {
+                    // Agrega la lógica que necesitas al presionar "Continuar"
+                    handleContinuar();
 
-        // Cierra el modal
-        setShowModal(false);
-      }}
-      style={styles.continueButton}
-    >
-      <Text style={styles.continueButtonText}>Continuar</Text>
-    </TouchableOpacity>
-  </Modal.Content>
-</Modal>
+                    // Cierra el modal
+                    setShowModal(false);
+                  }}
+                  style={styles.continueButton}
+                >
+                  <Text style={styles.continueButtonText}>Continuar</Text>
+                </TouchableOpacity>
+              </Modal.Content>
+            </Modal>
 
 
 

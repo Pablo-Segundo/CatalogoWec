@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import {
   View,
   Text,
@@ -21,7 +21,7 @@ import { NetworkModal } from '../../components/internetcomp/NetworkModal';
 import { NetworkContext } from '../../context/NetworkConect/NetworkContext';
 import { FloatingAction } from 'react-native-floating-action';
 import { Recently } from '../../components/Recently';
-import { TutoScreen } from '../../components/tutosReact/tutoScreen';
+
 import { SearchBar } from '../../components/searchBar';
 import Icon from 'react-native-vector-icons/AntDesign';
 
@@ -31,12 +31,19 @@ import { ProductContext } from '../../context/Product/ProductContext';
 import { IndexProducts } from '../../components/IndexProducts';
 import { FirstScreen } from '../../components/FirstScreen';
 
-import { AppTourView, AppTourSequence } from 'react-native-copilot';
-npm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilotnpm i react-native-copilot
-interface Props extends NativeStackScreenProps<ñ´dsfmaklfgdn sks dfl,mnnakdsklf bnasjklnfbj sz<jkadjhfbjkdefjkwbdfhjbjkadsfjbfdsjkbldsabjknfkbdndksabjkfbknfsamn,emn, jk
-adljmndfaklsdndf kasn adflsjkdnur klzsdjn klf asdf nasdklf klnnajs dgsjkal,dbjln asm,df
+import { TutoScreen } from '../../components/tutosReact/TutoScreen';
+import { CopilotProvider, CopilotStep, useCopilot, walkthroughable } from 'react-native-copilot';
+import { start } from 'react-native-copilot';
+import { steps } from 'framer-motion';
 
-export const CategoriesScreen = ({ navigation, start }: Props) => {
+const WalkthroughableText = walkthroughable(Text);
+const WalkthroughableScrollView = walkthroughable(ScrollView);
+const WalkthroughableImage = walkthroughable(Image);
+const CopilotText = walkthroughable(Text);
+
+interface Props extends NativeStackScreenProps<any, any> { }
+
+export const CategoriesScreen = ({ navigation }: Props) => {
   const [categories, setCategories] = useState();
   const { height, width } = Dimensions.get('window');
   const [brands, setBrands] = useState([]);
@@ -47,7 +54,35 @@ export const CategoriesScreen = ({ navigation, start }: Props) => {
   const [serchbar, setSerchbar] = useState('');
   const [tutorialVisible, setTutorialVisible] = useState(true);
 
+
   const { getIndexProducts, products } = useContext(ProductContext);
+  // copilot const
+  const { start, copilotEvents } = useCopilot();
+  const [secondStepActive, setSecondStepActive] = useState(true);
+  const [lastEvent, setLastEvent] = useState<string>(null);
+
+  useEffect(() => {
+    copilotEvents.on("stepChange", (step) => {
+      console.log('stepChange');
+      setLastEvent(`stepChange: ${step.name}`);
+    });
+    copilotEvents.on("start", () => {
+      console.log('start');
+      console.log('====================================');
+      setLastEvent(`start`);
+    });
+    copilotEvents.on("stop", () => {
+      console.log('stop');
+      setLastEvent(`stop`);
+    });
+
+  }, [copilotEvents]);
+
+
+
+
+
+
 
   // recomendaciones
   const [recommendations, setRecommendations] = useState([]);
@@ -61,7 +96,7 @@ export const CategoriesScreen = ({ navigation, start }: Props) => {
       setCategories(categories);
     } catch (error) {
       console.log(error);
-   
+
     }
   };
 
@@ -100,7 +135,7 @@ export const CategoriesScreen = ({ navigation, start }: Props) => {
   }, []);
   if (!categories || !brands) {
     return <LoadingScreen />;
-    
+
   }
   const actions = [
     {
@@ -122,14 +157,8 @@ export const CategoriesScreen = ({ navigation, start }: Props) => {
   const handleSearch = () => {
   };
 
-  const handleTutorialPress = () => {
-    setTutorialVisible(false);
-    // Puedes realizar acciones adicionales después de que el usuario presiona OK.
-  };
 
-  function start(): void {
-    throw new Error('Function not implemented.');
-  }
+
 
   // const handleRefresh = async () => {
   //   setRefreshing(true);
@@ -145,192 +174,204 @@ export const CategoriesScreen = ({ navigation, start }: Props) => {
   //   return <LoadingScreen />;
   // }
 
-  const handleStart = () => {
-    const tourSteps = [
-      {
-        targetView: 'button1',
-        title: 'Paso 1',
-        description: 'Este es el botón 1',
-        outerCircleColor: '#3498db',
-        innerCircleColor: '#3498db',
-        targetRadius: 40,
-        titleTextSize: 24,
-        descriptionTextSize: 16,
-      },
-    ];
-
-    const tourSequence = new AppTourSequence();
-    tourSteps.forEach(step => tourSequence.addStep(step));
-
-    start(tourSequence);
-  };
-
 
 
   return (
-    <>
-      
-      <InternetComponet>
-      <View style={styles.container2}>
-      <TouchableOpacity
-        style={styles.button2}
-        onPress={handleStart}
-        testID="button1"
-      >
-        <Text style={styles.buttonText2}>Botón 1</Text>
-      </TouchableOpacity>
+    <InternetComponet>
 
-      <AppTourView />
-    </View>
 
-    <View>
-    <Button title="Start tutorial" onPress={() => start()} />
-    </View>
-  
 
-        <NetworkModal visible={visible} setVisible={setVisible} />
-        <ScrollView
-        // bounces={false}
+      {/* <View style={{marginTop:100}}>
+          <TouchableOpacity onPress={() => start(this.props.)}>
+            <Text style={{ color: 'black', backgroundColor:'black' }}>Start Tutorial</Text>
+          </TouchableOpacity>
+
+        </View> */}
+
+      {/* <TutoScreen visible={tutorialVisible} setVisible={setTutorialVisible} /> */}
+      <NetworkModal visible={visible} setVisible={setVisible} />
+
+
+      <ScrollView >
+        <CopilotStep
+
+          text='Esta es la barra de busqueda'
+          order={1}
+          name="Barra de busqueda"
         >
-          <View>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Search')}>
-              <Card style={styles.cardContainer2}>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                  <Icon name="search1" size={30} color="#000" />
-                  <Text style={{ color: 'gray', marginVertical: 5 }}> buscar un producto</Text>
-                </View>
-              </Card>
-            </TouchableOpacity>
+          <WalkthroughableText>
 
-          </View>
-
-          <View>
-            {/* <Text style={{color:'black', fontSize: 18, fontWeight: 'bold'}}> Productos Agregados</Text> */}
-            <Card style={styles.cardContainer}>
-              <Text style={{ color: 'black', fontSize: 20, fontWeight: 'bold' }}>
-                {' '}
-                Marcas{' '}
-              </Text>
-            </Card>
-          </View>
-
-          <FlatList
-            data={brands}
-            nestedScrollEnabled={true}
-            scrollEnabled={true}
-            horizontal={true}
-            keyExtractor={(item) => item._id.toString()}
-            renderItem={({ item }) => (
+            <View>
               <TouchableOpacity
-                style={{ borderRadius: 100 }}
-                onPress={() => navigation.navigate('brands', item)}>
-                <View style={styles.directiorow}>
-                  <View style={styles.imageContainer}>
-                    <Text
-                      style={{
-                        color: 'black',
-                        fontSize: 16,
-                        fontWeight: 'bold',
-                      }}>
-                      {' '}
-                      -{item.name}-
-                    </Text>
-                    <ImageBackground
-                      source={{ uri: item.images['400x400'] }}
-                      style={styles.imagebrand}></ImageBackground>
+                onPress={() => navigation.navigate('Search')}>
+                <Card style={styles.cardContainer2}>
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <Icon name="search1" size={30} color="#000" />
+                    <Text style={{ color: 'gray', marginVertical: 5 }}> buscar un producto</Text>
                   </View>
-                </View>
+                </Card>
               </TouchableOpacity>
-            )}
-          />
+            </View>
+          </WalkthroughableText>
+        </CopilotStep>
 
 
-          <View>
-            <Card style={styles.cardContainer}>
-              <Text style={{ color: 'black', fontSize: 20, fontWeight: 'bold' }}>
-                {' '}
-                Tambien te puede interesar{' '}
-              </Text>
-            </Card>
-     <Card>
-      <View>
-            {/* <Recently />  */}
-               <IndexProducts   />
-           </View>
-     </Card>
-           
-                
-            
-          </View>
 
-          <View>
-            {/* <Text style={{color:'black', fontSize: 18, fontWeight: 'bold'}}> Productos Agregados</Text> */}
-            <Card style={styles.cardContainer}>
-              <Text style={{ color: 'black', fontSize: 20, fontWeight: 'bold' }}>
-                {' '}
-                categorías{' '}
-              </Text>
-            </Card>
-          </View>
+        <View>
+          <TouchableOpacity style={styles.button} onPress={() => {
+            console.log('====================================');
+            console.log('hola');
+            console.log('====================================');
+            start();
+          }}>
+            <Text style={styles.buttonText}>START THE TUTORIAL!</Text>
 
-          <View style={{ marginTop: 10 }}></View>
-
-
-          <FlatList
-            data={categories}
-            style={{ alignSelf: 'center', width: '100%' }}
-            numColumns={height / width > 1.6 ? 1 : 2}
-            renderItem={({ item }) => (
-              <>
-                <TouchableOpacity
-                  style={styles.container}
-                  onPress={() => navigation.navigate('Products', item)}>
-                  <ImageBackground
-                    source={{ uri: item.imagesMobile['400x400'] }}
-                    resizeMode="cover"
-                    style={styles.image}>
-                    <View style={styles.overlay}>
-                      <Text style={styles.text}>-{item.name}-</Text>
-                    </View>
-                  </ImageBackground>
-                </TouchableOpacity>
-              </>
-            )}
-          />
-          {categories.length === 0 && (
-            <Text style={{color:'black'}}>
-              Por el momento no hay datos que mostrar.
-            </Text>
-          )}
-          
-        </ScrollView>
-
-        {isFABActive && <View style={styles.overlayFLOAT}></View>}
-        <View style={{ position: 'absolute', bottom: 20, right: 5, zIndex: 999 }}>
-          <FloatingAction
-            actions={actions}
-            buttonSize={65}
-            color="#FF1493"
-            position="right"
-            // overrideWithAction={true}
-            onOpen={() => setIsFABActive(true)}
-            onClose={() => setIsFABActive(false)}
-            onPressItem={name => {
-              console.log(`selected button: ${name}`);
-            }}
-          />
+            <Text>{lastEvent && `Last event: ${lastEvent}`}</Text>
+          </TouchableOpacity>
         </View>
 
-      
-      </InternetComponet>
 
- 
-<View>
-   <FirstScreen/>
-</View>
-     
-    </>
+
+
+        <View>
+          {/* <Text style={{color:'black', fontSize: 18, fontWeight: 'bold'}}> Productos Agregados</Text> */}
+          <Card style={styles.cardContainer}>
+            <Text style={{ color: 'black', fontSize: 20, fontWeight: 'bold' }}>
+              {' '}
+              Marcas{' '}
+            </Text>
+          </Card>
+        </View>
+
+        <CopilotStep name={'este ES EL APARTADO DE MARCAS'} order={2} text={' Este es el apartado de "marcas"'}  >
+          <WalkthroughableScrollView pointerEvents="box-none" >
+            <FlatList
+              data={brands}
+              nestedScrollEnabled={true}
+              scrollEnabled={true}
+              horizontal={true}
+              keyExtractor={(item) => item._id.toString()}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={{ borderRadius: 100 }}
+                  onPress={() => navigation.navigate('brands', item)}>
+                  <View style={styles.directiorow}>
+                    <View style={styles.imageContainer}>
+                      <Text
+                        style={{
+                          color: 'black',
+                          fontSize: 16,
+                          fontWeight: 'bold',
+                        }}>
+                        {' '}
+                        -{item.name}-
+                      </Text>
+                      <ImageBackground
+                        source={{ uri: item.images['400x400'] }}
+                        style={styles.imagebrand}></ImageBackground>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              )}
+            />
+          </WalkthroughableScrollView>
+        </CopilotStep>
+
+        <View>
+          <Card style={styles.cardContainer}>
+            <Text style={{ color: 'black', fontSize: 20, fontWeight: 'bold' }}>
+              {' '}
+              Tambien te puede interesar{' '}
+            </Text>
+          </Card>
+
+
+          <CopilotStep
+            name='productos por temporada'
+            text='Esto son los productos por temporada "Estos pueden cambiar " '
+            order={3}
+          >
+            <WalkthroughableScrollView>
+              <View>
+                {/* <Recently />  */}
+                <IndexProducts />
+              </View>
+            </WalkthroughableScrollView>
+          </CopilotStep>
+
+
+
+
+
+        </View>
+
+        <View>
+          {/* <Text style={{color:'black', fontSize: 18, fontWeight: 'bold'}}> Productos Agregados</Text> */}
+          <Card style={styles.cardContainer}>
+            <Text style={{ color: 'black', fontSize: 20, fontWeight: 'bold' }}>
+              {' '}
+              categorías{' '}
+            </Text>
+          </Card>
+        </View>
+
+        <View style={{ marginTop: 10 }}></View>
+
+
+        <FlatList
+          data={categories}
+          style={{ alignSelf: 'center', width: '100%' }}
+          numColumns={height / width > 1.6 ? 1 : 2}
+          renderItem={({ item }) => (
+            <>
+              <TouchableOpacity
+                style={styles.container}
+                onPress={() => navigation.navigate('Products', item)}>
+                <ImageBackground
+                  source={{ uri: item.imagesMobile['400x400'] }}
+                  resizeMode="cover"
+                  style={styles.image}>
+                  <View style={styles.overlay}>
+                    <Text style={styles.text}>-{item.name}-</Text>
+                  </View>
+                </ImageBackground>
+              </TouchableOpacity>
+            </>
+          )}
+        />
+        {categories.length === 0 && (
+          <Text style={{ color: 'black' }}>
+            Por el momento no hay datos que mostrar.
+          </Text>
+        )}
+
+      </ScrollView>
+
+
+
+      {isFABActive && <View style={styles.overlayFLOAT}></View>}
+      <View style={{ position: 'absolute', bottom: 20, right: 5, zIndex: 999 }}>
+        <FloatingAction
+          actions={actions}
+          buttonSize={65}
+          color="#FF1493"
+          position="right"
+          // overrideWithAction={true}
+          onOpen={() => setIsFABActive(true)}
+          onClose={() => setIsFABActive(false)}
+          onPressItem={name => {
+            console.log(`selected button: ${name}`);
+          }}
+        />
+      </View>
+
+
+      <View>
+        <FirstScreen />
+      </View>
+
+
+    </InternetComponet>
   );
 };
 
@@ -348,11 +389,26 @@ const styles = StyleSheet.create({
         : 5,
     marginBottom: 5,
   },
+  title: {
+    fontSize: 24,
+
+    color: 'black',
+  },
+  button: {
+    backgroundColor: "#2980b9",
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 16,
+  },
 
   container2: {
-    flex:1,
-    justifyContent:'center',
-    alignItems:'center'
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 60
   },
   button2: {
     backgroundColor: '#3498db',
@@ -506,3 +562,7 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
 });
+function componentDidMount() {
+  throw new Error('Function not implemented.');
+}
+

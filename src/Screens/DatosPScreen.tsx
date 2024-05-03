@@ -117,6 +117,7 @@ export const DatosPScreen = () => {
           style={[styles.input, errorNombre && styles.errorInput]}
           placeholder="Por favor, escriba su nombre"
           placeholderTextColor="gray"
+        
           value={nombre}
           onChangeText={(text) => {
             setErrorDireccion(false);

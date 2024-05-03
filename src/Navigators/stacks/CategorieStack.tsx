@@ -53,6 +53,7 @@ const { cart } = useContext(CartContext);
                   animated={true}
                   backgroundColor="#F00A84"
                 />
+
                 <View
                   style={{
                     height: Platform.OS === "ios"

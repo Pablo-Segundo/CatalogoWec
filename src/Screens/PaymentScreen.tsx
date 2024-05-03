@@ -133,12 +133,12 @@ export const PaymentScreen = () => {
 
         <View style={{ marginVertical: 25 }}>
           <CreditCardInput
-          
+
             onChange={handleCreditCardChange}
 
-            requiresName // Asegúrate de que el formulario incluya el campo de nombre
+            requiresName
           />
-          {/* O, si prefieres la versión Lite */}
+        
           {/* <LiteCreditCardInput onChange={handleCreditCardChange} /> */}
           <View style={{ marginTop: 40, }}>
             <Button title="Pay with Stripe" onPress={handlePayment} />
@@ -147,13 +147,13 @@ export const PaymentScreen = () => {
         </View>
 
         <View>
-          {/* Mostrar detalles del carrito aquí */}
+       
           {cart.map((item) => (
             <Text key={item.product_id} style={styles.rowText}>
               {item.product.name} - Cantidad: {item.quantity} - Precio: ${item.product.price}
             </Text>
           ))}
-          {/* Mostrar el precio total y otros detalles si es necesario */}
+         
           <Text style={styles.rowText}>Total a pagar: ${totalPrice}</Text>
         </View>
 

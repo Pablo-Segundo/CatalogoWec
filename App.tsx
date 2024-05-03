@@ -8,8 +8,18 @@ import { CopilotProvider } from "react-native-copilot";
 
 
 export default function App() {
+  const style = {
+    backgroundColor: "black",
+    borderRadius: 10,
+    paddingTop: 5,
+
+    
+  };
+
 
   return (
+
+
     <>
       {/* <StripeProvider
       publishableKey="pk_test_51NNPllBsn6AXnSPi6VTNj1dg4eBhC4HCHadwxH1a4JNJ0Ffp3tqutylGB7mocT7tJAajQR8tV2p8xDtUNZvjfVXq00oKgyVEmy"
@@ -18,19 +28,18 @@ export default function App() {
     > */}
 
 
-        <CopilotProvider overlay='svg'>
+
+
+
       <NavigationContainer>
-
         <NativeBaseProvider>
-        
           <CartState>
-            <Navigation />
+            <CopilotProvider overlay="svg" tooltipStyle={style}  arrowColor='black' stopOnOutsideClick androidStatusBarVisible>
+              <Navigation />
+            </CopilotProvider>
           </CartState>
-
-
         </NativeBaseProvider>
       </NavigationContainer>
-        </CopilotProvider>
       <Toast />
 
       {/* <TarjetaScreen/> */}
